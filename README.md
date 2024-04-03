@@ -1,1 +1,1 @@
-# Blish-HUD-Keybinder
+# Blish-HUD-CharacterKeybinds
