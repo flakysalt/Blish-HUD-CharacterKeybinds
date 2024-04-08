@@ -1,0 +1,34 @@
+{
+    "name": "Character Keybinds",
+    "version": "0.0.1",
+    "namespace": "flakysalt.CharacterKeybinds",
+    "package": "CharacterKeybinds.dll",
+    "manifest_version": 1,
+
+    "description": "Switch your keybinds automaticaly when switching your character or specialization",
+    "dependencies": {
+        "bh.blishhud": ">=1.0.0"
+    },
+    "url": "https://github.com/flakysalt/Blish-HUD-CharacterKeybinds",
+    "contributors": [
+        {
+            "name": "flakysalt",
+            "username": "Aquaforce.3784",
+            "url": "https://github.com/flakysalt"
+        }
+    ],
+
+    "directories": [ "keybind_storage" ],
+    "enabled_without_gw2": false,
+
+    "api_permissions": {
+        "account": {
+            "optional": false,
+            "details": "This Is always needed"
+        },
+        "characters": {
+            "optional": false,
+            "details": "Needed to access character names and specialisations"
+        }
+    }
+}
