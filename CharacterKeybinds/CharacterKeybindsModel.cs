@@ -13,6 +13,8 @@ namespace flakysalt.CharacterKeybinds.Model
 	{
 		public SettingEntry<string> gw2KeybindsFolder;
 		public SettingEntry<KeyBinding> optionsKeybind;
+		public SettingEntry<bool> switchKeybindOnSpecializationsSwitch;
+
 
 		public SettingCollection settingsCollection { get; private set; }
 		public SettingCollection internalSettings;
@@ -45,6 +47,10 @@ namespace flakysalt.CharacterKeybinds.Model
 
 			optionsKeybind = settings.DefineSetting(nameof(optionsKeybind),
 			new KeyBinding(Keys.F11));
+
+			switchKeybindOnSpecializationsSwitch = settings.DefineSetting(
+				"Switch Keybinds on Specialization change",
+				false);
 		}
 
 		public async void LoadCharactersAsync(Gw2ApiManager Gw2ApiManager)

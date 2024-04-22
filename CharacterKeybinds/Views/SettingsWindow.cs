@@ -22,6 +22,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
         internal DirectoriesManager DirectoriesManager;
 
+        private StandardButton setupButton, restoreButton, reportBugButton;
 
         public SettingsWindow(CharacterKeybindsModel model, DirectoriesManager DirectoriesManager) 
         {
@@ -67,7 +68,6 @@ namespace flakysalt.CharacterKeybinds.Views
             var buttonFlowPanel = new FlowPanel()
             {
                 Size = buildPanel.Size,
-                BackgroundColor = Color.Blue,
                 FlowDirection = ControlFlowDirection.LeftToRight,
                 ControlPadding = new Vector2(5, 2),
                 OuterControlPadding = new Vector2(10, 15),
@@ -77,33 +77,33 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = _settingFlowPanel
             };
 
-            var setupButton = new StandardButton
+            setupButton = new StandardButton
             {
                 Parent = buttonFlowPanel,
                 Text = "Setup",
                 Location = new Microsoft.Xna.Framework.Point(100, 0)
             };
-            var restoreButon = new StandardButton
+            restoreButton = new StandardButton
             {
                 Parent = buttonFlowPanel,
                 Text = "Restore",
                 Location = new Microsoft.Xna.Framework.Point(100, 0)
             };
 
-            var reportBugButton = new StandardButton
+            reportBugButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
                 Text = "Report a Bug",
                 Location = new Microsoft.Xna.Framework.Point(100, 0)
             };
-            setupButton.Click += SetupButton_Click;
-			restoreButon.Click += RestoreButon_Click;
 
+            setupButton.Click += SetupButton_Click;
+			restoreButton.Click += RestoreButton_Click;
             reportBugButton.Click += ReportBugButton_Click;
 
         }
 
-		private void RestoreButon_Click(object sender, MouseEventArgs e)
+		private void RestoreButton_Click(object sender, MouseEventArgs e)
 		{
             var confirmationWindow = new ConfirmationWindow("Do you really want to restore your old keybinds?",
                 onConfirm: () => CopyKeybindFiles(model.gw2KeybindsFolder.Value, DirectoriesManager.GetFullDirectoryPath("keybind_storage")));
@@ -123,7 +123,6 @@ namespace flakysalt.CharacterKeybinds.Views
 
         void CopyKeybindFiles(string sourcePath, string outputPath) 
         {
-            // Get all .xml files in the source directory
             string[] xmlFiles = Directory.GetFiles(sourcePath, "*.xml");
 
             foreach (string file in xmlFiles)
@@ -133,6 +132,12 @@ namespace flakysalt.CharacterKeybinds.Views
                 File.Copy(file, destFile, true); // The 'true' parameter allows overwriting existing files
             }
         }
-
-    }
+		protected override void Unload()
+		{
+            setupButton.Click -= SetupButton_Click;
+            restoreButton.Click -= RestoreButton_Click;
+            reportBugButton.Click -= ReportBugButton_Click;
+            base.Unload();
+		}
+	}
 }
