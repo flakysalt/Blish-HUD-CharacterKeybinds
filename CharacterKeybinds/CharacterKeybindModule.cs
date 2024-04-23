@@ -108,7 +108,7 @@ namespace ExampleBlishhudModule
             _cornerIcon = new CornerIcon()
             {
                 Icon = _cornerTexture,
-                BasicTooltipText = $"My Corner Icon Tooltip for {Name}",
+                BasicTooltipText = $"{Name}",
                 Priority = 1645843523,
                 Parent = GameService.Graphics.SpriteScreen
             };

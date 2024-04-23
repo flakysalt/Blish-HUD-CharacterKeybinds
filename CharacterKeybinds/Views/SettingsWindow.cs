@@ -118,7 +118,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
 		private void ReportBugButton_Click(object sender, MouseEventArgs e)
 		{
-            System.Diagnostics.Process.Start("https://github.com/flakysalt/COTD_Blish/issues");
+            System.Diagnostics.Process.Start("https://github.com/flakysalt/Blish-HUD-CharacterKeybinds/issues");
         }
 
         void CopyKeybindFiles(string sourcePath, string outputPath) 

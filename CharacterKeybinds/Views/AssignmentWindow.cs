@@ -15,6 +15,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Blish_HUD.Input;
 using CharacterKeybinds.Util;
 using CharacterKeybinds.Views;
+using System.Linq;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
@@ -44,7 +45,13 @@ namespace flakysalt.CharacterKeybinds.Views
         private double updateTime = hasPlayerData ? 100_000 : 5_000;
 
 
-        public async Task Init(ContentsManager ContentsManager, Gw2ApiManager Gw2ApiManager, CharacterKeybindsModel model, DirectoriesManager directoriesManager, AutoclickView autoclickView) 
+		protected override void Unload()
+		{
+            hasPlayerData = false;
+            base.Unload();
+        }
+
+		public async Task Init(ContentsManager ContentsManager, Gw2ApiManager Gw2ApiManager, CharacterKeybindsModel model, DirectoriesManager directoriesManager, AutoclickView autoclickView) 
 		{
             this.model = model;
             this.Gw2ApiManager = Gw2ApiManager;
@@ -71,6 +78,9 @@ namespace flakysalt.CharacterKeybinds.Views
             blockerOverlay = new TextBox()
             {
                 Parent = AssignmentView,
+                ZIndex = 4,
+                HorizontalAlignment  = HorizontalAlignment.Center,
+                
                 Size = AssignmentView.Size,
                 Visible = false,
                 Text = "",
@@ -100,7 +110,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 ShowBorder = true,
                 Size = new Point(mainFlowPanel.Size.X, 400),
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
-                Parent = mainFlowPanel
+                Parent = mainFlowPanel 
             };
 
 
@@ -129,6 +139,8 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = bottomButtons,
             };
 
+            LoadMappingFromDisk();
+
             await LoadResources();
 
             addEntryButton.Click += OnAddKeybindClick;
@@ -140,7 +152,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
 		private void PlayerCharacter_SpecializationChanged(object sender, ValueEventArgs<int> newSpezialisation)
 		{
-            if (model.switchKeybindOnSpecializationsSwitch.Value) 
+            if (!model.onlyChangeKeybindsOnCharacterChange.Value) 
             {
                 Task.Run(() => SetupKeybinds(GameService.Gw2Mumble.PlayerCharacter.Name, newSpezialisation.Value));
             }
@@ -229,7 +241,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
 		private void AssignmentView_Hidden(object sender, EventArgs e)
 		{
-            if (!hasPlayerData) return;
+            //if (!hasPlayerData) return;
 
             List<CharacterKeybind> characterSpecializations = new List<CharacterKeybind>();
 
@@ -259,7 +271,6 @@ namespace flakysalt.CharacterKeybinds.Views
             try
             {
                 professionsResponse = await Gw2ApiManager.Gw2ApiClient.V2.Professions.AllAsync();
-
                 testResponse = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.AllAsync();
 
             }
@@ -302,8 +313,14 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 characterResponse = await Gw2ApiManager.Gw2ApiClient.V2.Characters.AllAsync();
                 addEntryButton.Enabled = true;
+                blockerOverlay.Visible = false;
                 addEntryButton.Text = "Add Binding";
-                LoadMappingFromDisk();
+                //LoadMappingFromDisk();
+
+                foreach (var binding in keybindUIData) 
+                {
+                    UpdateKeybind(binding);
+                }
             }
             catch (Exception e)
             {
@@ -313,10 +330,6 @@ namespace flakysalt.CharacterKeybinds.Views
 
         void LoadMappingFromDisk()
         {
-            if (hasPlayerData) return;
-            hasPlayerData = true;
-
-
             if (!System.IO.File.Exists(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json")))
             {
                 System.IO.File.Create(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
@@ -330,160 +343,108 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 AddKeybind(binding.characterName, binding.spezialisation, binding.keymap);
             }
-
         }
 
         private void OnAddKeybindClick(object sender, MouseEventArgs e)
         {
-            AddKeybind();
+            var uielement = AddKeybind();
+            UpdateKeybind(uielement);
         }
 
-        private void AddKeybind(string selectedCharacter = "",
+        private void UpdateKeybind(KeybindFlowContainerData keybindFlowContainer) 
+        {
+            string[] xmlFiles = Directory.GetFiles(directoriesManager.GetFullDirectoryPath("keybind_storage"), "*.xml");
+
+            for (int i = 0; i < xmlFiles.Length; i++)
+            {
+                xmlFiles[i] = Path.GetFileNameWithoutExtension(xmlFiles[i]);
+            }
+
+            keybindFlowContainer.SetKeymapOptions(xmlFiles.ToList());
+
+            keybindFlowContainer.SetNameOptions(characterResponse.Select(character => character.Name).ToList());
+
+            List<Character> charcterList = characterResponse as List<Character>;
+            Character currentCharacter = charcterList.Find(item => keybindFlowContainer.characterNameDropdown.SelectedItem == item.Name);
+
+            if (currentCharacter == null) return;
+
+            foreach (var profession in professionsResponse)
+            {
+                if (currentCharacter.Profession == profession.Name)
+                {
+                    var iconAssetId = int.Parse(Path.GetFileNameWithoutExtension(profession.Icon.Url.AbsoluteUri));
+                    keybindFlowContainer.professionImage.Texture = AsyncTexture2D.FromAssetId(iconAssetId);
+                }
+            }
+
+            foreach (var profession in professionSpezialisations)
+            {
+                if (currentCharacter.Profession == profession.Key)
+                {
+                    List<string> specializationNames = new List<string> { "All Spezialisations", "Core" };
+                    specializationNames.AddRange(profession.Value.Select(specialization => specialization.Name));
+
+                    keybindFlowContainer.SetSpecializationOptions(specializationNames);
+                }
+            }
+        }
+
+        private KeybindFlowContainerData AddKeybind(string selectedName = "",
             string selectedSpezialisations = "",
             string selectedKeymap = "")
 		{
-            var flowPanel = new FlowPanel
-            {
-                Parent = scrollView,
-                Size = new Point(scrollView.Width, 40),
-                CanScroll = false,
-                FlowDirection = ControlFlowDirection.LeftToRight
-            };
-            var characterImage = new Image
-            {
-                Parent = flowPanel,
-                Size = new Point(30, 30)
-            };
+			var keybindFlowContainer = new KeybindFlowContainerData(selectedName, selectedSpezialisations, selectedKeymap)
+			{
+				Parent = scrollView,
+				Size = new Point(scrollView.Width, 80),
+				CanScroll = false,
+				FlowDirection = ControlFlowDirection.LeftToRight
+			};
 
-            var characterDropdown = new Dropdown
-            {
-                Parent = flowPanel,
-                Size = new Point(130, 30)
-            };
-            var spezialisationDropdown = new Dropdown
-            {
-                Parent = flowPanel,
-                Size = new Point(130, 30)
-            };
+			keybindUIData.Add(keybindFlowContainer);
 
-            var keymapDropdown = new Dropdown
+			keybindFlowContainer.characterNameDropdown.ValueChanged += (o, eventArgs) =>
             {
-                Parent = flowPanel,
-                Size = new Point(130, 30)
-            };
-
-            KeybindFlowContainerData data = new KeybindFlowContainerData();
-            data.characterNameDropdown = characterDropdown;
-            data.specializationDropdown = spezialisationDropdown;
-            data.keymapDropdown = keymapDropdown;
-            keybindUIData.Add(data);
-
-            string[] xmlFiles = Directory.GetFiles(directoriesManager.GetFullDirectoryPath("keybind_storage"), "*.xml");
-
-            foreach (string file in xmlFiles)
-            {
-                keymapDropdown.Items.Add(Path.GetFileNameWithoutExtension(file));
-            }
-
-            spezialisationDropdown.Items.Add("...");
-
-            characterDropdown.Items.Add("Select Character...");
-            foreach (var character in characterResponse)
-            {
-                characterDropdown.Items.Add(character.Name);
-            }
-            characterDropdown.SelectedItem = string.IsNullOrEmpty(selectedCharacter) ? "Select Character..." : selectedCharacter;
-            characterDropdown.ValueChanged += (o, eventArgs) => 
-            {
-                spezialisationDropdown.Items.Clear();
                 List<Character> charcterList = characterResponse as List<Character>;
-                Character currentCharacter = charcterList.Find(item => characterDropdown.SelectedItem == item.Name);
+                Character currentCharacter = charcterList.Find(item => keybindFlowContainer.characterNameDropdown.SelectedItem == item.Name);
 
-                if (currentCharacter == null) 
-                {
-                    spezialisationDropdown.Enabled = false;
-                    return;
-                }
-
-                foreach (var profession in professionsResponse) 
-                {
-                    if (currentCharacter.Profession == profession.Name) 
-                    {
-                        var iconAssetId = int.Parse(Path.GetFileNameWithoutExtension(profession.Icon.Url.AbsoluteUri));
-                        characterImage.Texture = AsyncTexture2D.FromAssetId(iconAssetId);
-                    }
-                }
-
-                spezialisationDropdown.Enabled = true;
-                spezialisationDropdown.Items.Add("All Spezialisations");
-                spezialisationDropdown.Items.Add("Core");
-                spezialisationDropdown.SelectedItem = "All Spezialisations";
-
-
-                foreach (var profession in professionSpezialisations) 
-                {
-                    if (currentCharacter.Profession == profession.Key) 
-                    {
-                        foreach (var eliteSpec in profession.Value) 
-                        {
-                            spezialisationDropdown.Items.Add(eliteSpec.Name);
-                        }
-                    }
-                }
-            };
-
-            //Code Duplication from above, there is probably a better way
-            if (!string.IsNullOrEmpty(selectedCharacter))
-            {
-                spezialisationDropdown.Items.Clear();
-                List<Character> charcterList = characterResponse as List<Character>;
-                Character currentCharacter = charcterList.Find(item => characterDropdown.SelectedItem == item.Name);
-
-                if (currentCharacter == null)
-                {
-                    spezialisationDropdown.Enabled = false;
-                    return;
-                }
+                if (currentCharacter == null) return;
 
                 foreach (var profession in professionsResponse)
                 {
                     if (currentCharacter.Profession == profession.Name)
                     {
                         var iconAssetId = int.Parse(Path.GetFileNameWithoutExtension(profession.Icon.Url.AbsoluteUri));
-                        characterImage.Texture = AsyncTexture2D.FromAssetId(iconAssetId);
+                        keybindFlowContainer.professionImage.Texture = AsyncTexture2D.FromAssetId(iconAssetId);
                     }
                 }
-
-                spezialisationDropdown.Enabled = true;
-                spezialisationDropdown.Items.Add("All Spezialisations");
-                spezialisationDropdown.Items.Add("Core");
 
                 foreach (var profession in professionSpezialisations)
                 {
                     if (currentCharacter.Profession == profession.Key)
                     {
-                        foreach (var eliteSpec in profession.Value)
-                        {
-                            spezialisationDropdown.Items.Add(eliteSpec.Name);
-                        }
+                        List<string> specializationNames = new List<string> { "All Spezialisations", "Core" };
+                        keybindFlowContainer.specializationDropdown.SelectedItem = "All Spezialisations";
+                        specializationNames.AddRange(profession.Value.Select(specialization => specialization.Name));
+
+                        keybindFlowContainer.SetSpecializationOptions(specializationNames);
                     }
                 }
-            };
+				keybindFlowContainer.removeButton.Click += (sender, e) => 
+                {
+                    keybindUIData.Remove(keybindFlowContainer);
+                };
 
-            spezialisationDropdown.SelectedItem = string.IsNullOrEmpty(selectedSpezialisations) ? "All Spezialisations" : selectedSpezialisations;
-            keymapDropdown.SelectedItem = string.IsNullOrEmpty(selectedKeymap) ? "None" : selectedKeymap;
-            var removeButton = new StandardButton
+                keybindFlowContainer.keymapDropdown.Enabled = true;
+                keybindFlowContainer.specializationDropdown.Enabled = true;
+            };
+/*            keybindFlowContainer.specializationDropdown.ValueChanged += (o, eventArgs) => 
             {
-                Parent = flowPanel,
-                Text = "Remove",
-                Size = new Point(70, 30),
-            };
 
-            removeButton.Click += (o, eventArgs) => {
-                keybindUIData.Remove(data);
-                flowPanel.Dispose();
-            };
-            scrollView.RecalculateLayout();
+            };*/
+
+            return keybindFlowContainer;
         }
 	}
 }
