@@ -31,7 +31,7 @@ namespace flakysalt.CharacterKeybinds.Views
         public StandardWindow AssignmentView;
         private StandardButton addEntryButton;
         private FlowPanel scrollView, mainFlowPanel;
-        private TextBox blockerOverlay;
+        private Label blockerOverlay;
 
         Dictionary<String, List<Specialization>> professionSpezialisations = new Dictionary<String, List<Specialization>>();
         List<KeybindFlowContainerData> keybindUIData = new List<KeybindFlowContainerData>();
@@ -75,12 +75,11 @@ namespace flakysalt.CharacterKeybinds.Views
                 CanClose = true
             };
 
-            blockerOverlay = new TextBox()
+            blockerOverlay = new Label()
             {
                 Parent = AssignmentView,
                 ZIndex = 4,
                 HorizontalAlignment  = HorizontalAlignment.Center,
-                
                 Size = AssignmentView.Size,
                 Visible = false,
                 Text = "",
@@ -122,30 +121,20 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = mainFlowPanel
             };
 
-            var ExportButton = new StandardButton()
-            {
-                Text = "Export",
-                Parent = bottomButtons,
-            };
-
-            var ExportAndBindButton = new StandardButton()
-            {
-                Text = "Export and Bind",
-                Parent = bottomButtons,
-            };
-            var openClickerOptions = new StandardButton()
+/*            var openClickerOptions = new StandardButton()
             {
                 Text = "Open Clicker options",
                 Parent = bottomButtons,
-            };
+            };*/
 
             LoadMappingFromDisk();
 
             await LoadResources();
 
+            var test = GameService.Gw2Mumble.PlayerCharacter.Name;
             addEntryButton.Click += OnAddKeybindClick;
 			AssignmentView.Hidden += AssignmentView_Hidden;
-			openClickerOptions.Click += OpenClickerOptions_Click;
+			//openClickerOptions.Click += OpenClickerOptions_Click;
             GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
             GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged; ;
         }
@@ -162,20 +151,12 @@ namespace flakysalt.CharacterKeybinds.Views
 		{
             Task.Run(() => SetupKeybinds(newCharacterName.Value, GameService.Gw2Mumble.PlayerCharacter.Specialization));
         }
-        public async Task SetupKeybinds(string newCharacterName = "", int spezialisation = 0)
+        public async Task SetupKeybinds(string newCharacterName = "", int spezialisation = -1)
         {
-            //get current character object
-            Character newCharacter = null;
-            var currentSpezialisation = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(spezialisation);
+            if (string.IsNullOrEmpty(newCharacterName)) return;
 
-            foreach (var character in characterResponse)
-            {
-                if (character.Name == newCharacterName)
-                {
-                    newCharacter = character;
-                }
-            }
-            if (newCharacter == null) return;
+            //get current character object
+            var currentSpezialisation = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(spezialisation);
 
             //check for specific name/profess
             KeybindFlowContainerData selectedCharacterData = null;
@@ -213,8 +194,8 @@ namespace flakysalt.CharacterKeybinds.Views
             }
             if (selectedCharacterData == null || selectedCharacterData.keymapDropdown.SelectedItem == "None") return;
 
-            string sourceFile =Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"),$"{selectedCharacterData.keymapDropdown.SelectedItem}.xml");         
-            string destFile =Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
+            string sourceFile =Path.Combine(model.gw2KeybindsFolder.Value, $"{selectedCharacterData.keymapDropdown.SelectedItem}.xml");         
+            string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
 
             System.IO.File.Copy(sourceFile, destFile);
             await autoclickView.ClickInOrder();
@@ -230,6 +211,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
 		public void Update(GameTime gameTime) 
         {
+            var test = GameService.Gw2Mumble.PlayerCharacter.Name;
             _updateCharactersRunningTime += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (_updateCharactersRunningTime > updateTime) 
@@ -304,7 +286,9 @@ namespace flakysalt.CharacterKeybinds.Views
 
             if (!Gw2ApiManager.HasPermissions(apiKeyPermissions))
             {
-                blockerOverlay.Text = "api permissions are missing or api sub token not available yet";
+                blockerOverlay.Text = "API token missing or not available yet.\n" +
+                    "Make sure you have added an API token to Blish HUD and it has the neccessary permissions\n\n"+
+                    "(All already setup keybinds will still work!)";
                 blockerOverlay.Visible = true;
 
                 return;
@@ -315,7 +299,6 @@ namespace flakysalt.CharacterKeybinds.Views
                 addEntryButton.Enabled = true;
                 blockerOverlay.Visible = false;
                 addEntryButton.Text = "Add Binding";
-                //LoadMappingFromDisk();
 
                 foreach (var binding in keybindUIData) 
                 {
@@ -353,7 +336,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private void UpdateKeybind(KeybindFlowContainerData keybindFlowContainer) 
         {
-            string[] xmlFiles = Directory.GetFiles(directoriesManager.GetFullDirectoryPath("keybind_storage"), "*.xml");
+            string[] xmlFiles = Directory.GetFiles(model.gw2KeybindsFolder.Value, "*.xml");
 
             for (int i = 0; i < xmlFiles.Length; i++)
             {
@@ -431,19 +414,14 @@ namespace flakysalt.CharacterKeybinds.Views
                         keybindFlowContainer.SetSpecializationOptions(specializationNames);
                     }
                 }
-				keybindFlowContainer.removeButton.Click += (sender, e) => 
-                {
-                    keybindUIData.Remove(keybindFlowContainer);
-                };
-
                 keybindFlowContainer.keymapDropdown.Enabled = true;
                 keybindFlowContainer.specializationDropdown.Enabled = true;
             };
-/*            keybindFlowContainer.specializationDropdown.ValueChanged += (o, eventArgs) => 
+
+            keybindFlowContainer.removeButton.Click += (sender, e) =>
             {
-
-            };*/
-
+                keybindUIData.Remove(keybindFlowContainer);
+            };
             return keybindFlowContainer;
         }
 	}

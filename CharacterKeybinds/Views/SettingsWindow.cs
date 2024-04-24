@@ -20,14 +20,11 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private ViewContainer _lastSettingContainer;
 
-        internal DirectoriesManager DirectoriesManager;
+        private StandardButton reportBugButton;
 
-        private StandardButton setupButton, restoreButton, reportBugButton;
-
-        public SettingsWindow(CharacterKeybindsModel model, DirectoriesManager DirectoriesManager) 
+        public SettingsWindow(CharacterKeybindsModel model) 
         {
             this.model = model;
-            this.DirectoriesManager = DirectoriesManager;
         }
 
         protected override void Build(Container buildPanel)
@@ -77,19 +74,6 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = _settingFlowPanel
             };
 
-            setupButton = new StandardButton
-            {
-                Parent = buttonFlowPanel,
-                Text = "Setup",
-                Location = new Microsoft.Xna.Framework.Point(100, 0)
-            };
-            restoreButton = new StandardButton
-            {
-                Parent = buttonFlowPanel,
-                Text = "Restore",
-                Location = new Microsoft.Xna.Framework.Point(100, 0)
-            };
-
             reportBugButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
@@ -97,45 +81,17 @@ namespace flakysalt.CharacterKeybinds.Views
                 Location = new Microsoft.Xna.Framework.Point(100, 0)
             };
 
-            setupButton.Click += SetupButton_Click;
-			restoreButton.Click += RestoreButton_Click;
             reportBugButton.Click += ReportBugButton_Click;
 
         }
-
-		private void RestoreButton_Click(object sender, MouseEventArgs e)
-		{
-            var confirmationWindow = new ConfirmationWindow("Do you really want to restore your old keybinds?",
-                onConfirm: () => CopyKeybindFiles(model.gw2KeybindsFolder.Value, DirectoriesManager.GetFullDirectoryPath("keybind_storage")));
-
-            confirmationWindow.Show();
-        }
-
-        private void SetupButton_Click(object sender, MouseEventArgs e)
-		{
-            CopyKeybindFiles(model.gw2KeybindsFolder.Value, DirectoriesManager.GetFullDirectoryPath("keybind_storage"));
-		}
 
 		private void ReportBugButton_Click(object sender, MouseEventArgs e)
 		{
             System.Diagnostics.Process.Start("https://github.com/flakysalt/Blish-HUD-CharacterKeybinds/issues");
         }
 
-        void CopyKeybindFiles(string sourcePath, string outputPath) 
-        {
-            string[] xmlFiles = Directory.GetFiles(sourcePath, "*.xml");
-
-            foreach (string file in xmlFiles)
-            {
-                string fileName = Path.GetFileName(file);
-                string destFile = Path.Combine(outputPath, fileName);
-                File.Copy(file, destFile, true); // The 'true' parameter allows overwriting existing files
-            }
-        }
 		protected override void Unload()
 		{
-            setupButton.Click -= SetupButton_Click;
-            restoreButton.Click -= RestoreButton_Click;
             reportBugButton.Click -= ReportBugButton_Click;
             base.Unload();
 		}

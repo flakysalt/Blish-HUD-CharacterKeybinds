@@ -30,7 +30,7 @@ namespace ExampleBlishhudModule
         internal ContentsManager ContentsManager => this.ModuleParameters.ContentsManager;
         internal DirectoriesManager DirectoriesManager => this.ModuleParameters.DirectoriesManager;
         internal Gw2ApiManager Gw2ApiManager => this.ModuleParameters.Gw2ApiManager;
-        public override IView GetSettingsView() => new SettingsWindow(settingsModel, DirectoriesManager);
+        public override IView GetSettingsView() => new SettingsWindow(settingsModel);
 
         public CharacterKeybindsModel settingsModel;
 
@@ -67,23 +67,7 @@ namespace ExampleBlishhudModule
 
             //await CreateGw2StyleWindowThatDisplaysAllCurrencies(windowBackgroundTexture);
             CreateCornerIconWithContextMenu();
-            AttachEvents();
         }
-
-		private void AttachEvents()
-		{
-			Gw2MumbleService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
-		}
-        private void DetachEvents() 
-        {
-            Gw2MumbleService.Gw2Mumble.PlayerCharacter.NameChanged -= PlayerCharacter_NameChanged;
-
-        }
-
-        private void PlayerCharacter_NameChanged(object sender, ValueEventArgs<string> e)
-		{
-			
-		}
 
 		protected override void Update(GameTime gameTime)
         {
@@ -96,7 +80,6 @@ namespace ExampleBlishhudModule
         // Be sure to remove any tabs added to the Director window, CornerIcons, etc.
         protected override void Unload()
         {
-            DetachEvents();
             moduleWindowView?.AssignmentView?.Dispose();
             _cornerIcon?.Dispose();
             _cornerTexture?.Dispose();
