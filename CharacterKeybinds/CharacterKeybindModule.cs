@@ -49,7 +49,7 @@ namespace ExampleBlishhudModule
         }
         protected override async Task LoadAsync()
         {
-            _cornerTexture = ContentsManager.GetTexture("images/logo.png");
+            _cornerTexture = ContentsManager.GetTexture("images/logo_small.png");
             moduleWindowView = new AssignmentWindow(Logger);
             autoclickerView = new AutoclickView();
 
@@ -65,13 +65,16 @@ namespace ExampleBlishhudModule
             {
                 Icon = _cornerTexture,
                 BasicTooltipText = $"{Name}",
-                Priority = 1645843523,
-                Parent = GameService.Graphics.SpriteScreen
+                Priority = 1,
+                Parent = GameService.Graphics.SpriteScreen,
+                Visible = settingsModel.displayCornerIcon.Value,
+                DynamicHide = true
             };
             _cornerIcon.Click += (s, e) => moduleWindowView.AssignmentView.ToggleWindow();
+			settingsModel.displayCornerIcon.PropertyChanged += (sender,e) => _cornerIcon.Visible = settingsModel.displayCornerIcon.Value;
         }
 
-        protected override void Update(GameTime gameTime)
+		protected override void Update(GameTime gameTime)
         {
             autoclickerView.Update();
             moduleWindowView.Update(gameTime);
@@ -85,7 +88,5 @@ namespace ExampleBlishhudModule
             _cornerTexture?.Dispose();
             moduleInstance = null;
         }
-        
-
     }
 }

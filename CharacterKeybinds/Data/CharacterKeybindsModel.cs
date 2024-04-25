@@ -11,6 +11,8 @@ namespace flakysalt.CharacterKeybinds.Data
 		public SettingEntry<string> gw2KeybindsFolder;
 		public SettingEntry<KeyBinding> optionsKeybind;
 		public SettingEntry<bool> onlyChangeKeybindsOnCharacterChange;
+		public SettingEntry<bool> displayCornerIcon;
+
 
 		public SettingCollection settingsCollection { get; private set; }
 
@@ -33,6 +35,8 @@ namespace flakysalt.CharacterKeybinds.Data
 			onlyChangeKeybindsOnCharacterChange = settings.DefineSetting(
 				"Only change keybinds when switching characters",
 				true);
+
+			displayCornerIcon = settings.DefineSetting(nameof(displayCornerIcon), true, () => "Show corner icon");
 		}
 	}
 }

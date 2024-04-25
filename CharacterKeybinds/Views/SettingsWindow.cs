@@ -71,14 +71,14 @@ namespace flakysalt.CharacterKeybinds.Views
             reportBugButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
-                Size = new Point(250, 50),
+                Size = new Point(200, 50),
                 Text = "Report a Bug"
             };
             fairMacroUseButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
                 Left = 10,
-                Size = new Point(250, 50),
+                Size = new Point(200, 50),
                 Text = "Arenanet Macro Policy"
             };
 
