@@ -1,6 +1,6 @@
 {
     "name": "Character Keybinds",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "namespace": "flakysalt.CharacterKeybinds",
     "package": "CharacterKeybinds.dll",
     "manifest_version": 1,
@@ -17,10 +17,8 @@
             "url": "https://github.com/flakysalt"
         }
     ],
-
     "directories": [ "keybind_storage" ],
     "enabled_without_gw2": false,
-
     "api_permissions": {
         "account": {
             "optional": false,

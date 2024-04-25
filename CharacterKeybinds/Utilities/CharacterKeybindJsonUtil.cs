@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using CharacterKeybinds.Data;
+using flakysalt.CharacterKeybinds.Data;
 
-
-namespace CharacterKeybinds.Util
+namespace flakysalt.CharacterKeybinds.Util
 {
 	class CharacterKeybindJsonUtil
 	{

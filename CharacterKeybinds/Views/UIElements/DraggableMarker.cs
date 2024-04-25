@@ -4,32 +4,19 @@ using Blish_HUD.Controls.Intern;
 using Mouse = Blish_HUD.Controls.Intern.Mouse;
 using Blish_HUD;
 
-namespace CharacterKeybinds.Views
+namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
-	class DragMarker : Container
+	class DraggableMarker : Container
 	{
-
 		Point startDragMouseOffset;
-		Image image;
-
 		bool Dragging;
 
-
-		public DragMarker(int order = 0) 
+		public DraggableMarker(int order = 0) 
 		{
 
 			Width = 20;
 			Height = 20;
 			Parent = GameService.Graphics.SpriteScreen;
-
-/*			image = new Image()
-			{
-				BackgroundColor = Color.AliceBlue,
-				Width = Width,
-				Height = Height,
-				Parent = this,
-				Visible = true
-			};*/
 			var text = new Label
 			{
 				Text = order == 0 ? "" : order.ToString(),
@@ -58,13 +45,7 @@ namespace CharacterKeybinds.Views
 		public override void UpdateContainer(GameTime gameTime)
 		{
 			base.UpdateContainer(gameTime);
-
-			if (Dragging)
-			{
-				Location = Input.Mouse.Position + startDragMouseOffset;
-
-				//startDrag = Input.Mouse.Position;
-			}
+			if (Dragging) Location = Input.Mouse.Position + startDragMouseOffset;
 		}
 
 		// This offset calculation is needed because the mouse does not consider the UI scale when simulaating a click!
@@ -75,7 +56,6 @@ namespace CharacterKeybinds.Views
 			var clickPos = Location - offset;
 
 			return clickPos;
-
 		}
 
 		public void SimulateClick() 

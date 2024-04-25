@@ -3,25 +3,24 @@ using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Modules.Managers;
-using CharacterKeybinds.Data;
-using flakysalt.CharacterKeybinds.Model;
 using Gw2Sharp.WebApi.V2.Models;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using Blish_HUD.Input;
-using CharacterKeybinds.Util;
-using CharacterKeybinds.Views;
 using System.Linq;
+using Blish_HUD.Input;
+using flakysalt.CharacterKeybinds.Util;
+using flakysalt.CharacterKeybinds.Data;
+using flakysalt.CharacterKeybinds.Views.UiElements;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
 	class AssignmentWindow : View
     {
-        private static readonly Logger Logger = Logger.GetLogger<AssignmentWindow>();
+        private readonly Logger Logger;
 
         Gw2ApiManager Gw2ApiManager;
         CharacterKeybindsModel model;
@@ -33,8 +32,8 @@ namespace flakysalt.CharacterKeybinds.Views
         private FlowPanel scrollView, mainFlowPanel;
         private Label blockerOverlay;
 
-        Dictionary<String, List<Specialization>> professionSpezialisations = new Dictionary<String, List<Specialization>>();
-        List<KeybindFlowContainerData> keybindUIData = new List<KeybindFlowContainerData>();
+        Dictionary<string, List<Specialization>> professionSpezialisations = new Dictionary<string, List<Specialization>>();
+        List<KeybindFlowContainer> keybindUIData = new List<KeybindFlowContainer>();
 
         IEnumerable<Profession> professionsResponse = new List<Profession>();
         IEnumerable<Character> characterResponse = new List<Character>();
@@ -44,14 +43,22 @@ namespace flakysalt.CharacterKeybinds.Views
         private static bool hasPlayerData;
         private double updateTime = hasPlayerData ? 100_000 : 5_000;
 
+        public AssignmentWindow(Logger Logger) 
+        {
+            this.Logger = Logger;
+        }
 
-		protected override void Unload()
+        protected override void Unload()
 		{
             hasPlayerData = false;
             base.Unload();
         }
 
-		public async Task Init(ContentsManager ContentsManager, Gw2ApiManager Gw2ApiManager, CharacterKeybindsModel model, DirectoriesManager directoriesManager, AutoclickView autoclickView) 
+		public async Task Init(ContentsManager ContentsManager,
+            Gw2ApiManager Gw2ApiManager,
+            CharacterKeybindsModel model,
+            DirectoriesManager directoriesManager,
+            AutoclickView autoclickView) 
 		{
             this.model = model;
             this.Gw2ApiManager = Gw2ApiManager;
@@ -61,11 +68,10 @@ namespace flakysalt.CharacterKeybinds.Views
             var windowBackgroundTexture = AsyncTexture2D.FromAssetId(155997);
             var _emblem = ContentsManager.GetTexture("images/logo.png");
 
-
             AssignmentView = new StandardWindow(
                 windowBackgroundTexture,
-                new Rectangle(25, 26, 560, 640),
-                new Rectangle(40, 50, 540, 590))
+                new Rectangle(25, 26, 560, 600),
+                new Rectangle(40, 50, 540, 550))
             {
                 Emblem = _emblem,
                 Parent = GameService.Graphics.SpriteScreen,
@@ -83,12 +89,12 @@ namespace flakysalt.CharacterKeybinds.Views
                 Size = AssignmentView.Size,
                 Visible = false,
                 Text = "",
-                BackgroundColor = Microsoft.Xna.Framework.Color.Transparent
+                BackgroundColor = Microsoft.Xna.Framework.Color.Black
             };
 
             mainFlowPanel = new FlowPanel()
             {
-                Size = AssignmentView.Size,
+                Size = AssignmentView.ContentRegion.Size,
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
                 ControlPadding = new Vector2(5, 2),
                 OuterControlPadding = new Vector2(0, 15),
@@ -103,13 +109,25 @@ namespace flakysalt.CharacterKeybinds.Views
                 Enabled = false
             };
 
+            var ScrollViewPanel = new FlowPanel
+            {
+                Size = mainFlowPanel.Size,
+                FlowDirection = ControlFlowDirection.LeftToRight,
+                Parent = mainFlowPanel
+            };
+
             scrollView = new FlowPanel
             {
                 CanScroll = true,
                 ShowBorder = true,
-                Size = new Point(mainFlowPanel.Size.X, 400),
+                Size = new Point(ScrollViewPanel.Size.X- 20, ScrollViewPanel.Height),
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
-                Parent = mainFlowPanel 
+                Parent = ScrollViewPanel
+            };
+
+            var scrollbar = new Scrollbar(scrollView)
+            {
+                Height = ScrollViewPanel.Height
             };
 
 
@@ -121,11 +139,14 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = mainFlowPanel
             };
 
-/*            var openClickerOptions = new StandardButton()
+/*          This is for debugging only
+            var openClickerOptions = new StandardButton()
             {
                 Text = "Open Clicker options",
                 Parent = bottomButtons,
-            };*/
+            };
+            openClickerOptions.Click += OpenClickerOptions_Click; */
+
 
             LoadMappingFromDisk();
 
@@ -134,7 +155,6 @@ namespace flakysalt.CharacterKeybinds.Views
             var test = GameService.Gw2Mumble.PlayerCharacter.Name;
             addEntryButton.Click += OnAddKeybindClick;
 			AssignmentView.Hidden += AssignmentView_Hidden;
-			//openClickerOptions.Click += OpenClickerOptions_Click;
             GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
             GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged; ;
         }
@@ -159,7 +179,7 @@ namespace flakysalt.CharacterKeybinds.Views
             var currentSpezialisation = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(spezialisation);
 
             //check for specific name/profess
-            KeybindFlowContainerData selectedCharacterData = null;
+            KeybindFlowContainer selectedCharacterData = null;
             foreach (var keybindData in keybindUIData)
             {
                 if (keybindData.characterNameDropdown.SelectedItem == newCharacterName)
@@ -202,11 +222,9 @@ namespace flakysalt.CharacterKeybinds.Views
             System.IO.File.Delete(destFile);
         }
 
-
         private void OpenClickerOptions_Click(object sender, MouseEventArgs e)
 		{
             autoclickView.AutoClickWindow.Show();
-
         }
 
 		public void Update(GameTime gameTime) 
@@ -223,8 +241,6 @@ namespace flakysalt.CharacterKeybinds.Views
 
 		private void AssignmentView_Hidden(object sender, EventArgs e)
 		{
-            //if (!hasPlayerData) return;
-
             List<CharacterKeybind> characterSpecializations = new List<CharacterKeybind>();
 
             foreach (var keybindData in keybindUIData) 
@@ -245,7 +261,6 @@ namespace flakysalt.CharacterKeybinds.Views
             var characterKeybindJson = CharacterKeybindJsonUtil.SerializeCharacterList(characterSpecializations);
             System.IO.File.WriteAllText(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"), characterKeybindJson);
         }
-
 
         private async Task LoadResources()
 		{
@@ -280,15 +295,15 @@ namespace flakysalt.CharacterKeybinds.Views
 
             var apiKeyPermissions = new List<TokenPermission>
             {
-                TokenPermission.Account, // this permission can be used to check if your module got a token at all because every api key has this persmission.
-                TokenPermission.Characters // this is the permission we actually require here to get the character names
+                TokenPermission.Account,
+                TokenPermission.Characters
             };
 
             if (!Gw2ApiManager.HasPermissions(apiKeyPermissions))
             {
-                blockerOverlay.Text = "API token missing or not available yet.\n" +
-                    "Make sure you have added an API token to Blish HUD and it has the neccessary permissions\n\n"+
-                    "(All already setup keybinds will still work!)";
+                blockerOverlay.Text = "API token missing or not available yet.\n\n" +
+                    "Make sure you have added an API token to Blish HUD \nand it has the neccessary permissions!\n"+
+                    "(Previously setup keybinds will still work!)";
                 blockerOverlay.Visible = true;
 
                 return;
@@ -307,7 +322,7 @@ namespace flakysalt.CharacterKeybinds.Views
             }
             catch (Exception e)
             {
-                Logger.Info("Failed to get character names from api.");
+                Logger.Info($"Failed to get character names from api.\n {e}");
             }
         }
 
@@ -334,7 +349,7 @@ namespace flakysalt.CharacterKeybinds.Views
             UpdateKeybind(uielement);
         }
 
-        private void UpdateKeybind(KeybindFlowContainerData keybindFlowContainer) 
+        private void UpdateKeybind(KeybindFlowContainer keybindFlowContainer) 
         {
             string[] xmlFiles = Directory.GetFiles(model.gw2KeybindsFolder.Value, "*.xml");
 
@@ -373,14 +388,14 @@ namespace flakysalt.CharacterKeybinds.Views
             }
         }
 
-        private KeybindFlowContainerData AddKeybind(string selectedName = "",
+        private KeybindFlowContainer AddKeybind(string selectedName = "",
             string selectedSpezialisations = "",
             string selectedKeymap = "")
 		{
-			var keybindFlowContainer = new KeybindFlowContainerData(selectedName, selectedSpezialisations, selectedKeymap)
+			var keybindFlowContainer = new KeybindFlowContainer(selectedName, selectedSpezialisations, selectedKeymap)
 			{
 				Parent = scrollView,
-				Size = new Point(scrollView.Width, 80),
+				Size = new Point(scrollView.Width, 50),
 				CanScroll = false,
 				FlowDirection = ControlFlowDirection.LeftToRight
 			};

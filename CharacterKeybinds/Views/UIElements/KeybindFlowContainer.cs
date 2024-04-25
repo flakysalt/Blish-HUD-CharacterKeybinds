@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace CharacterKeybinds.Views
+namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
-	class KeybindFlowContainerData : FlowPanel
+	class KeybindFlowContainer : FlowPanel
 	{
         public StandardButton removeButton { get; private set; }
         public Image professionImage { get; private set; }
@@ -37,10 +37,9 @@ namespace CharacterKeybinds.Views
             }
             dropdown.Enabled = options.Count > 0;
             removeButton.Enabled = options.Count > 0;
-            //dropdown.SelectedItem = string.IsNullOrEmpty(selectedOption) ? defaultOptionPlaceholder : selectedOption;
         }
 
-        public KeybindFlowContainerData(string selectedCharacter = "",
+        public KeybindFlowContainer(string selectedCharacter = "",
             string selectedSpezialisations = "",
             string selectedKeymap = "")
         {

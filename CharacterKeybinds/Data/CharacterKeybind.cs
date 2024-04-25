@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CharacterKeybinds.Data
+namespace flakysalt.CharacterKeybinds.Data
 {
 	[Serializable]
 	public class CharacterKeybind
@@ -8,6 +8,5 @@ namespace CharacterKeybinds.Data
 		public string characterName;
 		public string spezialisation;
 		public string keymap;
-
 	}
 }

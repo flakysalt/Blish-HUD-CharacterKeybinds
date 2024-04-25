@@ -3,27 +3,21 @@ using Blish_HUD.Graphics.UI;
 using Blish_HUD.Input;
 using Blish_HUD.Settings.UI.Views;
 using Microsoft.Xna.Framework;
-using flakysalt.CharacterKeybinds.Model;
+using flakysalt.CharacterKeybinds.Data;
 using System.Linq;
-using Blish_HUD.Modules.Managers;
-using System.IO;
-using flakysalt.CharacterKeybinds.Util;
-
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-	class SettingsWindow : View
+    public class SettingsWindow : View
 	{
         private CharacterKeybindsModel model;
 
         private FlowPanel _settingFlowPanel;
-
         private ViewContainer _lastSettingContainer;
+        private StandardButton reportBugButton, fairMacroUseButton;
 
-        private StandardButton reportBugButton;
-
-        public SettingsWindow(CharacterKeybindsModel model) 
-        {
+		public SettingsWindow(CharacterKeybindsModel model)
+		{
             this.model = model;
         }
 
@@ -77,22 +71,35 @@ namespace flakysalt.CharacterKeybinds.Views
             reportBugButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
-                Text = "Report a Bug",
-                Location = new Microsoft.Xna.Framework.Point(100, 0)
+                Size = new Point(250, 50),
+                Text = "Report a Bug"
+            };
+            fairMacroUseButton = new StandardButton
+            {
+                Parent = _settingFlowPanel,
+                Left = 10,
+                Size = new Point(250, 50),
+                Text = "Arenanet Macro Policy"
             };
 
             reportBugButton.Click += ReportBugButton_Click;
-
+			fairMacroUseButton.Click += FairMacroUseButton_Click;
         }
 
 		private void ReportBugButton_Click(object sender, MouseEventArgs e)
 		{
             System.Diagnostics.Process.Start("https://github.com/flakysalt/Blish-HUD-CharacterKeybinds/issues");
         }
+        private void FairMacroUseButton_Click(object sender, MouseEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://help.guildwars2.com/hc/en-us/articles/360013762153-Policy-Macros-and-Macro-Use");
+        }
 
-		protected override void Unload()
+        protected override void Unload()
 		{
             reportBugButton.Click -= ReportBugButton_Click;
+            fairMacroUseButton.Click -= FairMacroUseButton_Click;
+
             base.Unload();
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace CharacterKeybinds.Data
+namespace flakysalt.CharacterKeybinds.Data
 {
 	public static class ClickPosLocations
 	{

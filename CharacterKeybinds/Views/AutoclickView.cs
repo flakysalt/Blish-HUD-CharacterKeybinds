@@ -1,39 +1,30 @@
 ﻿using Blish_HUD;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
-using CharacterKeybinds.Data;
-using flakysalt.CharacterKeybinds.Model;
-using Gw2Sharp.Mumble.Models;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Keyboard = Blish_HUD.Controls.Intern.Keyboard;
+using flakysalt.CharacterKeybinds.Data;
+using flakysalt.CharacterKeybinds.Views.UiElements;
 
-
-
-namespace CharacterKeybinds.Views
+namespace flakysalt.CharacterKeybinds.Views
 {
-	public class AutoclickView
+	public class AutoclickView : IDisposable
 	{
-
         public  StandardWindow AutoClickWindow;
-
-        private List<DragMarker> markers = new List<DragMarker>();
+        private Label debugLabel;
+        private StandardButton ToggleVisibilityButton, simulateClick;
 
         private bool markerVisible;
-
-        private Label debugLabel;
-
-        private InputService input;
+        private List<DraggableMarker> markers = new List<DraggableMarker>();
         CharacterKeybindsModel settingsModel;
 
-        public async void Init(InputService input, CharacterKeybindsModel settingsModel)
+        public async void Init(CharacterKeybindsModel settingsModel)
         {
-            this.input = input;
             this.settingsModel = settingsModel;
             var windowBackgroundTexture = AsyncTexture2D.FromAssetId(155997);
-            //var _windowEmblem = ContentsManager.GetTexture("Emblem.png");
-
             AutoClickWindow = new StandardWindow(
                 windowBackgroundTexture,
                 new Rectangle(25, 26, 560, 640),
@@ -42,12 +33,8 @@ namespace CharacterKeybinds.Views
                 Parent = GameService.Graphics.SpriteScreen,
                 Title = "Character Keybinds",
                 SavesPosition = true,
-                //CanResize = true,
-                //SavesSize = true,
-                Id = $"flakysalt_{nameof(CharacterKeybinds)}",
-                //Emblem = _windowEmblem,
+                Id = $"flakysalt_{nameof(AutoclickView)}",
                 CanClose = true
-                //Size = new Point(360, 360)
             };
 
             var mainFlowPanel = new FlowPanel()
@@ -68,7 +55,7 @@ namespace CharacterKeybinds.Views
                 Parent = mainFlowPanel
             };
 
-            var ToggleVisibilityButton = new StandardButton()
+            ToggleVisibilityButton = new StandardButton()
             {
                 Text = "Toggle Visibility",
                 Parent = mainFlowPanel,
@@ -81,18 +68,24 @@ namespace CharacterKeybinds.Views
             };
 
 			ToggleVisibilityButton.Click += ToggleVisibilityButton_Click;
-
             simulateClick.Click += SimulateClick_Click;
-
-			//GameService.Gw2Mumble.UI.UISizeChanged += UI_UISizeChanged;
 			GameService.Graphics.SpriteScreen.Resized += SpriteScreen_Resized;
-
             SpawnImportClickZones();
-
-            //AssignmentView.Show();
         }
 
-		private void SpriteScreen_Resized(object sender, ResizedEventArgs e)
+        public void Dispose() 
+        {
+            ToggleVisibilityButton.Click += ToggleVisibilityButton_Click;
+            simulateClick.Click += SimulateClick_Click;
+            GameService.Graphics.SpriteScreen.Resized += SpriteScreen_Resized;
+            for (int i = 0; i < markers.Count; i++)
+            {
+                markers[i].Dispose();
+            }
+            markers.Clear();
+        }
+
+        private void SpriteScreen_Resized(object sender, ResizedEventArgs e)
 		{
             SetMarkerPositions();
         }
@@ -145,7 +138,7 @@ namespace CharacterKeybinds.Views
 		{
             for (int i = 0; i < 4; i++) 
             {
-                DragMarker clickZone = new DragMarker(i+1)
+                DraggableMarker clickZone = new DraggableMarker(i+1)
                 {
                     Visible = false,
                 };
