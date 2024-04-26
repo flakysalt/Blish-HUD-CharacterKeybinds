@@ -1,11 +1,11 @@
 {
     "name": "Character Keybinds",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "namespace": "flakysalt.CharacterKeybinds",
     "package": "CharacterKeybinds.dll",
     "manifest_version": 1,
 
-    "description": "Switch your keybinds automaticaly when switching your character or specialization",
+    "description": "Switch your keybinds automatically when switching your character or specialization",
     "dependencies": {
         "bh.blishhud": ">=1.0.0"
     },

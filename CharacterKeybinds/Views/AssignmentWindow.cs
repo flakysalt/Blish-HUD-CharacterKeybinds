@@ -214,12 +214,33 @@ namespace flakysalt.CharacterKeybinds.Views
             }
             if (selectedCharacterData == null || selectedCharacterData.keymapDropdown.SelectedItem == "None") return;
 
-            string sourceFile =Path.Combine(model.gw2KeybindsFolder.Value, $"{selectedCharacterData.keymapDropdown.SelectedItem}.xml");         
+            MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value,"Cache"));
+            string sourceFile =Path.Combine(model.gw2KeybindsFolder.Value,"Cache", $"{selectedCharacterData.keymapDropdown.SelectedItem}.xml");         
             string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
 
             System.IO.File.Copy(sourceFile, destFile);
+
             await autoclickView.ClickInOrder();
+
             System.IO.File.Delete(destFile);
+            MoveAllXmlFiles(Path.Combine(model.gw2KeybindsFolder.Value, "Cache"),model.gw2KeybindsFolder.Value);
+        }
+
+        void MoveAllXmlFiles(string sourcePath,string destinationPath) 
+        {
+            string[] fileEntries = Directory.GetFiles(sourcePath, "*.xml");
+
+            if (!Directory.Exists(destinationPath)) 
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
+
+            foreach (string filePath in fileEntries)
+            {
+                string fileName = Path.GetFileName(filePath);
+                string destPath = Path.Combine(destinationPath, fileName);
+				System.IO.File.Move(filePath, destPath);
+            }
         }
 
         private void OpenClickerOptions_Click(object sender, MouseEventArgs e)
@@ -345,6 +366,8 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private void OnAddKeybindClick(object sender, MouseEventArgs e)
         {
+            if (!Directory.Exists(model.gw2KeybindsFolder.Value)) return;
+
             var uielement = AddKeybind();
             UpdateKeybind(uielement);
         }

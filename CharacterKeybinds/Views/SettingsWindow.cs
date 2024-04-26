@@ -5,6 +5,7 @@ using Blish_HUD.Settings.UI.Views;
 using Microsoft.Xna.Framework;
 using flakysalt.CharacterKeybinds.Data;
 using System.Linq;
+using System.IO;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
@@ -12,6 +13,7 @@ namespace flakysalt.CharacterKeybinds.Views
 	{
         private CharacterKeybindsModel model;
 
+        private Label ErrorLabel;
         private FlowPanel _settingFlowPanel;
         private ViewContainer _lastSettingContainer;
         private StandardButton reportBugButton, fairMacroUseButton;
@@ -81,9 +83,23 @@ namespace flakysalt.CharacterKeybinds.Views
                 Size = new Point(200, 50),
                 Text = "Arenanet Macro Policy"
             };
+            ErrorLabel = new Label
+            {
+                Parent = _settingFlowPanel,
+                TextColor = Color.Red,
+                Size = new Point(buildPanel.Width, 50),
+                Text = "Error: Selected Keybindsfolder does not exist!",
+                Visible = !Directory.Exists(model.gw2KeybindsFolder.Value)
+            };
 
+			model.gw2KeybindsFolder.PropertyChanged += Gw2KeybindsFolder_PropertyChanged;
             reportBugButton.Click += ReportBugButton_Click;
 			fairMacroUseButton.Click += FairMacroUseButton_Click;
+        }
+
+		private void Gw2KeybindsFolder_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+            ErrorLabel.Visible = !Directory.Exists(model.gw2KeybindsFolder.Value);
         }
 
 		private void ReportBugButton_Click(object sender, MouseEventArgs e)
@@ -99,6 +115,7 @@ namespace flakysalt.CharacterKeybinds.Views
 		{
             reportBugButton.Click -= ReportBugButton_Click;
             fairMacroUseButton.Click -= FairMacroUseButton_Click;
+            model.gw2KeybindsFolder.PropertyChanged -= Gw2KeybindsFolder_PropertyChanged;
 
             base.Unload();
 		}

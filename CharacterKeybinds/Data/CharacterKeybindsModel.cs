@@ -13,7 +13,6 @@ namespace flakysalt.CharacterKeybinds.Data
 		public SettingEntry<bool> onlyChangeKeybindsOnCharacterChange;
 		public SettingEntry<bool> displayCornerIcon;
 
-
 		public SettingCollection settingsCollection { get; private set; }
 
 		public CharacterKeybindsModel(SettingCollection settings) 
