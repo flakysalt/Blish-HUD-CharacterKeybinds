@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Blish_HUD.Controls.Intern;
 using Mouse = Blish_HUD.Controls.Intern.Mouse;
 using Blish_HUD;
+using System;
 
 namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
@@ -10,6 +11,8 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 	{
 		Point startDragMouseOffset;
 		bool Dragging;
+
+		public event EventHandler<Point> OnMarkerReleased;
 
 		public DraggableMarker(int order = 0) 
 		{
@@ -34,6 +37,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 		private void DragMarker_LeftMouseButtonReleased(object sender, Blish_HUD.Input.MouseEventArgs e)
 		{
 			Dragging = false;
+			OnMarkerReleased.Invoke(this,Location);
 		}
 
 		private void Image_LeftMouseButtonPressed(object sender, Blish_HUD.Input.MouseEventArgs e)

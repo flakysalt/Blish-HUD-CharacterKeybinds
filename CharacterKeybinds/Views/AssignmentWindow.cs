@@ -18,12 +18,12 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-	class AssignmentWindow : View
+	public class AssignmentWindow : View
     {
         private readonly Logger Logger;
 
         Gw2ApiManager Gw2ApiManager;
-        CharacterKeybindsModel model;
+        CharacterKeybindsSettings model;
         DirectoriesManager directoriesManager;
         AutoclickView autoclickView;
 
@@ -43,6 +43,9 @@ namespace flakysalt.CharacterKeybinds.Views
         private static bool hasPlayerData;
         private double updateTime = hasPlayerData ? 100_000 : 5_000;
 
+        private static object taskLock = new object();
+        private static bool isTaskStarted = false;
+
         public AssignmentWindow(Logger Logger) 
         {
             this.Logger = Logger;
@@ -56,7 +59,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
 		public async Task Init(ContentsManager ContentsManager,
             Gw2ApiManager Gw2ApiManager,
-            CharacterKeybindsModel model,
+            CharacterKeybindsSettings model,
             DirectoriesManager directoriesManager,
             AutoclickView autoclickView) 
 		{
@@ -148,7 +151,8 @@ namespace flakysalt.CharacterKeybinds.Views
             openClickerOptions.Click += OpenClickerOptions_Click; */
 
 
-            LoadMappingFromDisk();
+            //LoadMappingFromDisk();
+            LoadMappingFromSettings();
 
             await LoadResources();
 
@@ -156,74 +160,100 @@ namespace flakysalt.CharacterKeybinds.Views
             addEntryButton.Click += OnAddKeybindClick;
 			AssignmentView.Hidden += AssignmentView_Hidden;
             GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
-            GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged; ;
+            GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged;
         }
 
 		private void PlayerCharacter_SpecializationChanged(object sender, ValueEventArgs<int> newSpezialisation)
 		{
-            if (!model.onlyChangeKeybindsOnCharacterChange.Value) 
+            lock (taskLock) 
             {
-                Task.Run(() => SetupKeybinds(GameService.Gw2Mumble.PlayerCharacter.Name, newSpezialisation.Value));
+                if (model.changeKeybindsWhenSwitchingSpecialization.Value && !isTaskStarted)
+                {
+                    isTaskStarted = true;
+                    Task.Run(() => SetupKeybinds(GameService.Gw2Mumble.PlayerCharacter.Name, newSpezialisation.Value));
+                }
             }
         }
 
         private void PlayerCharacter_NameChanged(object sender, ValueEventArgs<string> newCharacterName)
 		{
-            Task.Run(() => SetupKeybinds(newCharacterName.Value, GameService.Gw2Mumble.PlayerCharacter.Specialization));
-        }
-        public async Task SetupKeybinds(string newCharacterName = "", int spezialisation = -1)
-        {
-            if (string.IsNullOrEmpty(newCharacterName)) return;
-
-            //get current character object
-            var currentSpezialisation = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(spezialisation);
-
-            //check for specific name/profess
-            KeybindFlowContainer selectedCharacterData = null;
-            foreach (var keybindData in keybindUIData)
+            lock (taskLock)
             {
-                if (keybindData.characterNameDropdown.SelectedItem == newCharacterName)
+                if (model.changeKeybindsWhenSwitchingSpecialization.Value && !isTaskStarted)
                 {
-                    //special case for core builds
-                    if (!currentSpezialisation.Elite && keybindData.specializationDropdown.SelectedItem == "Core")
-                    {
-                        selectedCharacterData = keybindData;
-                    }
-
-                    if (keybindData.specializationDropdown.SelectedItem == currentSpezialisation.Name)
-                    {
-                        selectedCharacterData = keybindData;
-                    }
+                    isTaskStarted = true;
+                    Task.Run(() => SetupKeybinds(newCharacterName.Value, GameService.Gw2Mumble.PlayerCharacter.Specialization));
                 }
             }
+        }
 
-            //if none matched, we check for a wildcard instead
-            if (selectedCharacterData == null)
+        public async Task SetupKeybinds(string newCharacterName = "", int spezialisation = -1)
+        {
+            try
             {
+                if (string.IsNullOrEmpty(newCharacterName)) return;
+
+                //get current character object
+                var currentSpezialisation = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(spezialisation);
+
+                autoclickView.UpdateSelectedCharacter(newCharacterName, currentSpezialisation.Name);
+
+                //check for specific name/profess
+                KeybindFlowContainer selectedCharacterData = null;
                 foreach (var keybindData in keybindUIData)
                 {
                     if (keybindData.characterNameDropdown.SelectedItem == newCharacterName)
                     {
                         //special case for core builds
-                        if (keybindData.specializationDropdown.SelectedItem == "All Spezialisations")
+                        if (!currentSpezialisation.Elite && keybindData.specializationDropdown.SelectedItem == "Core")
+                        {
+                            selectedCharacterData = keybindData;
+                        }
+
+                        if (keybindData.specializationDropdown.SelectedItem == currentSpezialisation.Name)
                         {
                             selectedCharacterData = keybindData;
                         }
                     }
                 }
+
+                //if none matched, we check for a wildcard instead
+                if (selectedCharacterData == null)
+                {
+                    foreach (var keybindData in keybindUIData)
+                    {
+                        if (keybindData.characterNameDropdown.SelectedItem == newCharacterName)
+                        {
+                            //special case for core builds
+                            if (keybindData.specializationDropdown.SelectedItem == "All Spezialisations")
+                            {
+                                selectedCharacterData = keybindData;
+                            }
+                        }
+                    }
+                }
+                if (selectedCharacterData == null || selectedCharacterData.keymapDropdown.SelectedItem == "None") return;
+
+                MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value, "Cache"));
+                string sourceFile = Path.Combine(model.gw2KeybindsFolder.Value, "Cache", $"{selectedCharacterData.keymapDropdown.SelectedItem}.xml");
+                string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
+
+                System.IO.File.Copy(sourceFile, destFile);
+
+                await autoclickView.ClickInOrder();
+
+                System.IO.File.Delete(destFile);
+                MoveAllXmlFiles(Path.Combine(model.gw2KeybindsFolder.Value, "Cache"), model.gw2KeybindsFolder.Value);
             }
-            if (selectedCharacterData == null || selectedCharacterData.keymapDropdown.SelectedItem == "None") return;
+            catch (Exception e)
+            {
+                Logger.Error($"Error Setting up keybinds\n{e}");
+            }
+            finally 
+            {
+                isTaskStarted = false;
+            }
 
-            MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value,"Cache"));
-            string sourceFile =Path.Combine(model.gw2KeybindsFolder.Value,"Cache", $"{selectedCharacterData.keymapDropdown.SelectedItem}.xml");         
-            string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
-
-            System.IO.File.Copy(sourceFile, destFile);
-
-            await autoclickView.ClickInOrder();
-
-            System.IO.File.Delete(destFile);
-            MoveAllXmlFiles(Path.Combine(model.gw2KeybindsFolder.Value, "Cache"),model.gw2KeybindsFolder.Value);
         }
 
         void MoveAllXmlFiles(string sourcePath,string destinationPath) 
@@ -274,22 +304,23 @@ namespace flakysalt.CharacterKeybinds.Views
                 };
                 characterSpecializations.Add(keybind);
             }
+            model.characterKeybinds.Value = characterSpecializations;
 
-            if (!System.IO.File.Exists(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json")))
+/*            if (!System.IO.File.Exists(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json")))
             {
                 System.IO.File.Create(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
             }
             var characterKeybindJson = CharacterKeybindJsonUtil.SerializeCharacterList(characterSpecializations);
-            System.IO.File.WriteAllText(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"), characterKeybindJson);
+            System.IO.File.WriteAllText(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"), characterKeybindJson);*/
         }
 
         private async Task LoadResources()
 		{
-            IEnumerable<Specialization> testResponse = new List<Specialization>();
+            IEnumerable<Specialization> specializations = new List<Specialization>();
             try
             {
                 professionsResponse = await Gw2ApiManager.Gw2ApiClient.V2.Professions.AllAsync();
-                testResponse = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.AllAsync();
+                specializations = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.AllAsync();
 
             }
             catch (Exception e)
@@ -297,16 +328,16 @@ namespace flakysalt.CharacterKeybinds.Views
                 Logger.Info($"Failed to get spezializations from api.\n Exception {e}");
             }
 
-            foreach (var test in testResponse) 
+            foreach (var specialization in specializations) 
             {
-                if (!test.Elite) continue;
-                if (professionSpezialisations.ContainsKey(test.Profession))
+                if (!specialization.Elite) continue;
+                if (professionSpezialisations.ContainsKey(specialization.Profession))
                 {
-                    professionSpezialisations[test.Profession].Add(test);
+                    professionSpezialisations[specialization.Profession].Add(specialization);
                 }
                 else 
                 {
-                    professionSpezialisations[test.Profession] = new List<Specialization> { test };
+                    professionSpezialisations[specialization.Profession] = new List<Specialization> { specialization };
                 }
             }
         }
@@ -359,6 +390,13 @@ namespace flakysalt.CharacterKeybinds.Views
             
             if (characterSpecializations == null) return;
             foreach (var binding in characterSpecializations) 
+            {
+                AddKeybind(binding.characterName, binding.spezialisation, binding.keymap);
+            }
+        }
+        void LoadMappingFromSettings()
+        {
+            foreach (var binding in model.characterKeybinds.Value)
             {
                 AddKeybind(binding.characterName, binding.spezialisation, binding.keymap);
             }
@@ -445,6 +483,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 {
                     if (currentCharacter.Profession == profession.Key)
                     {
+                        //probably localize this later
                         List<string> specializationNames = new List<string> { "All Spezialisations", "Core" };
                         keybindFlowContainer.specializationDropdown.SelectedItem = "All Spezialisations";
                         specializationNames.AddRange(profession.Value.Select(specialization => specialization.Name));

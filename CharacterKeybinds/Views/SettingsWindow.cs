@@ -6,21 +6,37 @@ using Microsoft.Xna.Framework;
 using flakysalt.CharacterKeybinds.Data;
 using System.Linq;
 using System.IO;
+using Blish_HUD.Modules.Managers;
+using flakysalt.CharacterKeybinds.Util;
+using System;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
     public class SettingsWindow : View
 	{
-        private CharacterKeybindsModel model;
+        private CharacterKeybindsSettings model;
+        private AssignmentWindow assignmentWindow;
+        private AutoclickView autoClickWindow;
 
-        private Label ErrorLabel;
         private FlowPanel _settingFlowPanel;
         private ViewContainer _lastSettingContainer;
         private StandardButton reportBugButton, fairMacroUseButton;
 
-		public SettingsWindow(CharacterKeybindsModel model)
+        private StandardButton openAssignmentWindowButton, openAutoClickerSettingsWindowButton;
+
+        DirectoriesManager directoriesManager;
+        Blish_HUD.Logger logger;
+
+
+        public SettingsWindow(CharacterKeybindsSettings model, AssignmentWindow assignmentWindow, AutoclickView autoclickView, DirectoriesManager directoriesManager, Blish_HUD.Logger logger)
 		{
             this.model = model;
+
+            this.assignmentWindow = assignmentWindow;
+            this.autoClickWindow = autoclickView;
+
+            this.directoriesManager = directoriesManager;
+            this.logger = logger;
         }
 
         protected override void Build(Container buildPanel)
@@ -35,6 +51,14 @@ namespace flakysalt.CharacterKeybinds.Views
                 HeightSizingMode = SizingMode.AutoSize,
                 AutoSizePadding = new Point(0, 15),
                 Parent = buildPanel
+            };
+
+            openAssignmentWindowButton = new StandardButton
+            {
+                Parent = _settingFlowPanel,
+                Left = 10,
+                Size = new Point(200, 30),
+                Text = "Settings"
             };
 
             foreach (var setting in model.settingsCollection.Where(s => s.SessionDefined))
@@ -60,11 +84,9 @@ namespace flakysalt.CharacterKeybinds.Views
             }
             var buttonFlowPanel = new FlowPanel()
             {
-                Size = buildPanel.Size,
+                Width = _settingFlowPanel.Width,
                 FlowDirection = ControlFlowDirection.LeftToRight,
                 ControlPadding = new Vector2(5, 2),
-                OuterControlPadding = new Vector2(10, 15),
-                WidthSizingMode = SizingMode.Fill,
                 HeightSizingMode = SizingMode.AutoSize,
                 AutoSizePadding = new Point(0, 15),
                 Parent = _settingFlowPanel
@@ -73,33 +95,63 @@ namespace flakysalt.CharacterKeybinds.Views
             reportBugButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
-                Size = new Point(200, 50),
+                Size = new Point(200, 30),
                 Text = "Report a Bug"
             };
             fairMacroUseButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
                 Left = 10,
-                Size = new Point(200, 50),
+                Size = new Point(200, 30),
                 Text = "Arenanet Macro Policy"
             };
-            ErrorLabel = new Label
+
+            openAutoClickerSettingsWindowButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
-                TextColor = Color.Red,
-                Size = new Point(buildPanel.Width, 50),
-                Text = "Error: Selected Keybindsfolder does not exist!",
-                Visible = !Directory.Exists(model.gw2KeybindsFolder.Value)
+                Size = new Point(100, 30),
+                Text = "Debug"
             };
 
-			model.gw2KeybindsFolder.PropertyChanged += Gw2KeybindsFolder_PropertyChanged;
+            ImportLegacyKeybinds();
+
             reportBugButton.Click += ReportBugButton_Click;
 			fairMacroUseButton.Click += FairMacroUseButton_Click;
+
+			openAssignmentWindowButton.Click += OpenAssignmentWindowButton_Click;
+
+            openAutoClickerSettingsWindowButton.Click += OpenAutoClickerSettingsWindowButton_Click;
         }
 
-		private void Gw2KeybindsFolder_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		private void OpenAssignmentWindowButton_Click(object sender, MouseEventArgs e)
 		{
-            ErrorLabel.Visible = !Directory.Exists(model.gw2KeybindsFolder.Value);
+            assignmentWindow?.AssignmentView.Show();
+        }
+
+		private void OpenAutoClickerSettingsWindowButton_Click(object sender, MouseEventArgs e)
+		{
+            autoClickWindow?.AutoClickWindow.Show();
+
+        }
+
+		private void ImportLegacyKeybinds()
+        {
+            if (File.Exists(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"))) 
+            {
+                try
+                {
+                    string loadJson = File.ReadAllText(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
+                    var characterSpecializations = CharacterKeybindJsonUtil.DeserializeCharacterList(loadJson);
+
+                    model.characterKeybinds.Value = characterSpecializations;
+
+                    File.Delete(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
+                }
+                catch (Exception e)
+                {
+                    logger.Error($"Could not import legacy bindings. \n {e}");
+                }
+            }
         }
 
 		private void ReportBugButton_Click(object sender, MouseEventArgs e)
@@ -115,7 +167,6 @@ namespace flakysalt.CharacterKeybinds.Views
 		{
             reportBugButton.Click -= ReportBugButton_Click;
             fairMacroUseButton.Click -= FairMacroUseButton_Click;
-            model.gw2KeybindsFolder.PropertyChanged -= Gw2KeybindsFolder_PropertyChanged;
 
             base.Unload();
 		}

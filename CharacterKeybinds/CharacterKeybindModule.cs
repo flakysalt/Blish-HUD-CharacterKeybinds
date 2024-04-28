@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using flakysalt.CharacterKeybinds.Views;
 using flakysalt.CharacterKeybinds.Data;
 
-namespace ExampleBlishhudModule
+namespace flakysalt.CharacterKeybinds
 {
     [Export(typeof(Module))]
     public class CharacterKeybindModule : Module
@@ -27,14 +27,14 @@ namespace ExampleBlishhudModule
         internal ContentsManager ContentsManager => this.ModuleParameters.ContentsManager;
         internal DirectoriesManager DirectoriesManager => this.ModuleParameters.DirectoriesManager;
         internal Gw2ApiManager Gw2ApiManager => this.ModuleParameters.Gw2ApiManager;
-        public override IView GetSettingsView() => new SettingsWindow(settingsModel);
+        public override IView GetSettingsView() => new SettingsWindow(settingsModel, moduleWindowView,autoclickerView, DirectoriesManager, Logger);
 
-        public CharacterKeybindsModel settingsModel;
-
-        public AutoclickView autoclickerView;
+        public CharacterKeybindsSettings settingsModel;
 
         #region Views
         private AssignmentWindow moduleWindowView;
+        public AutoclickView autoclickerView;
+
         #endregion
 
         [ImportingConstructor]
@@ -45,8 +45,9 @@ namespace ExampleBlishhudModule
 
         protected override void DefineSettings(SettingCollection settings)
         {
-            settingsModel = new CharacterKeybindsModel(settings);
+            settingsModel = new CharacterKeybindsSettings(settings);
         }
+
         protected override async Task LoadAsync()
         {
             _cornerTexture = ContentsManager.GetTexture("images/logo_small.png");
@@ -83,7 +84,7 @@ namespace ExampleBlishhudModule
         protected override void Unload()
         {
             moduleWindowView?.AssignmentView?.Dispose();
-            autoclickerView?.AutoClickWindow?.Dispose();
+            autoclickerView?.Dispose();
             _cornerIcon?.Dispose();
             _cornerTexture?.Dispose();
             moduleInstance = null;

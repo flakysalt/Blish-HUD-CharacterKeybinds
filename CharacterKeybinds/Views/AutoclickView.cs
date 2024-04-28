@@ -2,36 +2,36 @@
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Keyboard = Blish_HUD.Controls.Intern.Keyboard;
 using flakysalt.CharacterKeybinds.Data;
 using flakysalt.CharacterKeybinds.Views.UiElements;
+using System.Linq;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-	public class AutoclickView : IDisposable
+	public class AutoclickView
 	{
         public  StandardWindow AutoClickWindow;
-        private Label debugLabel;
-        private StandardButton ToggleVisibilityButton, simulateClick;
+        private Label positionDebugLabel,characterDebugLabel;
+        private StandardButton ToggleVisibilityButton, simulateClick, resetPositionButton;
 
         private bool markerVisible;
         private List<DraggableMarker> markers = new List<DraggableMarker>();
-        CharacterKeybindsModel settingsModel;
+        CharacterKeybindsSettings settingsModel;
 
-        public async void Init(CharacterKeybindsModel settingsModel)
+        public async void Init(CharacterKeybindsSettings settingsModel)
         {
             this.settingsModel = settingsModel;
             var windowBackgroundTexture = AsyncTexture2D.FromAssetId(155997);
             AutoClickWindow = new StandardWindow(
                 windowBackgroundTexture,
-                new Rectangle(25, 26, 560, 640),
+                new Rectangle(25, 26, 560, 649),
                 new Rectangle(40, 50, 540, 590))
             {
                 Parent = GameService.Graphics.SpriteScreen,
-                Title = "Character Keybinds",
+                Title = "Debug Window",
                 SavesPosition = true,
                 Id = $"flakysalt_{nameof(AutoclickView)}",
                 CanClose = true
@@ -43,46 +43,88 @@ namespace flakysalt.CharacterKeybinds.Views
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
                 ControlPadding = new Vector2(5, 2),
                 OuterControlPadding = new Vector2(0, 15),
-                WidthSizingMode = SizingMode.Fill,
-                HeightSizingMode = SizingMode.Fill,
                 Parent = AutoClickWindow
             };
-            debugLabel = new Label
-            {
-                Text = "",
-                Width = 200,
-                Height = 300,
-                Parent = mainFlowPanel
-            };
+
 
             ToggleVisibilityButton = new StandardButton()
             {
-                Text = "Toggle Visibility",
+                Text = "Toggle Marker Visibility",
+                Width = 200,
                 Parent = mainFlowPanel,
             };
-
-            var simulateClick = new StandardButton()
+            resetPositionButton = new StandardButton()
             {
-                Text = "Click!",
-                Parent = mainFlowPanel,
+                Text = "Reset Marker Positions",
+                Width = 200,
+                Parent = mainFlowPanel
             };
 
-			ToggleVisibilityButton.Click += ToggleVisibilityButton_Click;
+            simulateClick = new StandardButton()
+            {
+                Text = "Simulate Clicks!",
+                Parent = mainFlowPanel,
+                Width = 200
+            };
+
+			positionDebugLabel = new Label
+			{
+				Text = "",
+				Width = 200,
+				Height = 200,
+				Parent = mainFlowPanel,
+				//Visible = false
+			};
+
+            characterDebugLabel = new Label
+            {
+                Text = "",
+                Width = 200,
+                Height = 200,
+                Parent = mainFlowPanel,
+                //Visible = false
+            };
+
+            resetPositionButton.Click += ResetMarkerPositions;
+
+            ToggleVisibilityButton.Click += ToggleVisibilityButton_Click;
             simulateClick.Click += SimulateClick_Click;
 			GameService.Graphics.SpriteScreen.Resized += SpriteScreen_Resized;
+
+			AutoClickWindow.Hidden += AutoClickWindow_Hidden;
             SpawnImportClickZones();
         }
 
-        public void Dispose() 
+		private void AutoClickWindow_Hidden(object sender, System.EventArgs e)
+		{
+            markerVisible = false;
+            foreach (var marker in markers)
+            {
+                marker.Visible = markerVisible;
+            }
+        }
+
+        public void UpdateSelectedCharacter(string newCharName, string newSpecname) 
         {
-            ToggleVisibilityButton.Click += ToggleVisibilityButton_Click;
-            simulateClick.Click += SimulateClick_Click;
-            GameService.Graphics.SpriteScreen.Resized += SpriteScreen_Resized;
+            characterDebugLabel.Text = $"Current Character: {newCharName}\n" +
+                $"Current Spec: {newSpecname}";
+        }
+
+		public void Dispose() 
+        {
+            resetPositionButton.Click -= ResetMarkerPositions;
+
+            ToggleVisibilityButton.Click -= ToggleVisibilityButton_Click;
+            simulateClick.Click -= SimulateClick_Click;
+            GameService.Graphics.SpriteScreen.Resized -= SpriteScreen_Resized;
+
             for (int i = 0; i < markers.Count; i++)
             {
+                markers[i].OnMarkerReleased -= Marker_OnMarkerReleased;
                 markers[i].Dispose();
             }
             markers.Clear();
+            AutoClickWindow?.Dispose();
         }
 
         private void SpriteScreen_Resized(object sender, ResizedEventArgs e)
@@ -106,13 +148,19 @@ namespace flakysalt.CharacterKeybinds.Views
 		}
         private void SetMarkerPositions() 
         {
-            for (int i = 0; i < markers.Count; i++)
+            for (int i = 0; i < settingsModel.clickPositions.Value.Count; i++)
             {
-                markers[i].Location = ScreenScenter() + ClickPosLocations.importMarkerLocations[i];
+                markers[i].Location = ScreenScenter() + settingsModel.clickPositions.Value[i];
             }
         }
 
-		private void SimulateClick_Click(object sender, Blish_HUD.Input.MouseEventArgs e)
+        private void ResetMarkerPositions(object sender, Blish_HUD.Input.MouseEventArgs e)
+        {
+            settingsModel.clickPositions.Value = ClickPosLocations.importMarkerLocations;
+            SetMarkerPositions();
+        }
+
+        private void SimulateClick_Click(object sender, Blish_HUD.Input.MouseEventArgs e)
 		{
             Task.Run(ClickInOrder);
         }
@@ -145,9 +193,19 @@ namespace flakysalt.CharacterKeybinds.Views
                 markers.Add(clickZone);
             }
             SetMarkerPositions();
+
+            foreach (var marker in markers)
+            {
+				marker.OnMarkerReleased += Marker_OnMarkerReleased;
+            }
         }
 
-        Point ScreenScenter() 
+		private void Marker_OnMarkerReleased(object sender, Point e)
+		{
+            settingsModel.clickPositions.Value = markers.Select(marker => marker.Location- ScreenScenter()).ToList();
+        }
+
+		Point ScreenScenter() 
         {
             return new Point(GameService.Graphics.SpriteScreen.Size.X / 2, GameService.Graphics.SpriteScreen.Size.Y / 2);
         }
@@ -160,7 +218,7 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 markerPositionsString += $"Marker{i + 1} Loc: {markers[i].Location} \n";
             }
-            debugLabel.Text = markerPositionsString +
+            positionDebugLabel.Text = markerPositionsString +
                $"\n ScreenSize: {GameService.Graphics.SpriteScreen.Size}" ;
         }
 	}
