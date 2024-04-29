@@ -262,7 +262,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 if (!System.IO.File.Exists(Path.Combine(model.gw2KeybindsFolder.Value, $"{sourceFileName}.xml"))) return;
 
                 string sourceFile = Path.Combine(model.gw2KeybindsFolder.Value, "Cache", $"{sourceFileName}.xml");
-                string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
+                string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "CharacterKeybinds.xml");
 
                 MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value, "Cache"));
                 System.IO.File.Copy(sourceFile, destFile);
