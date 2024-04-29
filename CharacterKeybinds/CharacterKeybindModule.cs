@@ -32,8 +32,8 @@ namespace flakysalt.CharacterKeybinds
         public CharacterKeybindsSettings settingsModel;
 
         #region Views
-        private AssignmentWindow moduleWindowView;
-        public AutoclickView autoclickerView;
+        private CharacterKeybindWindow moduleWindowView;
+        public TroubleshootWindow autoclickerView;
 
         #endregion
 
@@ -51,11 +51,11 @@ namespace flakysalt.CharacterKeybinds
         protected override async Task LoadAsync()
         {
             _cornerTexture = ContentsManager.GetTexture("images/logo_small.png");
-            moduleWindowView = new AssignmentWindow(Logger);
-            autoclickerView = new AutoclickView();
+            moduleWindowView = new CharacterKeybindWindow(Logger);
+            autoclickerView = new TroubleshootWindow();
 
             await moduleWindowView.Init(ContentsManager, Gw2ApiManager, settingsModel, DirectoriesManager, autoclickerView);
-            autoclickerView.Init(settingsModel);
+            autoclickerView.Init(settingsModel,ContentsManager);
 
             CreateCornerIconWithContextMenu();
         }
@@ -71,19 +71,18 @@ namespace flakysalt.CharacterKeybinds
                 Visible = settingsModel.displayCornerIcon.Value,
                 DynamicHide = true
             };
-            _cornerIcon.Click += (s, e) => moduleWindowView.AssignmentView.ToggleWindow();
+            _cornerIcon.Click += (s, e) => moduleWindowView.WindowView.ToggleWindow();
 			settingsModel.displayCornerIcon.PropertyChanged += (sender,e) => _cornerIcon.Visible = settingsModel.displayCornerIcon.Value;
         }
 
 		protected override void Update(GameTime gameTime)
         {
-            autoclickerView.Update();
             moduleWindowView.Update(gameTime);
         }
 
         protected override void Unload()
         {
-            moduleWindowView?.AssignmentView?.Dispose();
+            moduleWindowView?.WindowView?.Dispose();
             autoclickerView?.Dispose();
             _cornerIcon?.Dispose();
             _cornerTexture?.Dispose();

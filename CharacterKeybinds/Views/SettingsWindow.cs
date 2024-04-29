@@ -15,25 +15,25 @@ namespace flakysalt.CharacterKeybinds.Views
     public class SettingsWindow : View
 	{
         private CharacterKeybindsSettings model;
-        private AssignmentWindow assignmentWindow;
-        private AutoclickView autoClickWindow;
+        private CharacterKeybindWindow characterKeybindWindow;
+        private TroubleshootWindow troubleshootWindow;
 
         private FlowPanel _settingFlowPanel;
         private ViewContainer _lastSettingContainer;
         private StandardButton reportBugButton, fairMacroUseButton;
 
-        private StandardButton openAssignmentWindowButton, openAutoClickerSettingsWindowButton;
+        private StandardButton characterKeybindSettinsButton, openTroubleshootWindowButton, faqButton;
 
         DirectoriesManager directoriesManager;
         Blish_HUD.Logger logger;
 
 
-        public SettingsWindow(CharacterKeybindsSettings model, AssignmentWindow assignmentWindow, AutoclickView autoclickView, DirectoriesManager directoriesManager, Blish_HUD.Logger logger)
+        public SettingsWindow(CharacterKeybindsSettings model, CharacterKeybindWindow assignmentWindow, TroubleshootWindow autoclickView, DirectoriesManager directoriesManager, Blish_HUD.Logger logger)
 		{
             this.model = model;
 
-            this.assignmentWindow = assignmentWindow;
-            this.autoClickWindow = autoclickView;
+            this.characterKeybindWindow = assignmentWindow;
+            this.troubleshootWindow = autoclickView;
 
             this.directoriesManager = directoriesManager;
             this.logger = logger;
@@ -50,15 +50,25 @@ namespace flakysalt.CharacterKeybinds.Views
                 WidthSizingMode = SizingMode.Fill,
                 HeightSizingMode = SizingMode.AutoSize,
                 AutoSizePadding = new Point(0, 15),
-                Parent = buildPanel
+                Parent = buildPanel,
             };
 
-            openAssignmentWindowButton = new StandardButton
+            var topButtonPanel = new FlowPanel()
             {
+                Width = _settingFlowPanel.Width,
+                FlowDirection = ControlFlowDirection.LeftToRight,
+                ControlPadding = new Vector2(5, 2),
+                HeightSizingMode = SizingMode.AutoSize,
+                AutoSizePadding = new Point(0, 15),
                 Parent = _settingFlowPanel,
+            };
+
+            characterKeybindSettinsButton = new StandardButton
+            {
+                Parent = topButtonPanel,
                 Left = 10,
-                Size = new Point(200, 30),
-                Text = "Settings"
+                Size = new Point(200, 50),
+                Text = "Keybind Settings"
             };
 
             foreach (var setting in model.settingsCollection.Where(s => s.SessionDefined))
@@ -82,56 +92,66 @@ namespace flakysalt.CharacterKeybinds.Views
                     }
                 }
             }
-            var buttonFlowPanel = new FlowPanel()
+            var bottombuttonFlowPanel = new FlowPanel()
             {
                 Width = _settingFlowPanel.Width,
                 FlowDirection = ControlFlowDirection.LeftToRight,
                 ControlPadding = new Vector2(5, 2),
                 HeightSizingMode = SizingMode.AutoSize,
                 AutoSizePadding = new Point(0, 15),
-                Parent = _settingFlowPanel
+                Parent = _settingFlowPanel,
+            };
+
+            faqButton = new StandardButton
+            {
+                Parent = bottombuttonFlowPanel,
+                Size = new Point(200, 30),
+                Text = "Help / FAQ"
             };
 
             reportBugButton = new StandardButton
             {
-                Parent = _settingFlowPanel,
+                Parent = bottombuttonFlowPanel,
                 Size = new Point(200, 30),
                 Text = "Report a Bug"
             };
             fairMacroUseButton = new StandardButton
             {
-                Parent = _settingFlowPanel,
+                Parent = bottombuttonFlowPanel,
                 Left = 10,
                 Size = new Point(200, 30),
                 Text = "Arenanet Macro Policy"
             };
 
-            openAutoClickerSettingsWindowButton = new StandardButton
+            openTroubleshootWindowButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
-                Size = new Point(100, 30),
-                Text = "Debug"
+                Size = new Point(200, 30),
+                Text = "Troubleshoot"
             };
 
             ImportLegacyKeybinds();
 
+			faqButton.Click += FaqButton_Click;
             reportBugButton.Click += ReportBugButton_Click;
 			fairMacroUseButton.Click += FairMacroUseButton_Click;
-
-			openAssignmentWindowButton.Click += OpenAssignmentWindowButton_Click;
-
-            openAutoClickerSettingsWindowButton.Click += OpenAutoClickerSettingsWindowButton_Click;
+			characterKeybindSettinsButton.Click += OpenCharacterKeybindsSettingButton_Click;
+            openTroubleshootWindowButton.Click += OpenTroubleshootWindowButton_Click;
         }
 
-		private void OpenAssignmentWindowButton_Click(object sender, MouseEventArgs e)
+		private void FaqButton_Click(object sender, MouseEventArgs e)
 		{
-            assignmentWindow?.AssignmentView.Show();
+            System.Diagnostics.Process.Start("https://blishhud.com/modules/?module=flakysalt.CharacterKeybinds");
         }
 
-		private void OpenAutoClickerSettingsWindowButton_Click(object sender, MouseEventArgs e)
+        private void OpenCharacterKeybindsSettingButton_Click(object sender, MouseEventArgs e)
 		{
-            autoClickWindow?.AutoClickWindow.Show();
+            characterKeybindWindow?.WindowView.Show();
+        }
 
+		private void OpenTroubleshootWindowButton_Click(object sender, MouseEventArgs e)
+		{
+            troubleshootWindow?.WindowView.Show();
         }
 
 		private void ImportLegacyKeybinds()

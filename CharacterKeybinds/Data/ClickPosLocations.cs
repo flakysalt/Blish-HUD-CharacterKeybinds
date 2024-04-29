@@ -7,10 +7,10 @@ namespace flakysalt.CharacterKeybinds.Data
 	{
 		public static List<Point> importMarkerLocations = new List<Point>
 		{
-			new Point(-288,-150),
-			new Point(216,307),
-			new Point(216,356),
-			new Point(-26,45)
+			new Point(-280,-145),
+			new Point(236,320),
+			new Point(236,358),
+			new Point(-28,54)
 		};
 	}
 }

@@ -4,6 +4,7 @@ using Blish_HUD.Controls.Intern;
 using Mouse = Blish_HUD.Controls.Intern.Mouse;
 using Blish_HUD;
 using System;
+using Blish_HUD.Content;
 
 namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
@@ -16,18 +17,30 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 
 		public DraggableMarker(int order = 0) 
 		{
+			var cursorTexture = AsyncTexture2D.FromAssetId(1863840);
 
-			Width = 20;
-			Height = 20;
+			Width = 32;
+			Height = 32;
 			Parent = GameService.Graphics.SpriteScreen;
+			ZIndex = 1000;
+			var image = new Image(cursorTexture)
+			{
+				Parent = this,
+				Size = Size
+			};
 			var text = new Label
 			{
 				Text = order == 0 ? "" : order.ToString(),
+				TextColor = Color.White,
+				ShadowColor = Color.Black,
+				ShowShadow = true,
 				Parent = this,
 				Size = Size,
-				BackgroundColor = Color.Black,
-				HorizontalAlignment = HorizontalAlignment.Center
+				//Location = new Point(3,0),
+				HorizontalAlignment = HorizontalAlignment.Right,
+				VerticalAlignment = VerticalAlignment.Top
 			};
+
 
 			LeftMouseButtonPressed += Image_LeftMouseButtonPressed;
 			LeftMouseButtonReleased += DragMarker_LeftMouseButtonReleased;
@@ -55,8 +68,8 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 		// This offset calculation is needed because the mouse does not consider the UI scale when simulaating a click!
 		public Point CalculateClickOffset() 
 		{
-			var offset = new Point((int)((Location.X + (Width / 2)) * GameService.Graphics.UIScaleMultiplier),
-				(int)((Location.Y + (Height / 2)) * GameService.Graphics.UIScaleMultiplier));
+			var offset = new Point((int)(Location.X * GameService.Graphics.UIScaleMultiplier),
+				(int)(Location.Y * GameService.Graphics.UIScaleMultiplier));
 			var clickPos = Location - offset;
 
 			return clickPos;

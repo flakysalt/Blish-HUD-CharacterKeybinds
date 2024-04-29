@@ -47,8 +47,8 @@ namespace flakysalt.CharacterKeybinds.Data
 			displayCornerIcon = settings.DefineSetting(nameof(displayCornerIcon), true, () => "Show corner icon");
 
 			internalSettingsCollection = settings.AddSubCollection("internal Settings");
-			characterKeybinds = internalSettingsCollection.DefineSetting("fishLastCaughtTime", new List<CharacterKeybind>());
-			clickPositions = internalSettingsCollection.DefineSetting("fishLastCaughtTime", ClickPosLocations.importMarkerLocations);
+			characterKeybinds = internalSettingsCollection.DefineSetting("keybinds", new List<CharacterKeybind>());
+			clickPositions = internalSettingsCollection.DefineSetting("clickpos", ClickPosLocations.importMarkerLocations);
 		}
 	}
 }

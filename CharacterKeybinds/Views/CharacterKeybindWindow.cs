@@ -18,16 +18,16 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-	public class AssignmentWindow : View
+	public class CharacterKeybindWindow : View
     {
         private readonly Logger Logger;
 
         Gw2ApiManager Gw2ApiManager;
         CharacterKeybindsSettings model;
         DirectoriesManager directoriesManager;
-        AutoclickView autoclickView;
+        TroubleshootWindow troubleshootWindow;
 
-        public StandardWindow AssignmentView;
+        public StandardWindow WindowView;
         private StandardButton addEntryButton;
         private FlowPanel scrollView, mainFlowPanel;
         private Label blockerOverlay;
@@ -46,7 +46,7 @@ namespace flakysalt.CharacterKeybinds.Views
         private static object taskLock = new object();
         private static bool isTaskStarted = false;
 
-        public AssignmentWindow(Logger Logger) 
+        public CharacterKeybindWindow(Logger Logger) 
         {
             this.Logger = Logger;
         }
@@ -61,20 +61,20 @@ namespace flakysalt.CharacterKeybinds.Views
             Gw2ApiManager Gw2ApiManager,
             CharacterKeybindsSettings model,
             DirectoriesManager directoriesManager,
-            AutoclickView autoclickView) 
+            TroubleshootWindow autoclickView) 
 		{
             this.model = model;
             this.Gw2ApiManager = Gw2ApiManager;
             this.directoriesManager = directoriesManager;
-            this.autoclickView = autoclickView;
+            this.troubleshootWindow = autoclickView;
 
             var windowBackgroundTexture = AsyncTexture2D.FromAssetId(155997);
             var _emblem = ContentsManager.GetTexture("images/logo.png");
 
-            AssignmentView = new StandardWindow(
+            WindowView = new StandardWindow(
                 windowBackgroundTexture,
-                new Rectangle(25, 26, 560, 600),
-                new Rectangle(40, 50, 540, 550))
+                new Rectangle(25, 26, 600, 600),
+                new Rectangle(40, 50, 580, 550))
             {
                 Emblem = _emblem,
                 Parent = GameService.Graphics.SpriteScreen,
@@ -86,10 +86,10 @@ namespace flakysalt.CharacterKeybinds.Views
 
             blockerOverlay = new Label()
             {
-                Parent = AssignmentView,
+                Parent = WindowView,
                 ZIndex = 4,
                 HorizontalAlignment  = HorizontalAlignment.Center,
-                Size = AssignmentView.Size,
+                Size = WindowView.Size,
                 Visible = false,
                 Text = "",
                 BackgroundColor = Microsoft.Xna.Framework.Color.Black
@@ -97,11 +97,11 @@ namespace flakysalt.CharacterKeybinds.Views
 
             mainFlowPanel = new FlowPanel()
             {
-                Size = AssignmentView.ContentRegion.Size,
+                Size = WindowView.ContentRegion.Size,
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
                 ControlPadding = new Vector2(5, 2),
                 OuterControlPadding = new Vector2(0, 15),
-                Parent = AssignmentView
+                Parent = WindowView
             };
 
             addEntryButton = new StandardButton()
@@ -156,11 +156,21 @@ namespace flakysalt.CharacterKeybinds.Views
 
             await LoadResources();
 
-            var test = GameService.Gw2Mumble.PlayerCharacter.Name;
             addEntryButton.Click += OnAddKeybindClick;
-			AssignmentView.Hidden += AssignmentView_Hidden;
+			WindowView.Hidden += AssignmentView_Hidden;
             GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
             GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged;
+
+            GameService.Gw2Mumble.CurrentMap.MapChanged += CurrentMap_MapChanged;
+        }
+
+		private void CurrentMap_MapChanged(object sender, ValueEventArgs<int> e)
+		{
+
+            //if(Blish_HUD.Contexts.FestivalContext.)
+            //935 SAB
+            var test = GameService.Gw2Mumble.CurrentMap.Id;
+
         }
 
 		private void PlayerCharacter_SpecializationChanged(object sender, ValueEventArgs<int> newSpezialisation)
@@ -179,7 +189,7 @@ namespace flakysalt.CharacterKeybinds.Views
 		{
             lock (taskLock)
             {
-                if (model.changeKeybindsWhenSwitchingSpecialization.Value && !isTaskStarted)
+                if (!isTaskStarted)
                 {
                     isTaskStarted = true;
                     Task.Run(() => SetupKeybinds(newCharacterName.Value, GameService.Gw2Mumble.PlayerCharacter.Specialization));
@@ -195,8 +205,6 @@ namespace flakysalt.CharacterKeybinds.Views
 
                 //get current character object
                 var currentSpezialisation = await Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(spezialisation);
-
-                autoclickView.UpdateSelectedCharacter(newCharacterName, currentSpezialisation.Name);
 
                 //check for specific name/profess
                 KeybindFlowContainer selectedCharacterData = null;
@@ -234,16 +242,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 }
                 if (selectedCharacterData == null || selectedCharacterData.keymapDropdown.SelectedItem == "None") return;
 
-                MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value, "Cache"));
-                string sourceFile = Path.Combine(model.gw2KeybindsFolder.Value, "Cache", $"{selectedCharacterData.keymapDropdown.SelectedItem}.xml");
-                string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
-
-                System.IO.File.Copy(sourceFile, destFile);
-
-                await autoclickView.ClickInOrder();
-
-                System.IO.File.Delete(destFile);
-                MoveAllXmlFiles(Path.Combine(model.gw2KeybindsFolder.Value, "Cache"), model.gw2KeybindsFolder.Value);
+                await ChangeKeybinds(selectedCharacterData.keymapDropdown.SelectedItem);
             }
             catch (Exception e)
             {
@@ -255,6 +254,29 @@ namespace flakysalt.CharacterKeybinds.Views
             }
 
         }
+
+        async Task ChangeKeybinds(string sourceFileName) 
+        {
+            try 
+            {
+                MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value, "Cache"));
+                string sourceFile = Path.Combine(model.gw2KeybindsFolder.Value, "Cache", $"{sourceFileName}.xml");
+                string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
+
+                System.IO.File.Copy(sourceFile, destFile);
+
+                await troubleshootWindow.ClickInOrder();
+
+                System.IO.File.Delete(destFile);
+                MoveAllXmlFiles(Path.Combine(model.gw2KeybindsFolder.Value, "Cache"), model.gw2KeybindsFolder.Value);
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Error copying files\n{e}");
+            }
+
+        }
+
 
         void MoveAllXmlFiles(string sourcePath,string destinationPath) 
         {
@@ -275,7 +297,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private void OpenClickerOptions_Click(object sender, MouseEventArgs e)
 		{
-            autoclickView.AutoClickWindow.Show();
+            troubleshootWindow.WindowView.Show();
         }
 
 		public void Update(GameTime gameTime) 
@@ -305,13 +327,6 @@ namespace flakysalt.CharacterKeybinds.Views
                 characterSpecializations.Add(keybind);
             }
             model.characterKeybinds.Value = characterSpecializations;
-
-/*            if (!System.IO.File.Exists(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json")))
-            {
-                System.IO.File.Create(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
-            }
-            var characterKeybindJson = CharacterKeybindJsonUtil.SerializeCharacterList(characterSpecializations);
-            System.IO.File.WriteAllText(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"), characterKeybindJson);*/
         }
 
         private async Task LoadResources()
@@ -378,22 +393,6 @@ namespace flakysalt.CharacterKeybinds.Views
             }
         }
 
-        void LoadMappingFromDisk()
-        {
-            if (!System.IO.File.Exists(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json")))
-            {
-                System.IO.File.Create(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
-            }
-
-            string loadJson = System.IO.File.ReadAllText(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
-            var characterSpecializations = CharacterKeybindJsonUtil.DeserializeCharacterList(loadJson);
-            
-            if (characterSpecializations == null) return;
-            foreach (var binding in characterSpecializations) 
-            {
-                AddKeybind(binding.characterName, binding.spezialisation, binding.keymap);
-            }
-        }
         void LoadMappingFromSettings()
         {
             foreach (var binding in model.characterKeybinds.Value)
@@ -498,6 +497,12 @@ namespace flakysalt.CharacterKeybinds.Views
             keybindFlowContainer.removeButton.Click += (sender, e) =>
             {
                 keybindUIData.Remove(keybindFlowContainer);
+            };
+
+            keybindFlowContainer.OnApplyPressed += (sender, selectedKeybinds) =>
+            {
+                Task.Run(() => ChangeKeybinds(selectedKeybinds));
+
             };
             return keybindFlowContainer;
         }
