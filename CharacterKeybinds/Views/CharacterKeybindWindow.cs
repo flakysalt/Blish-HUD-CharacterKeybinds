@@ -259,14 +259,14 @@ namespace flakysalt.CharacterKeybinds.Views
         {
             try 
             {
-                MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value, "Cache"));
+                if (!System.IO.File.Exists(Path.Combine(model.gw2KeybindsFolder.Value, $"{sourceFileName}.xml"))) return;
+
                 string sourceFile = Path.Combine(model.gw2KeybindsFolder.Value, "Cache", $"{sourceFileName}.xml");
                 string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "00000000.xml");
 
+                MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value, "Cache"));
                 System.IO.File.Copy(sourceFile, destFile);
-
                 await troubleshootWindow.ClickInOrder();
-
                 System.IO.File.Delete(destFile);
                 MoveAllXmlFiles(Path.Combine(model.gw2KeybindsFolder.Value, "Cache"), model.gw2KeybindsFolder.Value);
             }

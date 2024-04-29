@@ -63,12 +63,6 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             };
             characterNameDropdown.SelectedItem = string.IsNullOrEmpty(selectedCharacter) ? "Select Character": selectedCharacter;
 
-			characterNameDropdown.PropertyChanged += (e,v)=> 
-            {
-                specializationDropdown.Enabled = characterNameDropdown.SelectedItem != "Select Character" && characterNameDropdown.Items.Count > 0;
-            };
-
-
             specializationDropdown = new Dropdown
             {
                 Parent = this,
@@ -99,6 +93,15 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
                 Text = "Apply",
                 Size = new Point(60, 30),
                 Enabled = true
+            };
+
+            keymapDropdown.PropertyChanged += (e, v) =>
+            {
+                applyButton.Enabled = keymapDropdown.SelectedItem != "Keybinds";
+            };
+            characterNameDropdown.PropertyChanged += (e, v) =>
+            {
+                specializationDropdown.Enabled = characterNameDropdown.SelectedItem != "Select Character" && characterNameDropdown.Items.Count > 0;
             };
 
             applyButton.Click += (o, eventArgs) =>
