@@ -54,8 +54,8 @@ namespace flakysalt.CharacterKeybinds
             moduleWindowView = new CharacterKeybindWindow(Logger);
             autoclickerView = new TroubleshootWindow();
 
+            autoclickerView.Init(settingsModel, ContentsManager);
             await moduleWindowView.Init(ContentsManager, Gw2ApiManager, settingsModel, DirectoriesManager, autoclickerView);
-            autoclickerView.Init(settingsModel,ContentsManager);
 
             CreateCornerIconWithContextMenu();
         }
@@ -83,9 +83,16 @@ namespace flakysalt.CharacterKeybinds
         protected override void Unload()
         {
             moduleWindowView?.WindowView?.Dispose();
+            moduleWindowView?.Dispose();
+
             autoclickerView?.Dispose();
+
             _cornerIcon?.Dispose();
             _cornerTexture?.Dispose();
+
+
+            moduleWindowView = null;
+            autoclickerView = null;
             moduleInstance = null;
         }
     }

@@ -11,14 +11,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Blish_HUD.Input;
-using flakysalt.CharacterKeybinds.Util;
 using flakysalt.CharacterKeybinds.Data;
 using flakysalt.CharacterKeybinds.Views.UiElements;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-	public class CharacterKeybindWindow : View
+	public class CharacterKeybindWindow : View, IDisposable
     {
         private readonly Logger Logger;
 
@@ -38,10 +37,8 @@ namespace flakysalt.CharacterKeybinds.Views
         IEnumerable<Profession> professionsResponse = new List<Profession>();
         IEnumerable<Character> characterResponse = new List<Character>();
 
-
         private double _updateCharactersRunningTime;
-        private static bool hasPlayerData;
-        private double updateTime = hasPlayerData ? 100_000 : 5_000;
+        private double updateTime = 5_000;
 
         private static object taskLock = new object();
         private static bool isTaskStarted = false;
@@ -51,9 +48,15 @@ namespace flakysalt.CharacterKeybinds.Views
             this.Logger = Logger;
         }
 
-        protected override void Unload()
+        public void Dispose()
 		{
-            hasPlayerData = false;
+
+            addEntryButton.Click -= OnAddKeybindClick;
+            WindowView.Hidden -= AssignmentView_Hidden;
+
+            GameService.Gw2Mumble.PlayerCharacter.NameChanged -= PlayerCharacter_NameChanged;
+            GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged -= PlayerCharacter_SpecializationChanged;
+
             base.Unload();
         }
 
@@ -161,16 +164,6 @@ namespace flakysalt.CharacterKeybinds.Views
             GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
             GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged;
 
-            GameService.Gw2Mumble.CurrentMap.MapChanged += CurrentMap_MapChanged;
-        }
-
-		private void CurrentMap_MapChanged(object sender, ValueEventArgs<int> e)
-		{
-
-            //if(Blish_HUD.Contexts.FestivalContext.)
-            //935 SAB
-            var test = GameService.Gw2Mumble.CurrentMap.Id;
-
         }
 
 		private void PlayerCharacter_SpecializationChanged(object sender, ValueEventArgs<int> newSpezialisation)
@@ -257,22 +250,27 @@ namespace flakysalt.CharacterKeybinds.Views
 
         async Task ChangeKeybinds(string sourceFileName) 
         {
-            try 
+            string sourceFile = Path.Combine(model.gw2KeybindsFolder.Value, "Cache", $"{sourceFileName}.xml");
+            string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "CharacterKeybinds.xml");
+
+            try
             {
                 if (!System.IO.File.Exists(Path.Combine(model.gw2KeybindsFolder.Value, $"{sourceFileName}.xml"))) return;
-
-                string sourceFile = Path.Combine(model.gw2KeybindsFolder.Value, "Cache", $"{sourceFileName}.xml");
-                string destFile = Path.Combine(model.gw2KeybindsFolder.Value, "CharacterKeybinds.xml");
-
                 MoveAllXmlFiles(model.gw2KeybindsFolder.Value, Path.Combine(model.gw2KeybindsFolder.Value, "Cache"));
                 System.IO.File.Copy(sourceFile, destFile);
                 await troubleshootWindow.ClickInOrder();
-                System.IO.File.Delete(destFile);
-                MoveAllXmlFiles(Path.Combine(model.gw2KeybindsFolder.Value, "Cache"), model.gw2KeybindsFolder.Value);
             }
             catch (Exception e)
             {
                 Logger.Error($"Error copying files\n{e}");
+            }
+            finally 
+            {
+                if (System.IO.File.Exists(destFile)) 
+                {
+                    System.IO.File.Delete(destFile);
+                }
+                MoveAllXmlFiles(Path.Combine(model.gw2KeybindsFolder.Value, "Cache"), model.gw2KeybindsFolder.Value);
             }
 
         }
