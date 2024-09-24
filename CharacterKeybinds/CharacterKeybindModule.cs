@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using flakysalt.CharacterKeybinds.Views;
 using flakysalt.CharacterKeybinds.Data;
+using System.ComponentModel;
+using System;
 
 namespace flakysalt.CharacterKeybinds
 {
@@ -61,19 +63,40 @@ namespace flakysalt.CharacterKeybinds
         }
 
         private void CreateCornerIconWithContextMenu()
-        {
-            _cornerIcon = new CornerIcon()
+		{
+            if (settingsModel.displayCornerIcon.Value) 
             {
-                Icon = _cornerTexture,
-                BasicTooltipText = $"{Name}",
-                Priority = 1,
-                Parent = GameService.Graphics.SpriteScreen,
-                Visible = settingsModel.displayCornerIcon.Value,
-                DynamicHide = true
-            };
-            _cornerIcon.Click += (s, e) => moduleWindowView.WindowView.ToggleWindow();
-			settingsModel.displayCornerIcon.PropertyChanged += (sender,e) => _cornerIcon.Visible = settingsModel.displayCornerIcon.Value;
+                _cornerIcon = new CornerIcon()
+                {
+                    Icon = _cornerTexture,
+                    BasicTooltipText = $"{Name}",
+                    Priority = 1,
+                    Parent = GameService.Graphics.SpriteScreen,
+                    Visible = true
+                };
+                _cornerIcon.Click += (s, e) => moduleWindowView.WindowView.ToggleWindow();
+
+            }
+
+            settingsModel.displayCornerIcon.PropertyChanged += EnableOrCreateCornerIcon;
+		}
+
+		private void EnableOrCreateCornerIcon(object sender, PropertyChangedEventArgs e)
+		{
+            //TODO i dont know why it enables but this should work as a workaround for now
+            if (_cornerIcon == null)
+            {
+                _cornerIcon = new CornerIcon()
+                {
+                    Icon = _cornerTexture,
+                    BasicTooltipText = $"{Name}",
+                    Priority = 1,
+                    Parent = GameService.Graphics.SpriteScreen,
+                };
+            }
+            _cornerIcon.Visible = settingsModel.displayCornerIcon.Value;
         }
+
 
 		protected override void Update(GameTime gameTime)
         {

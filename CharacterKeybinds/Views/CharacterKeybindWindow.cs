@@ -145,16 +145,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = mainFlowPanel
             };
 
-/*          This is for debugging only
-            var openClickerOptions = new StandardButton()
-            {
-                Text = "Open Clicker options",
-                Parent = bottomButtons,
-            };
-            openClickerOptions.Click += OpenClickerOptions_Click; */
 
-
-            //LoadMappingFromDisk();
             LoadMappingFromSettings();
 
             await LoadResources();
