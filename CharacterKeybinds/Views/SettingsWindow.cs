@@ -14,7 +14,7 @@ using System;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-    public class SettingsWindow : View<CharacterKeybindSettingsPresenter>
+    public class SettingsWindow : View
 	{
         private CharacterKeybindsSettings model;
         private CharacterKeybindWindow characterKeybindWindow;
@@ -52,7 +52,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 WidthSizingMode = SizingMode.Fill,
                 HeightSizingMode = SizingMode.AutoSize,
                 AutoSizePadding = new Point(0, 15),
-                Parent = buildPanel,
+                Parent = buildPanel
             };
 
             var topButtonPanel = new FlowPanel()
@@ -131,8 +131,6 @@ namespace flakysalt.CharacterKeybinds.Views
                 Size = new Point(200, 30),
                 Text = "Troubleshoot"
             };
-
-            ImportLegacyKeybinds();
 
 			faqButton.Click += FaqButton_Click;
             reportBugButton.Click += ReportBugButton_Click;
