@@ -5,8 +5,9 @@ using Blish_HUD.Input;
 using Blish_HUD.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using flakysalt.CharacterKeybinds.Data;
 
-namespace flakysalt.CharacterKeybinds.Data
+namespace flakysalt.CharacterKeybinds.Model
 {
 	public class CharacterKeybindsSettings
 	{
@@ -19,7 +20,7 @@ namespace flakysalt.CharacterKeybinds.Data
 
 		public SettingCollection internalSettingsCollection { get; private set; }
 
-		public SettingEntry<List<CharacterKeybind>> characterKeybinds;
+		public SettingEntry<List<Keymap>> characterKeybinds;
 		public SettingEntry<List<Point>> clickPositions;
 
 
@@ -47,8 +48,9 @@ namespace flakysalt.CharacterKeybinds.Data
 			displayCornerIcon = settings.DefineSetting(nameof(displayCornerIcon), true, () => "Show corner icon");
 
 			internalSettingsCollection = settings.AddSubCollection("internal Settings");
-			characterKeybinds = internalSettingsCollection.DefineSetting("keybinds", new List<CharacterKeybind>());
-			clickPositions = internalSettingsCollection.DefineSetting("clickpos", ClickPosLocations.importMarkerLocations);
+
+			characterKeybinds = internalSettingsCollection.DefineSetting("keybinds", new List<Keymap>());
+			clickPositions = internalSettingsCollection.DefineSetting("clickpos", ClickPositions.importClickPositions);
 		}
 	}
 }

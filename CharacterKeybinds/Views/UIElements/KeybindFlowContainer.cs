@@ -1,22 +1,45 @@
 ﻿using Blish_HUD.Controls;
+using flakysalt.CharacterKeybinds.Data;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
 namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
-	class KeybindFlowContainer : FlowPanel
-	{
+    public class KeymapEventArgs : EventArgs
+    {
+        public Keymap oldKeymap;
+        public Keymap newKeymap;
+    }
+
+    public class KeybindFlowContainer : FlowPanel
+    {
         public StandardButton removeButton { get; private set; }
         public StandardButton applyButton { get; private set; }
         public Image professionImage { get; private set; }
-		public Dropdown characterNameDropdown { get; private set; }
-		public Dropdown specializationDropdown { get; private set; }
+        public Dropdown characterNameDropdown { get; private set; }
+        public Dropdown specializationDropdown { get; private set; }
         public Dropdown keymapDropdown { get; private set; }
 
-        public event EventHandler<string> OnApplyPressed;
+        private string defaultCharacterEntry = "Select Character";
+        private string defaultKeybindsEntry = "Keybinds";
+        private string defaultSpecializationEntry = "Specialization";
 
-        public void SetKeymapOptions(List<string> options) 
+        private string coreSpecialization = "Core";
+        private string wildcardSpecialization = "All Specialization";
+
+        public delegate void MyHandler(object p1, object p2);
+
+
+        public event EventHandler<Keymap> OnApply;
+
+        public event EventHandler<KeymapEventArgs> OnDataChanged;
+
+        public event EventHandler<Keymap> OnRemove;
+
+        public Keymap oldKeymap;
+
+        public void SetKeymapOptions(List<string> options)
         {
             SetDropdownOptions(keymapDropdown, options);
 
@@ -31,7 +54,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             SetDropdownOptions(characterNameDropdown, options);
         }
 
-        private void SetDropdownOptions(Dropdown dropdown,List<string> options)
+        private void SetDropdownOptions(Dropdown dropdown, List<string> options)
         {
             dropdown.Items.Clear();
 
@@ -43,11 +66,9 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             removeButton.Enabled = options.Count > 0;
         }
 
-        public KeybindFlowContainer(string selectedCharacter = "",
-            string selectedSpezialisations = "",
-            string selectedKeymap = "")
+        public KeybindFlowContainer()
         {
-            
+
             FlowDirection = ControlFlowDirection.LeftToRight;
             professionImage = new Image
             {
@@ -59,57 +80,114 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             {
                 Parent = this,
                 Size = new Point(120, 30),
-                Enabled = false
             };
-            characterNameDropdown.SelectedItem = string.IsNullOrEmpty(selectedCharacter) ? "Select Character": selectedCharacter;
 
             specializationDropdown = new Dropdown
             {
                 Parent = this,
                 Size = new Point(120, 30),
-                Enabled = false
             };
-            specializationDropdown.SelectedItem = string.IsNullOrEmpty(selectedSpezialisations) ? "Specialization" : selectedSpezialisations;
-
+            specializationDropdown.Items.Add(wildcardSpecialization);
+            specializationDropdown.Items.Add(coreSpecialization);
 
             keymapDropdown = new Dropdown
             {
                 Parent = this,
                 Size = new Point(120, 30),
-                Enabled = false
             };
-            keymapDropdown.SelectedItem = string.IsNullOrEmpty(selectedKeymap) ? "Keybinds": selectedKeymap;
 
             removeButton = new StandardButton
             {
                 Parent = this,
                 Text = "Delete",
                 Size = new Point(70, 30),
-                Enabled = false
             };
             applyButton = new StandardButton
             {
                 Parent = this,
                 Text = "Apply",
                 Size = new Point(60, 30),
-                Enabled = true
+                Enabled = true,
             };
 
-            keymapDropdown.PropertyChanged += (e, v) =>
+            keymapDropdown.ValueChanged += (e, v) =>
             {
-                applyButton.Enabled = keymapDropdown.SelectedItem != "Keybinds";
+                applyButton.Enabled = keymapDropdown.SelectedItem != defaultKeybindsEntry;
+
+                OnDataChanged?.Invoke(this, GetKeymapArgs());
+                this.oldKeymap = GetKeymap();
             };
-            characterNameDropdown.PropertyChanged += (e, v) =>
+
+            specializationDropdown.ValueChanged += (e, v) =>
             {
-                specializationDropdown.Enabled = characterNameDropdown.SelectedItem != "Select Character" && characterNameDropdown.Items.Count > 0;
+                OnDataChanged?.Invoke(this, GetKeymapArgs());
+                this.oldKeymap = GetKeymap();
+            };
+
+            characterNameDropdown.ValueChanged += (e, v) =>
+            {
+                specializationDropdown.SelectedItem = defaultSpecializationEntry;
+
+                OnDataChanged?.Invoke(this, GetKeymapArgs());
+                this.oldKeymap = GetKeymap();
             };
 
             applyButton.Click += (o, eventArgs) =>
             {
-                OnApplyPressed.Invoke(o, keymapDropdown.SelectedItem);
+                OnApply?.Invoke(o, GetKeymap());
             };
-            removeButton.Click += (o, eventArgs) => {
+            removeButton.Click += (o, eventArgs) =>
+            {
+                OnRemove?.Invoke(0, GetKeymap());
                 this.Dispose();
+            };
+        }
+
+        public void SetDropdownContent(Dropdown dropdown, List<string> values)
+        {
+            values.ForEach(e => dropdown.Items.Add(e));
+        }
+
+        public void SetValues(Keymap keymap)
+        {
+            oldKeymap = keymap;
+            characterNameDropdown.SelectedItem = string.IsNullOrEmpty(keymap.characterName) ? defaultCharacterEntry : keymap.characterName;
+            specializationDropdown.SelectedItem = string.IsNullOrEmpty(keymap.specializationName) ? defaultSpecializationEntry : keymap.specializationName;
+            keymapDropdown.SelectedItem = string.IsNullOrEmpty(keymap.keymapName) ? defaultKeybindsEntry : keymap.keymapName;
+        }
+
+        public void AttachListeners(EventHandler<Keymap> OnApplyAction,
+            EventHandler<KeymapEventArgs> OnDataChanged,
+            EventHandler<Keymap> OnDeleteAction) 
+        {
+            this.OnDataChanged += OnDataChanged;
+            this.OnApply += OnApplyAction;
+            this.OnRemove += OnDeleteAction;
+
+            removeButton.Click += (o, eventArgs) =>
+            {
+                this.OnDataChanged -= OnDataChanged;
+                this.OnApply -= OnApplyAction;
+                this.OnRemove -= OnDeleteAction;
+            };
+        }
+
+        KeymapEventArgs GetKeymapArgs()
+        {
+            return new KeymapEventArgs
+            {
+                newKeymap = GetKeymap(),
+                oldKeymap = this.oldKeymap
+            };
+        }
+
+        Keymap GetKeymap() 
+        {
+            return new Keymap
+            {
+                characterName = characterNameDropdown.SelectedItem == defaultCharacterEntry ? null : characterNameDropdown.SelectedItem,
+                specializationName = specializationDropdown.SelectedItem == defaultSpecializationEntry ? null : specializationDropdown.SelectedItem,
+                keymapName = keymapDropdown.SelectedItem == defaultKeybindsEntry ? null : keymapDropdown.SelectedItem,
             };
         }
 

@@ -12,6 +12,9 @@ using flakysalt.CharacterKeybinds.Views;
 using flakysalt.CharacterKeybinds.Data;
 using System.ComponentModel;
 using System;
+using flakysalt.CharacterKeybinds.Model;
+using flakysalt.CharacterKeybinds.Presenter;
+using CharacterKeybinds.Model;
 
 namespace flakysalt.CharacterKeybinds
 {
@@ -35,7 +38,9 @@ namespace flakysalt.CharacterKeybinds
 
         #region Views
         private CharacterKeybindWindow moduleWindowView;
-        public TroubleshootWindow autoclickerView;
+        private CharacterKeybindSettingsPresenter presenter;
+
+        public Autoclicker autoclickerView;
 
         #endregion
 
@@ -53,14 +58,22 @@ namespace flakysalt.CharacterKeybinds
         protected override async Task LoadAsync()
         {
             _cornerTexture = ContentsManager.GetTexture("images/logo_small.png");
-            moduleWindowView = new CharacterKeybindWindow(Logger);
-            autoclickerView = new TroubleshootWindow();
-
+            autoclickerView = new Autoclicker();
             autoclickerView.Init(settingsModel, ContentsManager);
-            await moduleWindowView.Init(ContentsManager, Gw2ApiManager, settingsModel, DirectoriesManager, autoclickerView);
+
+            LoadModuleWindow();
 
             CreateCornerIconWithContextMenu();
         }
+
+        private void LoadModuleWindow()
+        {
+            moduleWindowView = new CharacterKeybindWindow(ContentsManager);
+            var model = new CharacterKeybindModel(settingsModel);
+            presenter = new CharacterKeybindSettingsPresenter(moduleWindowView, model,Gw2ApiManager, autoclickerView);
+        }
+
+
 
         private void CreateCornerIconWithContextMenu()
 		{
@@ -100,7 +113,7 @@ namespace flakysalt.CharacterKeybinds
 
 		protected override void Update(GameTime gameTime)
         {
-            moduleWindowView.Update(gameTime);
+            presenter.Update(gameTime);
         }
 
         protected override void Unload()

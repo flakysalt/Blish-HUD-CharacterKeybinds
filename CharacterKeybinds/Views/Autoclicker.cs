@@ -6,13 +6,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Keyboard = Blish_HUD.Controls.Intern.Keyboard;
 using flakysalt.CharacterKeybinds.Data;
+using flakysalt.CharacterKeybinds.Model;
+
 using flakysalt.CharacterKeybinds.Views.UiElements;
 using System.Linq;
 using Blish_HUD.Modules.Managers;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-	public class TroubleshootWindow
+	public class Autoclicker
 	{
         public  StandardWindow WindowView;
         private StandardButton ToggleVisibilityButton, resetPositionButton, testClickerButton;
@@ -38,7 +40,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = GameService.Graphics.SpriteScreen,
                 Title = "Troubleshoot Window",
                 SavesPosition = true,
-                Id = $"flakysalt_{nameof(TroubleshootWindow)}",
+                Id = $"flakysalt_{nameof(Autoclicker)}",
                 CanClose = true
             };
 
@@ -163,7 +165,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private void ResetMarkerPositions(object sender, Blish_HUD.Input.MouseEventArgs e)
         {
-            settingsModel.clickPositions.Value = ClickPosLocations.importMarkerLocations;
+            settingsModel.clickPositions.Value = ClickPositions.importClickPositions;
             SetMarkerPositions();
         }
 

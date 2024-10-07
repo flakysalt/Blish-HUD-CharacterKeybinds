@@ -3,7 +3,9 @@ using Blish_HUD.Graphics.UI;
 using Blish_HUD.Input;
 using Blish_HUD.Settings.UI.Views;
 using Microsoft.Xna.Framework;
-using flakysalt.CharacterKeybinds.Data;
+using flakysalt.CharacterKeybinds.Model;
+using flakysalt.CharacterKeybinds.Presenter;
+
 using System.Linq;
 using System.IO;
 using Blish_HUD.Modules.Managers;
@@ -12,11 +14,11 @@ using System;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-    public class SettingsWindow : View
+    public class SettingsWindow : View<CharacterKeybindSettingsPresenter>
 	{
         private CharacterKeybindsSettings model;
         private CharacterKeybindWindow characterKeybindWindow;
-        private TroubleshootWindow troubleshootWindow;
+        private Autoclicker troubleshootWindow;
 
         private FlowPanel _settingFlowPanel;
         private ViewContainer _lastSettingContainer;
@@ -28,7 +30,7 @@ namespace flakysalt.CharacterKeybinds.Views
         Blish_HUD.Logger logger;
 
 
-        public SettingsWindow(CharacterKeybindsSettings model, CharacterKeybindWindow assignmentWindow, TroubleshootWindow autoclickView, DirectoriesManager directoriesManager, Blish_HUD.Logger logger)
+        public SettingsWindow(CharacterKeybindsSettings model, CharacterKeybindWindow assignmentWindow, Autoclicker autoclickView, DirectoriesManager directoriesManager, Blish_HUD.Logger logger)
 		{
             this.model = model;
 

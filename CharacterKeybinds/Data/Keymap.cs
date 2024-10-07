@@ -3,10 +3,10 @@
 namespace flakysalt.CharacterKeybinds.Data
 {
 	[Serializable]
-	public class CharacterKeybind
+	public class Keymap
 	{
 		public string characterName;
-		public string spezialisation;
-		public string keymap;
+		public string specializationName;
+		public string keymapName;
 	}
 }
