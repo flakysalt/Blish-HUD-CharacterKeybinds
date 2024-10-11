@@ -3,6 +3,7 @@ using flakysalt.CharacterKeybinds.Data;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using Blish_HUD.Content;
 
 namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
@@ -14,12 +15,12 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 
     public class KeybindFlowContainer : FlowPanel
     {
-        public StandardButton removeButton { get; private set; }
-        public StandardButton applyButton { get; private set; }
-        public Image professionImage { get; private set; }
-        public Dropdown characterNameDropdown { get; private set; }
-        public Dropdown specializationDropdown { get; private set; }
-        public Dropdown keymapDropdown { get; private set; }
+        private StandardButton removeButton { get;}
+        private StandardButton applyButton { get; }
+        private Image professionImage { get; }
+        public Dropdown characterNameDropdown { get; }
+        public Dropdown specializationDropdown { get; }
+        public Dropdown keymapDropdown { get; }
 
         private string defaultCharacterEntry = "Select Character";
         private string defaultKeybindsEntry = "Keybinds";
@@ -28,88 +29,63 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         private string coreSpecialization = "Core";
         private string wildcardSpecialization = "All Specialization";
 
-        public delegate void MyHandler(object p1, object p2);
-
-
         public event EventHandler<Keymap> OnApply;
-
         public event EventHandler<KeymapEventArgs> OnDataChanged;
-
         public event EventHandler<Keymap> OnRemove;
 
-        public Keymap oldKeymap;
-
-        public void SetKeymapOptions(List<string> options)
-        {
-            SetDropdownOptions(keymapDropdown, options);
-
-        }
-        public void SetSpecializationOptions(List<string> options)
-        {
-            SetDropdownOptions(specializationDropdown, options);
-
-        }
-        public void SetNameOptions(List<string> options)
-        {
-            SetDropdownOptions(characterNameDropdown, options);
-        }
-
-        private void SetDropdownOptions(Dropdown dropdown, List<string> options)
-        {
-            dropdown.Items.Clear();
-
-            foreach (var option in options)
-            {
-                dropdown.Items.Add(option);
-            }
-            dropdown.Enabled = options.Count > 0;
-            removeButton.Enabled = options.Count > 0;
-        }
+        private Keymap oldKeymap;
 
         public KeybindFlowContainer()
         {
-
+            OuterControlPadding = new Vector2(10,0);
+            ControlPadding = new Vector2(2,0);
+            Height = 45;
             FlowDirection = ControlFlowDirection.LeftToRight;
+            
             professionImage = new Image
             {
                 Parent = this,
-                Size = new Point(30, 30)
+                Size = new Point(30, 30),
             };
 
             characterNameDropdown = new Dropdown
             {
+                Height = 30,
                 Parent = this,
-                Size = new Point(120, 30),
+                Width = 120
             };
 
             specializationDropdown = new Dropdown
             {
+                Height = 30,
                 Parent = this,
-                Size = new Point(120, 30),
+                Width = 120
             };
             specializationDropdown.Items.Add(wildcardSpecialization);
             specializationDropdown.Items.Add(coreSpecialization);
 
             keymapDropdown = new Dropdown
             {
+                Height = 30,
                 Parent = this,
-                Size = new Point(120, 30),
+                Width = 120
             };
-
-            removeButton = new StandardButton
-            {
-                Parent = this,
-                Text = "Delete",
-                Size = new Point(70, 30),
-            };
+            
             applyButton = new StandardButton
             {
                 Parent = this,
                 Text = "Apply",
                 Size = new Point(60, 30),
-                Enabled = true,
             };
-
+            
+            removeButton = new StandardButton
+            {
+                Parent = this,
+                Text = "Delete",
+                Size = new Point(60, 30),
+                
+            };
+            
             keymapDropdown.ValueChanged += (e, v) =>
             {
                 applyButton.Enabled = keymapDropdown.SelectedItem != defaultKeybindsEntry;
@@ -154,6 +130,11 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             characterNameDropdown.SelectedItem = string.IsNullOrEmpty(keymap.characterName) ? defaultCharacterEntry : keymap.characterName;
             specializationDropdown.SelectedItem = string.IsNullOrEmpty(keymap.specializationName) ? defaultSpecializationEntry : keymap.specializationName;
             keymapDropdown.SelectedItem = string.IsNullOrEmpty(keymap.keymapName) ? defaultKeybindsEntry : keymap.keymapName;
+        }
+
+        public void SetProfessionIcon(int iconId)
+        {
+            professionImage.Texture = AsyncTexture2D.FromAssetId(iconId);
         }
 
         public void AttachListeners(EventHandler<Keymap> OnApplyAction,

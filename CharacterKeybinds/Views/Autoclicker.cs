@@ -23,7 +23,7 @@ namespace flakysalt.CharacterKeybinds.Views
         private List<DraggableMarker> markers = new List<DraggableMarker>();
         CharacterKeybindsSettings settingsModel;
 
-        public async void Init(CharacterKeybindsSettings settingsModel, ContentsManager ContentsManager)
+        public void Init(CharacterKeybindsSettings settingsModel, ContentsManager ContentsManager)
         {
             this.settingsModel = settingsModel;
 
@@ -168,26 +168,21 @@ namespace flakysalt.CharacterKeybinds.Views
             settingsModel.clickPositions.Value = ClickPositions.importClickPositions;
             SetMarkerPositions();
         }
-
-        private void SimulateClick_Click(object sender, Blish_HUD.Input.MouseEventArgs e)
-		{
-            Task.Run(ClickInOrder);
-        }
-
+        
         public async Task ClickInOrder() 
         {
             ScreenNotification.ShowNotification("Switching keybinds... ", ScreenNotification.NotificationType.Red, duration:3);
             var keyboardShortcut = settingsModel.optionsKeybind.Value.PrimaryKey;
             await Task.Delay(1000);
             Keyboard.Stroke((Blish_HUD.Controls.Extern.VirtualKeyShort)keyboardShortcut);
-            await Task.Delay(300);
+            await Task.Delay(200);
 
             foreach (var marker in markers)
             {
                 marker.SimulateClick();
-                await Task.Delay(200);
+                await Task.Delay(100);
             }
-            await Task.Delay(500);
+            await Task.Delay(200);
             Keyboard.Stroke((Blish_HUD.Controls.Extern.VirtualKeyShort)keyboardShortcut);
         }
 

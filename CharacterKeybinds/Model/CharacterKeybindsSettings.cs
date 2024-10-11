@@ -14,6 +14,8 @@ namespace flakysalt.CharacterKeybinds.Model
 		public SettingCollection settingsCollection { get; private set; }
 
 		public SettingEntry<string> gw2KeybindsFolder;
+
+		public SettingEntry<string> defaultKeybinds;
 		public SettingEntry<KeyBinding> optionsKeybind;
 		public SettingEntry<bool> changeKeybindsWhenSwitchingSpecialization;
 		public SettingEntry<bool> displayCornerIcon;
@@ -49,6 +51,7 @@ namespace flakysalt.CharacterKeybinds.Model
 
 			internalSettingsCollection = settings.AddSubCollection("internal Settings");
 
+			defaultKeybinds = internalSettingsCollection.DefineSetting("defaultKeybinds", "");
 			characterKeybinds = internalSettingsCollection.DefineSetting("keybinds", new List<Keymap>());
 			clickPositions = internalSettingsCollection.DefineSetting("clickpos", ClickPositions.importClickPositions);
 		}

@@ -9,12 +9,9 @@ using Blish_HUD.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using flakysalt.CharacterKeybinds.Views;
-using flakysalt.CharacterKeybinds.Data;
 using System.ComponentModel;
-using System;
 using flakysalt.CharacterKeybinds.Model;
 using flakysalt.CharacterKeybinds.Presenter;
-using CharacterKeybinds.Model;
 
 namespace flakysalt.CharacterKeybinds
 {
@@ -22,22 +19,18 @@ namespace flakysalt.CharacterKeybinds
     public class CharacterKeybindModule : Module
     {
         internal static CharacterKeybindModule moduleInstance;
-
-        private static readonly Logger Logger = Logger.GetLogger<CharacterKeybindModule>();
-
+        
         private Texture2D _cornerTexture;
         private CornerIcon _cornerIcon;
 
-        internal SettingsManager SettingsManager => this.ModuleParameters.SettingsManager;
         internal ContentsManager ContentsManager => this.ModuleParameters.ContentsManager;
-        internal DirectoriesManager DirectoriesManager => this.ModuleParameters.DirectoriesManager;
         internal Gw2ApiManager Gw2ApiManager => this.ModuleParameters.Gw2ApiManager;
-        public override IView GetSettingsView() => new SettingsWindow(settingsModel, moduleWindowView,autoclickerView, DirectoriesManager, Logger);
+        public override IView GetSettingsView() => new SettingsWindow(settingsModel, moduleWindowView,autoclickerView);
 
         public CharacterKeybindsSettings settingsModel;
 
         #region Views
-        private CharacterKeybindWindow moduleWindowView;
+        private CharacterKeybindsTab moduleWindowView;
         private CharacterKeybindSettingsPresenter presenter;
 
         public Autoclicker autoclickerView;
@@ -68,7 +61,7 @@ namespace flakysalt.CharacterKeybinds
 
         private void LoadModuleWindow()
         {
-            moduleWindowView = new CharacterKeybindWindow(ContentsManager);
+            moduleWindowView = new CharacterKeybindsTab(ContentsManager);
             var model = new CharacterKeybindModel(settingsModel);
             presenter = new CharacterKeybindSettingsPresenter(moduleWindowView, model,Gw2ApiManager, autoclickerView);
         }
@@ -87,7 +80,7 @@ namespace flakysalt.CharacterKeybinds
                     Parent = GameService.Graphics.SpriteScreen,
                     Visible = true
                 };
-                _cornerIcon.Click += (s, e) => moduleWindowView.WindowView.ToggleWindow();
+                _cornerIcon.Click += (s, e) => moduleWindowView.ToggleWindow();
 
             }
 
@@ -118,15 +111,13 @@ namespace flakysalt.CharacterKeybinds
 
         protected override void Unload()
         {
-            moduleWindowView?.WindowView?.Dispose();
             moduleWindowView?.Dispose();
 
             autoclickerView?.Dispose();
 
             _cornerIcon?.Dispose();
             _cornerTexture?.Dispose();
-
-
+            
             moduleWindowView = null;
             autoclickerView = null;
             moduleInstance = null;

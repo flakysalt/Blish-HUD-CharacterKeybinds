@@ -4,20 +4,16 @@ using Blish_HUD.Input;
 using Blish_HUD.Settings.UI.Views;
 using Microsoft.Xna.Framework;
 using flakysalt.CharacterKeybinds.Model;
-using flakysalt.CharacterKeybinds.Presenter;
 
 using System.Linq;
-using System.IO;
 using Blish_HUD.Modules.Managers;
-using flakysalt.CharacterKeybinds.Util;
-using System;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
     public class SettingsWindow : View
 	{
         private CharacterKeybindsSettings model;
-        private CharacterKeybindWindow characterKeybindWindow;
+        private CharacterKeybindsTab characterKeybindWindow;
         private Autoclicker troubleshootWindow;
 
         private FlowPanel _settingFlowPanel;
@@ -25,20 +21,13 @@ namespace flakysalt.CharacterKeybinds.Views
         private StandardButton reportBugButton, fairMacroUseButton;
 
         private StandardButton characterKeybindSettinsButton, openTroubleshootWindowButton, faqButton;
-
-        DirectoriesManager directoriesManager;
-        Blish_HUD.Logger logger;
-
-
-        public SettingsWindow(CharacterKeybindsSettings model, CharacterKeybindWindow assignmentWindow, Autoclicker autoclickView, DirectoriesManager directoriesManager, Blish_HUD.Logger logger)
+        
+        public SettingsWindow(CharacterKeybindsSettings model, CharacterKeybindsTab assignmentWindow, Autoclicker autoclickView)
 		{
             this.model = model;
 
             this.characterKeybindWindow = assignmentWindow;
             this.troubleshootWindow = autoclickView;
-
-            this.directoriesManager = directoriesManager;
-            this.logger = logger;
         }
 
         protected override void Build(Container buildPanel)
@@ -146,32 +135,12 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private void OpenCharacterKeybindsSettingButton_Click(object sender, MouseEventArgs e)
 		{
-            characterKeybindWindow?.WindowView.Show();
+            characterKeybindWindow?.Show();
         }
 
 		private void OpenTroubleshootWindowButton_Click(object sender, MouseEventArgs e)
 		{
             troubleshootWindow?.WindowView.Show();
-        }
-
-		private void ImportLegacyKeybinds()
-        {
-            if (File.Exists(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"))) 
-            {
-                try
-                {
-                    string loadJson = File.ReadAllText(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
-                    var characterSpecializations = CharacterKeybindJsonUtil.DeserializeCharacterList(loadJson);
-
-                    model.characterKeybinds.Value = characterSpecializations;
-
-                    File.Delete(Path.Combine(directoriesManager.GetFullDirectoryPath("keybind_storage"), "characterMap.json"));
-                }
-                catch (Exception e)
-                {
-                    logger.Error($"Could not import legacy bindings. \n {e}");
-                }
-            }
         }
 
 		private void ReportBugButton_Click(object sender, MouseEventArgs e)

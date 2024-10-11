@@ -1,23 +1,11 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using flakysalt.CharacterKeybinds.Data;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace flakysalt.CharacterKeybinds.Util
 {
-	static class CharacterKeybindJsonUtil
+	static class CharacterKeybindFileUtil
 	{
-        public static string SerializeCharacterList(List<Keymap> characterList)
-        {
-            return JsonConvert.SerializeObject(characterList, Formatting.Indented);
-        }
-
-        public static List<Keymap> DeserializeCharacterList(string jsonString)
-        {
-            return JsonConvert.DeserializeObject<List<Keymap>>(jsonString);
-        }
-
         public static void MoveAllXmlFiles(string sourcePath, string destinationPath)
         {
             string[] fileEntries = Directory.GetFiles(sourcePath, "*.xml");

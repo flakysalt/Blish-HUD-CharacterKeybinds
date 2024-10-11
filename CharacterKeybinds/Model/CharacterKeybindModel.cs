@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CharacterKeybinds.Model
+namespace flakysalt.CharacterKeybinds.Model
 {
 	public class CharacterKeybindModel
 	{
@@ -15,6 +15,8 @@ namespace CharacterKeybinds.Model
 		Dictionary<Profession, HashSet<Specialization>> ProfessionEliteSpecialization = new Dictionary<Profession, HashSet<Specialization>>();
 		IEnumerable<Character> characters = new List<Character>();
 
+		public string currentKeybinds { get; set; }
+
 		private Action OnCharactersChanged;
 		private Action OnKeymapChanged;
 
@@ -22,7 +24,6 @@ namespace CharacterKeybinds.Model
 		{
 			_settings = settings;
 		}
-
 
 		#region Actions
 
@@ -42,6 +43,27 @@ namespace CharacterKeybinds.Model
 		public List<string> GetCharacterNames()
 		{
 			return characters.Select(character => character.Name).ToList();
+		}
+		public Character GetCharacter(string Name)
+		{
+			return characters.FirstOrDefault(character => character.Name == Name);
+		}
+
+		public Profession GetProfession(string Name)
+		{
+			return ProfessionEliteSpecialization.FirstOrDefault(character => character.Key.Id == Name).Key;
+		}
+		public Specialization GetProfessionSpecialization(string Name)
+		{
+			foreach (var keyValuePair in ProfessionEliteSpecialization)
+			{
+				foreach (var specialization in keyValuePair.Value)
+				{
+					if (specialization.Name == Name)
+						return specialization;
+				}
+			}
+			return null;
 		}
 
 		public List<Character> GetCharacters()
@@ -69,6 +91,11 @@ namespace CharacterKeybinds.Model
 		public List<Keymap> GetKeymaps()
 		{
 			return _settings.characterKeybinds.Value;
+		}
+
+		public string GetDefaultKeybind()
+		{
+			return _settings.defaultKeybinds.Value;
 		}
 
 		public string GetKeybindsFolder()
@@ -156,6 +183,11 @@ namespace CharacterKeybinds.Model
 			}
 
 			ProfessionEliteSpecialization[profession].Add(eliteSpecialization);
+		}
+
+		public void SetDefaultKeymap(string keymap)
+		{
+			_settings.defaultKeybinds.Value = keymap;
 		}
 
 		#endregion

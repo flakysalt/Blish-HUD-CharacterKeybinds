@@ -6,7 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using flakysalt.CharacterKeybinds.Views.UiElements;
-using CharacterKeybinds.Model;
+using flakysalt.CharacterKeybinds.Model;
 using Gw2Sharp.WebApi.V2.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +16,12 @@ using Microsoft.Xna.Framework;
 
 namespace flakysalt.CharacterKeybinds.Presenter
 {
-    public class CharacterKeybindSettingsPresenter : Presenter<CharacterKeybindWindow, CharacterKeybindModel>, IDisposable
+    public class CharacterKeybindSettingsPresenter : Presenter<CharacterKeybindsTab, CharacterKeybindModel>, IDisposable
     {
         private readonly Logger Logger = Logger.GetLogger<CharacterKeybindSettingsPresenter>();
 
         private static object taskLock = new object();
-        private static bool isTaskStarted = false;
+        private static bool isTaskStarted;
 
         private double _updateCharactersRunningTime;
         private double updateTime = 5_000;
@@ -30,12 +30,12 @@ namespace flakysalt.CharacterKeybinds.Presenter
         Autoclicker _autoClicker;
 
 
-        public CharacterKeybindSettingsPresenter(CharacterKeybindWindow view, CharacterKeybindModel model
+        public CharacterKeybindSettingsPresenter(CharacterKeybindsTab view, CharacterKeybindModel model
             , Gw2ApiManager apiManager, Autoclicker autoclicker) : base(view, model)
         {
             _Gw2ApiManager = apiManager;
             _autoClicker = autoclicker;
-
+            
             AttachToGameServices();
             AttachViewHandler();
             AttachModelHandler();
@@ -65,10 +65,16 @@ namespace flakysalt.CharacterKeybinds.Presenter
         {
             GameService.Gw2Mumble.PlayerCharacter.NameChanged -= PlayerCharacter_NameChanged;
             GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged -= PlayerCharacter_SpecializationChanged;
+            
+            View.OnAddButtonClicked -= OnAddButtonPressed;
+            View.OnApplyDefaultKeymapClicked -= OnApplyDefaultKeymap;
+            View.OnDefaultKeymapChanged -= OnChangeDefaultKeymap;
         }
         private void AttachViewHandler()
         {
-            View.BindAddEntryButton(AddKeybindEntry);
+            View.OnAddButtonClicked += OnAddButtonPressed;
+            View.OnApplyDefaultKeymapClicked += OnApplyDefaultKeymap;
+            View.OnDefaultKeymapChanged += OnChangeDefaultKeymap;
         }
 
         private void AttachModelHandler()
@@ -81,17 +87,44 @@ namespace flakysalt.CharacterKeybinds.Presenter
         {
             View.ClearKeybindEntries();
 
-            foreach (var keymap in Model.GetKeymaps()) 
+            View.SetDefaultKeybindOptions(CharacterKeybindFileUtil.GetKeybindFiles(Model.GetKeybindsFolder()),
+                Model.GetDefaultKeybind());
+
+            foreach (var keymap in Model.GetKeymaps())
             {
+                var iconAssetId = 0;
+                var backgroundId = 0;
+
+                var character = Model.GetCharacter(keymap.characterName);
+                if (character != null)
+                {
+                    iconAssetId = int.Parse(Path.GetFileNameWithoutExtension(Model.GetProfession(character.Profession).Icon.Url.AbsoluteUri));
+                }
+                
                 var container = View.AddKeybind();
-                View.SetKeybindOptions(container, Model.GetCharacterNames(),Model.GetProfessionSpecializations(keymap.characterName), CharacterKeybindJsonUtil.GetKeybindFiles(Model.GetKeybindsFolder()));
-                View.SetKeybindValues(container, keymap);
+                View.SetKeybindOptions(container, Model.GetCharacterNames(),Model.GetProfessionSpecializations(keymap.characterName), CharacterKeybindFileUtil.GetKeybindFiles(Model.GetKeybindsFolder()));
+                View.SetKeybindValues(container, keymap,iconAssetId);
                 View.AttachListeners(container,OnApplyKeymap, OnKeymapChange, OnKeymapRemoved);
             }
         }
         public void OnApplyKeymap(object sender, Keymap keymap)
         {
 			_ = ChangeKeybinds(keymap.keymapName, Model.GetKeybindsFolder());
+        }
+        
+        public void OnApplyDefaultKeymap(object sender, string keymap)
+        {
+            _ = ChangeKeybinds(keymap, Model.GetKeybindsFolder());
+        }
+
+        public void OnChangeDefaultKeymap(object sender, string keymap)
+        {
+            Model.SetDefaultKeymap(keymap);
+        }
+
+        public void OnAddButtonPressed(object sender, EventArgs args)
+        {
+            AddKeybindEntry();
         }
 
         public void OnKeymapChange(object sender, KeymapEventArgs keymapArgs)
@@ -114,14 +147,13 @@ namespace flakysalt.CharacterKeybinds.Presenter
             try
             {
                 if (string.IsNullOrEmpty(newCharacterName)) return;
-
-                //get current character object
+                
                 var currentSpecialization = await _Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(specialization);
-                var keymap = Model.GetKeymapName(newCharacterName, currentSpecialization);
+                var keymap = Model.GetKeymapName(newCharacterName, currentSpecialization)?.keymapName ?? Model.GetDefaultKeybind();
 
-                if (keymap != null) 
+                if (keymap != Model.currentKeybinds)
                 {
-                    await ChangeKeybinds(keymap.keymapName, Model.GetKeybindsFolder());
+                    await ChangeKeybinds(keymap, Model.GetKeybindsFolder());
                 }
             }
             catch (Exception e)
@@ -136,13 +168,15 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         async Task ChangeKeybinds(string sourceFileName, string keybindsFolder)
         {
+            Model.currentKeybinds = sourceFileName;
+
             string sourceFile = Path.Combine(keybindsFolder, "Cache", $"{sourceFileName}.xml");
             string destFile = Path.Combine(keybindsFolder, "CharacterKeybinds.xml");
 
             try
             {
                 if (!System.IO.File.Exists(Path.Combine(keybindsFolder, $"{sourceFileName}.xml"))) return;
-                CharacterKeybindJsonUtil.MoveAllXmlFiles(keybindsFolder, Path.Combine(keybindsFolder, "Cache"));
+                CharacterKeybindFileUtil.MoveAllXmlFiles(keybindsFolder, Path.Combine(keybindsFolder, "Cache"));
                 System.IO.File.Copy(sourceFile, destFile);
                 await _autoClicker.ClickInOrder();
             }
@@ -156,7 +190,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 {
                     System.IO.File.Delete(destFile);
                 }
-                CharacterKeybindJsonUtil.MoveAllXmlFiles(Path.Combine(keybindsFolder, "Cache"), keybindsFolder);
+                CharacterKeybindFileUtil.MoveAllXmlFiles(Path.Combine(keybindsFolder, "Cache"), keybindsFolder);
             }
 
         }
@@ -218,7 +252,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
             {
                 if (!specialization.Elite) continue;
 
-                Profession profesion = professions.First(p => p.Name == specialization.Profession);
+                Profession profesion = professions.First(p => p.Id == specialization.Profession);
                 Model.AddProfessionEliteSpecialization(profesion, specialization);
             }
         }
