@@ -83,7 +83,7 @@ namespace flakysalt.CharacterKeybinds.Views
 			{
 				Parent = mainFlowPanel,
 				Width = mainFlowPanel.Width,
-				
+				BasicTooltipText = "Applies these keybindings in case there are no specific ones setup for a character.",
 				Text = "Default Keybinds",
 				Font = GameService.Content.DefaultFont18
 
@@ -112,11 +112,11 @@ namespace flakysalt.CharacterKeybinds.Views
 				Parent = defaultKeybindFlowPanel
 			};
 			
-			
 			new Label()
 			{
 				Parent = mainFlowPanel,
 				Width = mainFlowPanel.Width,
+				BasicTooltipText = "Keybinding to use for a specific character or specializations",
 				Text = "Character Specific Keybinds",
 				Font = GameService.Content.DefaultFont18
 			};
