@@ -9,8 +9,8 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
     public class KeymapEventArgs : EventArgs
     {
-        public Keymap oldKeymap;
-        public Keymap newKeymap;
+        public CharacterKeybind OldCharacterKeybind;
+        public CharacterKeybind NewCharacterKeybind;
     }
 
     public class KeybindFlowContainer : FlowPanel
@@ -29,11 +29,11 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         private string coreSpecialization = "Core";
         private string wildcardSpecialization = "All Specialization";
 
-        public event EventHandler<Keymap> OnApply;
+        public event EventHandler<CharacterKeybind> OnApply;
         public event EventHandler<KeymapEventArgs> OnDataChanged;
-        public event EventHandler<Keymap> OnRemove;
+        public event EventHandler<CharacterKeybind> OnRemove;
 
-        private Keymap oldKeymap;
+        private CharacterKeybind _oldCharacterKeybind;
 
         public KeybindFlowContainer()
         {
@@ -91,13 +91,13 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
                 applyButton.Enabled = keymapDropdown.SelectedItem != defaultKeybindsEntry;
 
                 OnDataChanged?.Invoke(this, GetKeymapArgs());
-                this.oldKeymap = GetKeymap();
+                this._oldCharacterKeybind = GetKeymap();
             };
 
             specializationDropdown.ValueChanged += (e, v) =>
             {
                 OnDataChanged?.Invoke(this, GetKeymapArgs());
-                this.oldKeymap = GetKeymap();
+                this._oldCharacterKeybind = GetKeymap();
             };
 
             characterNameDropdown.ValueChanged += (e, v) =>
@@ -105,7 +105,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
                 specializationDropdown.SelectedItem = defaultSpecializationEntry;
 
                 OnDataChanged?.Invoke(this, GetKeymapArgs());
-                this.oldKeymap = GetKeymap();
+                this._oldCharacterKeybind = GetKeymap();
             };
 
             applyButton.Click += (o, eventArgs) =>
@@ -124,12 +124,12 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             values.ForEach(e => dropdown.Items.Add(e));
         }
 
-        public void SetValues(Keymap keymap)
+        public void SetValues(CharacterKeybind characterKeybind)
         {
-            oldKeymap = keymap;
-            characterNameDropdown.SelectedItem = string.IsNullOrEmpty(keymap.characterName) ? defaultCharacterEntry : keymap.characterName;
-            specializationDropdown.SelectedItem = string.IsNullOrEmpty(keymap.specializationName) ? defaultSpecializationEntry : keymap.specializationName;
-            keymapDropdown.SelectedItem = string.IsNullOrEmpty(keymap.keymapName) ? defaultKeybindsEntry : keymap.keymapName;
+            _oldCharacterKeybind = characterKeybind;
+            characterNameDropdown.SelectedItem = string.IsNullOrEmpty(characterKeybind.characterName) ? defaultCharacterEntry : characterKeybind.characterName;
+            specializationDropdown.SelectedItem = string.IsNullOrEmpty(characterKeybind.spezialisation) ? defaultSpecializationEntry : characterKeybind.spezialisation;
+            keymapDropdown.SelectedItem = string.IsNullOrEmpty(characterKeybind.keymap) ? defaultKeybindsEntry : characterKeybind.keymap;
         }
 
         public void SetProfessionIcon(int iconId)
@@ -137,9 +137,9 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             professionImage.Texture = AsyncTexture2D.FromAssetId(iconId);
         }
 
-        public void AttachListeners(EventHandler<Keymap> OnApplyAction,
+        public void AttachListeners(EventHandler<CharacterKeybind> OnApplyAction,
             EventHandler<KeymapEventArgs> OnDataChanged,
-            EventHandler<Keymap> OnDeleteAction) 
+            EventHandler<CharacterKeybind> OnDeleteAction) 
         {
             this.OnDataChanged += OnDataChanged;
             this.OnApply += OnApplyAction;
@@ -157,18 +157,18 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         {
             return new KeymapEventArgs
             {
-                newKeymap = GetKeymap(),
-                oldKeymap = this.oldKeymap
+                NewCharacterKeybind = GetKeymap(),
+                OldCharacterKeybind = this._oldCharacterKeybind
             };
         }
 
-        Keymap GetKeymap() 
+        CharacterKeybind GetKeymap() 
         {
-            return new Keymap
+            return new CharacterKeybind
             {
                 characterName = characterNameDropdown.SelectedItem == defaultCharacterEntry ? null : characterNameDropdown.SelectedItem,
-                specializationName = specializationDropdown.SelectedItem == defaultSpecializationEntry ? null : specializationDropdown.SelectedItem,
-                keymapName = keymapDropdown.SelectedItem == defaultKeybindsEntry ? null : keymapDropdown.SelectedItem,
+                spezialisation = specializationDropdown.SelectedItem == defaultSpecializationEntry ? null : specializationDropdown.SelectedItem,
+                keymap = keymapDropdown.SelectedItem == defaultKeybindsEntry ? null : keymapDropdown.SelectedItem,
             };
         }
 

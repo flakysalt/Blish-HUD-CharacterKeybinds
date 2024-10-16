@@ -86,9 +86,9 @@ namespace flakysalt.CharacterKeybinds.Model
 
 		public List<string> GetKeymapsNames()
 		{
-			return _settings.characterKeybinds.Value.Select(specialization => specialization.keymapName).ToList();
+			return _settings.characterKeybinds.Value.Select(specialization => specialization.keymap).ToList();
 		}
-		public List<Keymap> GetKeymaps()
+		public List<CharacterKeybind> GetKeymaps()
 		{
 			return _settings.characterKeybinds.Value;
 		}
@@ -103,24 +103,24 @@ namespace flakysalt.CharacterKeybinds.Model
 			return _settings.gw2KeybindsFolder.Value;
 		}
 
-		public Keymap GetKeymapName(string characterName, Specialization specialization) 
+		public CharacterKeybind GetKeymapName(string characterName, Specialization specialization) 
 		{
 			foreach (var keybindData in _settings.characterKeybinds.Value)
 			{
 				if (keybindData.characterName == characterName)
 				{
 					//special case for core builds
-					if (!specialization.Elite && keybindData.specializationName == "Core")
+					if (!specialization.Elite && keybindData.spezialisation == "Core")
 					{
 						return keybindData;
 					}
 
-					if (specialization.Name == keybindData.specializationName)
+					if (specialization.Name == keybindData.spezialisation)
 					{
 						return keybindData;
 					}
 
-					if (keybindData.specializationName == "All Specialization")
+					if (keybindData.spezialisation == "All Specialization")
 					{
 						return keybindData;
 					}
@@ -138,12 +138,12 @@ namespace flakysalt.CharacterKeybinds.Model
 			this.characters = characters;
 			OnCharactersChanged.Invoke();
 		}
-		public void RemoveKeymap(Keymap keymap)
+		public void RemoveKeymap(CharacterKeybind characterKeybind)
 		{
 			var element = _settings.characterKeybinds.Value.Find(e =>
-			e.keymapName == keymap.keymapName &&
-			e.characterName == keymap.characterName &&
-			e.specializationName == keymap.specializationName);
+			e.keymap == characterKeybind.keymap &&
+			e.characterName == characterKeybind.characterName &&
+			e.spezialisation == characterKeybind.spezialisation);
 
 			if (element != null)
 			{
@@ -154,19 +154,19 @@ namespace flakysalt.CharacterKeybinds.Model
 
 		public void AddKeymap()
 		{
-			_settings.characterKeybinds.Value.Add(new Keymap());
+			_settings.characterKeybinds.Value.Add(new CharacterKeybind());
 			OnKeymapChanged.Invoke();
 		}
 
-		public void UpdateKeymap(Keymap oldValue, Keymap newValue)
+		public void UpdateKeymap(CharacterKeybind oldValue, CharacterKeybind newValue)
 		{
 			if (oldValue == null)
 				return;
 
 			int index = _settings.characterKeybinds.Value.FindIndex(e =>
-			e.keymapName == oldValue.keymapName &&
+			e.keymap == oldValue.keymap &&
 			e.characterName == oldValue.characterName &&
-			e.specializationName == oldValue.specializationName);
+			e.spezialisation == oldValue.spezialisation);
 
 			if (index != -1)
 			{

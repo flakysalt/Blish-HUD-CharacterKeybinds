@@ -107,9 +107,9 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 View.AttachListeners(container,OnApplyKeymap, OnKeymapChange, OnKeymapRemoved);
             }
         }
-        public void OnApplyKeymap(object sender, Keymap keymap)
+        public void OnApplyKeymap(object sender, CharacterKeybind characterKeybind)
         {
-			_ = ChangeKeybinds(keymap.keymapName, Model.GetKeybindsFolder());
+			_ = ChangeKeybinds(characterKeybind.keymap, Model.GetKeybindsFolder());
         }
         
         public void OnApplyDefaultKeymap(object sender, string keymap)
@@ -129,12 +129,12 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         public void OnKeymapChange(object sender, KeymapEventArgs keymapArgs)
         {
-            Model.UpdateKeymap(keymapArgs.oldKeymap, keymapArgs.newKeymap);
+            Model.UpdateKeymap(keymapArgs.OldCharacterKeybind, keymapArgs.NewCharacterKeybind);
         }
 
-        public void OnKeymapRemoved(object sender, Keymap keymap)
+        public void OnKeymapRemoved(object sender, CharacterKeybind characterKeybind)
         {
-            Model.RemoveKeymap(keymap);
+            Model.RemoveKeymap(characterKeybind);
         }
 
         public void AddKeybindEntry()
@@ -149,7 +149,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 if (string.IsNullOrEmpty(newCharacterName)) return;
                 
                 var currentSpecialization = await _Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(specialization);
-                var keymap = Model.GetKeymapName(newCharacterName, currentSpecialization)?.keymapName ?? Model.GetDefaultKeybind();
+                var keymap = Model.GetKeymapName(newCharacterName, currentSpecialization)?.keymap ?? Model.GetDefaultKeybind();
 
                 if (keymap != Model.currentKeybinds)
                 {

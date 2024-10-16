@@ -54,7 +54,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
 
 			//TODO Remove the tabs
-			var tab1 = new Tab(ContentsManager.GetTexture("images/logo_small.png"), SomeViewMethod, "test name");
+			var tab1 = new Tab(ContentsManager.GetTexture("images/logo_small.png"), SomeViewMethod, "Character Keybinds");
 			WindowView.Tabs.Add(tab1);
 
 			WindowView.TabChanged += WindowView_TabChanged;
@@ -63,7 +63,7 @@ namespace flakysalt.CharacterKeybinds.Views
 			blockerOverlay = new Label()
 			{
 				Parent = WindowView,
-				ZIndex = 4,
+				ZIndex = 10,
 				HorizontalAlignment = HorizontalAlignment.Center,
 				Size = WindowView.Size,
 				Visible = false,
@@ -218,17 +218,17 @@ namespace flakysalt.CharacterKeybinds.Views
             keybindFlowContainer.SetDropdownContent(keybindFlowContainer.keymapDropdown, keymaps);
         }
 
-        public void SetKeybindValues(KeybindFlowContainer keybindFlowContainer, Keymap keymap, int iconId)
+        public void SetKeybindValues(KeybindFlowContainer keybindFlowContainer, CharacterKeybind characterKeybind, int iconId)
         {
-            keybindFlowContainer.SetValues(keymap);
+            keybindFlowContainer.SetValues(characterKeybind);
             keybindFlowContainer.SetProfessionIcon(iconId);
 
         }
         
         public void AttachListeners(KeybindFlowContainer keybindFlowContainer,
-            EventHandler<Keymap> OnApplyAction,
+            EventHandler<CharacterKeybind> OnApplyAction,
             EventHandler<KeymapEventArgs> OnDataChanged,
-            EventHandler<Keymap> OnDeleteAction) 
+            EventHandler<CharacterKeybind> OnDeleteAction) 
         {
             keybindFlowContainer.AttachListeners(OnApplyAction, OnDataChanged, OnDeleteAction);
         }

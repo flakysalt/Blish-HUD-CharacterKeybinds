@@ -169,20 +169,21 @@ namespace flakysalt.CharacterKeybinds.Views
             SetMarkerPositions();
         }
         
-        public async Task ClickInOrder() 
+        public async Task ClickInOrder()
         {
-            ScreenNotification.ShowNotification("Switching keybinds... ", ScreenNotification.NotificationType.Red, duration:3);
+            ScreenNotification.ShowNotification("Switching keybinds... ", ScreenNotification.NotificationType.Red,
+                duration: 4 - (int)settingsModel.autoClickSpeedMultiplier.Value);
             var keyboardShortcut = settingsModel.optionsKeybind.Value.PrimaryKey;
             await Task.Delay(1000);
             Keyboard.Stroke((Blish_HUD.Controls.Extern.VirtualKeyShort)keyboardShortcut);
-            await Task.Delay(200);
+            await Task.Delay((int)(200 /settingsModel.autoClickSpeedMultiplier.Value));
 
             foreach (var marker in markers)
             {
                 marker.SimulateClick();
-                await Task.Delay(100);
+                await Task.Delay((int)(200 /settingsModel.autoClickSpeedMultiplier.Value));
             }
-            await Task.Delay(200);
+            await Task.Delay((int)(200 /settingsModel.autoClickSpeedMultiplier.Value));
             Keyboard.Stroke((Blish_HUD.Controls.Extern.VirtualKeyShort)keyboardShortcut);
         }
 

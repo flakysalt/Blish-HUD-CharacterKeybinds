@@ -12,6 +12,8 @@ namespace flakysalt.CharacterKeybinds.Model
 	public class CharacterKeybindsSettings
 	{
 		public SettingCollection settingsCollection { get; private set; }
+		
+		public SettingEntry<float> autoClickSpeedMultiplier { get; private set; }
 
 		public SettingEntry<string> gw2KeybindsFolder;
 
@@ -22,7 +24,7 @@ namespace flakysalt.CharacterKeybinds.Model
 
 		public SettingCollection internalSettingsCollection { get; private set; }
 
-		public SettingEntry<List<Keymap>> characterKeybinds;
+		public SettingEntry<List<CharacterKeybind>> characterKeybinds;
 		public SettingEntry<List<Point>> clickPositions;
 
 
@@ -36,7 +38,7 @@ namespace flakysalt.CharacterKeybinds.Model
 			gw2KeybindsFolder = settings.DefineSetting(
 			"GW2 Keybind Path",
 			targetFolderPath,
-			() => "Path to the Keybinds folder",
+			() => "Path to the Keybinds folder. Usually somewhere inside your documents folder",
 			() => "");
 
 			optionsKeybind = settings.DefineSetting(nameof(optionsKeybind),
@@ -48,11 +50,15 @@ namespace flakysalt.CharacterKeybinds.Model
 				true);
 
 			displayCornerIcon = settings.DefineSetting(nameof(displayCornerIcon), true, () => "Show corner icon");
+			autoClickSpeedMultiplier = settings.DefineSetting(nameof(autoClickSpeedMultiplier),
+				1.0f,
+				() => "Keybindings Apply Speed",()=> "Adjusts how fast the keybindings will be applied.\nLower this if your system is weaker and has trouble applying the keybindings.");
+			autoClickSpeedMultiplier.SetRange(0.5f,2.5f);
 
 			internalSettingsCollection = settings.AddSubCollection("internal Settings");
 
 			defaultKeybinds = internalSettingsCollection.DefineSetting("defaultKeybinds", "");
-			characterKeybinds = internalSettingsCollection.DefineSetting("keybinds", new List<Keymap>());
+			characterKeybinds = internalSettingsCollection.DefineSetting("keybinds", new List<CharacterKeybind>());
 			clickPositions = internalSettingsCollection.DefineSetting("clickpos", ClickPositions.importClickPositions);
 		}
 	}
