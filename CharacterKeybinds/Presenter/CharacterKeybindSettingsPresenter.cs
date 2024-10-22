@@ -9,6 +9,7 @@ using flakysalt.CharacterKeybinds.Views.UiElements;
 using flakysalt.CharacterKeybinds.Model;
 using Gw2Sharp.WebApi.V2.Models;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using flakysalt.CharacterKeybinds.Util;
 using flakysalt.CharacterKeybinds.Data;
@@ -24,7 +25,9 @@ namespace flakysalt.CharacterKeybinds.Presenter
         private static bool isTaskStarted;
 
         private double _updateCharactersRunningTime;
-        private double updateTime = 5_000;
+        private double updateTime = dataFetched ? 60_000 : 5_000;
+        private static bool dataFetched = false;
+
 
         Gw2ApiManager _Gw2ApiManager;
         Autoclicker _autoClicker;
@@ -45,7 +48,6 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         public void Update(GameTime gameTime)
         {
-            var test = GameService.Gw2Mumble.PlayerCharacter.Name;
             _updateCharactersRunningTime += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (_updateCharactersRunningTime > updateTime)
@@ -57,10 +59,19 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private void AttachToGameServices()
         {
+            GameService.Overlay.UserLocaleChanged += OnLocaleChange;
             GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
             GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged;
 
         }
+
+        void OnLocaleChange(object sender ,ValueEventArgs<CultureInfo> info)
+        {
+            Model.ClearResources();
+            Task.Run(LoadCharacterInformationAsync);
+            dataFetched = false;
+        }
+
         public void Dispose()
         {
             GameService.Gw2Mumble.PlayerCharacter.NameChanged -= PlayerCharacter_NameChanged;
@@ -94,22 +105,28 @@ namespace flakysalt.CharacterKeybinds.Presenter
             {
                 var iconAssetId = 0;
                 var backgroundId = 0;
-
-                var character = Model.GetCharacter(keymap.characterName);
-                if (character != null)
+                try
                 {
-                    iconAssetId = int.Parse(Path.GetFileNameWithoutExtension(Model.GetProfession(character.Profession).Icon.Url.AbsoluteUri));
+                    var character = Model.GetCharacter(keymap.CharacterName);
+
+                    if (character != null)
+                    {
+                        iconAssetId = int.Parse(Path.GetFileNameWithoutExtension(Model.GetProfession(character.Profession).Icon.Url.AbsoluteUri));
+                    }
+                    var container = View.AddKeybind();
+                    View.SetKeybindOptions(container, Model.GetCharacterNames(),Model.GetProfessionSpecializations(keymap.CharacterName), CharacterKeybindFileUtil.GetKeybindFiles(Model.GetKeybindsFolder()));
+                    View.SetKeybindValues(container, keymap,iconAssetId);
+                    View.AttachListeners(container,OnApplyKeymap, OnKeymapChange, OnKeymapRemoved);
                 }
-                
-                var container = View.AddKeybind();
-                View.SetKeybindOptions(container, Model.GetCharacterNames(),Model.GetProfessionSpecializations(keymap.characterName), CharacterKeybindFileUtil.GetKeybindFiles(Model.GetKeybindsFolder()));
-                View.SetKeybindValues(container, keymap,iconAssetId);
-                View.AttachListeners(container,OnApplyKeymap, OnKeymapChange, OnKeymapRemoved);
+                catch (Exception ex)
+                {
+                    Logger.Fatal(ex.Message);
+                }
             }
         }
-        public void OnApplyKeymap(object sender, CharacterKeybind characterKeybind)
+        public void OnApplyKeymap(object sender, Keymap characterKeybind)
         {
-			_ = ChangeKeybinds(characterKeybind.keymap, Model.GetKeybindsFolder());
+			_ = ChangeKeybinds(characterKeybind.KeymapName, Model.GetKeybindsFolder());
         }
         
         public void OnApplyDefaultKeymap(object sender, string keymap)
@@ -129,10 +146,10 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         public void OnKeymapChange(object sender, KeymapEventArgs keymapArgs)
         {
-            Model.UpdateKeymap(keymapArgs.OldCharacterKeybind, keymapArgs.NewCharacterKeybind);
+            Model.UpdateKeymap(keymapArgs.OldCharacterKeymap, keymapArgs.NewCharacterKeymap);
         }
 
-        public void OnKeymapRemoved(object sender, CharacterKeybind characterKeybind)
+        public void OnKeymapRemoved(object sender, Keymap characterKeybind)
         {
             Model.RemoveKeymap(characterKeybind);
         }
@@ -149,7 +166,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 if (string.IsNullOrEmpty(newCharacterName)) return;
                 
                 var currentSpecialization = await _Gw2ApiManager.Gw2ApiClient.V2.Specializations.GetAsync(specialization);
-                var keymap = Model.GetKeymapName(newCharacterName, currentSpecialization)?.keymap ?? Model.GetDefaultKeybind();
+                var keymap = Model.GetKeymapName(newCharacterName, currentSpecialization)?.KeymapName ?? Model.GetDefaultKeybind();
 
                 if (keymap != Model.currentKeybinds)
                 {
@@ -227,11 +244,9 @@ namespace flakysalt.CharacterKeybinds.Presenter
             };
 
             View.SetBlocker(!_Gw2ApiManager.HasPermissions(apiKeyPermissions));
-
             try
             {
                 await LoadResources();
-                Model.SetCharacters( await _Gw2ApiManager.Gw2ApiClient.V2.Characters.AllAsync());
                 OnKeymapsChanged();
             }
             catch (Exception e)
@@ -242,6 +257,8 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private async Task LoadResources()
         {
+            Model.SetCharacters( await _Gw2ApiManager.Gw2ApiClient.V2.Characters.AllAsync());
+
             IEnumerable<Specialization> specializations = new List<Specialization>();
             IEnumerable<Profession> professions = new List<Profession>();
 
@@ -255,6 +272,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 Profession profesion = professions.First(p => p.Id == specialization.Profession);
                 Model.AddProfessionEliteSpecialization(profesion, specialization);
             }
+            dataFetched = true;
         }
     }
 }

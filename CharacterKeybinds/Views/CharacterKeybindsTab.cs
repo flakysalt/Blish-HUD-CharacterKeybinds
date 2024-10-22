@@ -210,15 +210,15 @@ namespace flakysalt.CharacterKeybinds.Views
 
         public void SetKeybindOptions(KeybindFlowContainer keybindFlowContainer,
             List<string> charaters,
-            List<string> specializations,
+            List<LocalizedSpecialization> specializations,
             List<string> keymaps)
         {
-            keybindFlowContainer.SetDropdownContent(keybindFlowContainer.characterNameDropdown, charaters);
-            keybindFlowContainer.SetDropdownContent(keybindFlowContainer.specializationDropdown, specializations);
-            keybindFlowContainer.SetDropdownContent(keybindFlowContainer.keymapDropdown, keymaps);
+            keybindFlowContainer.SetDropdownContent(keybindFlowContainer.CharacterNameDropdown, charaters);
+            keybindFlowContainer.SetSpecializationContent(specializations);
+            keybindFlowContainer.SetDropdownContent(keybindFlowContainer.KeymapDropdown, keymaps);
         }
 
-        public void SetKeybindValues(KeybindFlowContainer keybindFlowContainer, CharacterKeybind characterKeybind, int iconId)
+        public void SetKeybindValues(KeybindFlowContainer keybindFlowContainer, Keymap characterKeybind, int iconId)
         {
             keybindFlowContainer.SetValues(characterKeybind);
             keybindFlowContainer.SetProfessionIcon(iconId);
@@ -226,9 +226,9 @@ namespace flakysalt.CharacterKeybinds.Views
         }
         
         public void AttachListeners(KeybindFlowContainer keybindFlowContainer,
-            EventHandler<CharacterKeybind> OnApplyAction,
+            EventHandler<Keymap> OnApplyAction,
             EventHandler<KeymapEventArgs> OnDataChanged,
-            EventHandler<CharacterKeybind> OnDeleteAction) 
+            EventHandler<Keymap> OnDeleteAction) 
         {
             keybindFlowContainer.AttachListeners(OnApplyAction, OnDataChanged, OnDeleteAction);
         }
@@ -236,7 +236,8 @@ namespace flakysalt.CharacterKeybinds.Views
         public void ClearKeybindEntries()
         {
             for (int i = keybindScrollView.Children.Count - 1; i >= 0; i--)
-            { 
+            {
+	            ((KeybindFlowContainer)keybindScrollView.Children[i]).DisposeEvents();
 	            keybindScrollView.RemoveChild(keybindScrollView.Children[i]);
             }
         }

@@ -25,6 +25,8 @@ namespace flakysalt.CharacterKeybinds.Model
 		public SettingCollection internalSettingsCollection { get; private set; }
 
 		public SettingEntry<List<CharacterKeybind>> characterKeybinds;
+		public SettingEntry<List<Keymap>> Keymaps;
+
 		public SettingEntry<List<Point>> clickPositions;
 
 
@@ -58,8 +60,12 @@ namespace flakysalt.CharacterKeybinds.Model
 			internalSettingsCollection = settings.AddSubCollection("internal Settings");
 
 			defaultKeybinds = internalSettingsCollection.DefineSetting("defaultKeybinds", "");
-			characterKeybinds = internalSettingsCollection.DefineSetting("keybinds", new List<CharacterKeybind>());
+			
+			Keymaps = internalSettingsCollection.DefineSetting("Keymaps", new List<Keymap>());
 			clickPositions = internalSettingsCollection.DefineSetting("clickpos", ClickPositions.importClickPositions);
+			
+			//legacy, use "Keymaps" instead
+			characterKeybinds = internalSettingsCollection.DefineSetting("keybinds", new List<CharacterKeybind>());
 		}
 	}
 }

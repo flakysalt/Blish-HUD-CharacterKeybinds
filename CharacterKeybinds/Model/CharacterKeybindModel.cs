@@ -1,5 +1,4 @@
 ﻿using flakysalt.CharacterKeybinds.Data;
-using flakysalt.CharacterKeybinds.Model;
 using Gw2Sharp.WebApi.V2.Models;
 using System;
 using System.Collections.Generic;
@@ -12,8 +11,8 @@ namespace flakysalt.CharacterKeybinds.Model
 		CharacterKeybindsSettings _settings;
 
 		//AccountData
-		Dictionary<Profession, HashSet<Specialization>> ProfessionEliteSpecialization = new Dictionary<Profession, HashSet<Specialization>>();
-		IEnumerable<Character> characters = new List<Character>();
+		Dictionary<Profession, List<Specialization>> ProfessionEliteSpecialization = new Dictionary<Profession, List<Specialization>>();
+		List<Character> characters = new List<Character>();
 
 		public string currentKeybinds { get; set; }
 
@@ -71,26 +70,39 @@ namespace flakysalt.CharacterKeybinds.Model
 			return (List<Character>)characters;
 		}
 
-		public List<string> GetProfessionSpecializations(string characterName)
+		public List<LocalizedSpecialization> GetProfessionSpecializations(string characterName)
 		{
 			var character = characters.FirstOrDefault(c => c.Name == characterName);
 
-			if (character == null)
-				return new List<string>();
+			if (character == null) 
+				return new List<LocalizedSpecialization>();
 
+			var professionKey = ProfessionEliteSpecialization.Keys.FirstOrDefault(p => p.Id == character.Profession);
+			if(professionKey == null) 
+				return new List<LocalizedSpecialization>();
+			
+			List<LocalizedSpecialization> localizedSpecializations = new List<LocalizedSpecialization>();
 
-			var professionKey = ProfessionEliteSpecialization.Keys.FirstOrDefault(p => p.Name == character.Profession);
-
-			return ProfessionEliteSpecialization[professionKey].Select(specialization => specialization.Name).ToList();
+			
+			foreach (var specialization in ProfessionEliteSpecialization[professionKey])
+			{
+				LocalizedSpecialization localizedSpec = new LocalizedSpecialization
+				{
+					displayName = specialization.Name,
+					id = specialization.Id
+				};
+				localizedSpecializations.Add(localizedSpec);
+			}
+			return localizedSpecializations;
 		}
 
 		public List<string> GetKeymapsNames()
 		{
 			return _settings.characterKeybinds.Value.Select(specialization => specialization.keymap).ToList();
 		}
-		public List<CharacterKeybind> GetKeymaps()
+		public List<Keymap> GetKeymaps()
 		{
-			return _settings.characterKeybinds.Value;
+			return _settings.Keymaps.Value;
 		}
 
 		public string GetDefaultKeybind()
@@ -103,24 +115,25 @@ namespace flakysalt.CharacterKeybinds.Model
 			return _settings.gw2KeybindsFolder.Value;
 		}
 
-		public CharacterKeybind GetKeymapName(string characterName, Specialization specialization) 
+		public Keymap GetKeymapName(string characterName, Specialization specialization) 
 		{
-			foreach (var keybindData in _settings.characterKeybinds.Value)
+			foreach (var keybindData in _settings.Keymaps.Value)
 			{
-				if (keybindData.characterName == characterName)
+				if (keybindData.CharacterName == characterName)
 				{
 					//special case for core builds
-					if (!specialization.Elite && keybindData.spezialisation == "Core")
+					if (!specialization.Elite && keybindData.SpecialisationId == Keymap.CoreSpecializationId)
 					{
 						return keybindData;
 					}
 
-					if (specialization.Name == keybindData.spezialisation)
+					if (specialization.Id == keybindData.SpecialisationId)
 					{
 						return keybindData;
 					}
-
-					if (keybindData.spezialisation == "All Specialization")
+					
+					//Check for profession wildcard
+					if (keybindData.SpecialisationId == Keymap.AllSpecializationId)
 					{
 						return keybindData;
 					}
@@ -135,59 +148,71 @@ namespace flakysalt.CharacterKeybinds.Model
 
 		public void SetCharacters(IReadOnlyCollection<Character> characters)
 		{
-			this.characters = characters;
+			this.characters = characters.ToList();
 			OnCharactersChanged.Invoke();
 		}
-		public void RemoveKeymap(CharacterKeybind characterKeybind)
+		
+		public void RemoveKeymap(Keymap characterKeybind)
 		{
-			var element = _settings.characterKeybinds.Value.Find(e =>
-			e.keymap == characterKeybind.keymap &&
-			e.characterName == characterKeybind.characterName &&
-			e.spezialisation == characterKeybind.spezialisation);
-
+			var element = _settings.Keymaps.Value.Find(e =>
+			e.KeymapName == characterKeybind.KeymapName &&
+			e.CharacterName == characterKeybind.CharacterName &&
+			e.SpecialisationId == characterKeybind.SpecialisationId);
 			if (element != null)
 			{
-				_settings.characterKeybinds.Value.Remove(element);
+				_settings.Keymaps.Value.Remove(element);
 				OnKeymapChanged.Invoke();
 			}
 		}
 
 		public void AddKeymap()
 		{
-			_settings.characterKeybinds.Value.Add(new CharacterKeybind());
+			_settings.Keymaps.Value.Add(new Keymap());
 			OnKeymapChanged.Invoke();
 		}
 
-		public void UpdateKeymap(CharacterKeybind oldValue, CharacterKeybind newValue)
+		public void UpdateKeymap(Keymap oldValue, Keymap newValue)
 		{
 			if (oldValue == null)
 				return;
 
-			int index = _settings.characterKeybinds.Value.FindIndex(e =>
-			e.keymap == oldValue.keymap &&
-			e.characterName == oldValue.characterName &&
-			e.spezialisation == oldValue.spezialisation);
+			int index = _settings.Keymaps.Value.FindIndex(e =>
+			e.KeymapName == oldValue.KeymapName &&
+			e.CharacterName == oldValue.CharacterName &&
+			e.SpecialisationId == oldValue.SpecialisationId);
 
 			if (index != -1)
 			{
-				_settings.characterKeybinds.Value[index] = newValue;
+				_settings.Keymaps.Value[index] = newValue;
 				OnKeymapChanged.Invoke();
 			}
 		}
 
 		public void AddProfessionEliteSpecialization(Profession profession, Specialization eliteSpecialization)
 		{
-			if (!ProfessionEliteSpecialization.ContainsKey(profession))
+			Profession existingProfession = ProfessionEliteSpecialization.Keys.FirstOrDefault(p => p.Id == profession.Id);
+			
+			if (existingProfession == null)
 			{
-				ProfessionEliteSpecialization[profession] = new HashSet<Specialization>();
+				ProfessionEliteSpecialization[profession] = new List<Specialization>();
+				existingProfession = profession;
 			}
 
-			ProfessionEliteSpecialization[profession].Add(eliteSpecialization);
+			if (ProfessionEliteSpecialization[existingProfession].All(e => eliteSpecialization.Id != e.Id))
+			{
+				ProfessionEliteSpecialization[existingProfession].Add(eliteSpecialization);
+			}
 		}
 
 		public void SetDefaultKeymap(string keymap)
 		{
 			_settings.defaultKeybinds.Value = keymap;
+		}
+
+		public void ClearResources()
+		{
+			characters.Clear();
+			ProfessionEliteSpecialization.Clear();
 		}
 
 		#endregion
