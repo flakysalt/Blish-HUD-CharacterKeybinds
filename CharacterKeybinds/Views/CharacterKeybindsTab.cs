@@ -20,6 +20,7 @@ namespace flakysalt.CharacterKeybinds.Views
         private FlowPanel scrollView, mainFlowPanel, keybindScrollView;
         private Label blockerOverlay;
         private Dropdown defaultKeybindDropdown;
+        private LoadingSpinner spinner;
         
         public EventHandler<string> OnApplyDefaultKeymapClicked;
         public EventHandler<string> OnDefaultKeymapChanged;
@@ -69,6 +70,11 @@ namespace flakysalt.CharacterKeybinds.Views
 				Visible = false,
 				Text = "",
 				BackgroundColor = Color.Black
+			};
+			spinner = new LoadingSpinner()
+			{
+				Parent = WindowView,
+				Location = new Point(WindowView.ContentRegion.Width/2 -32,WindowView.ContentRegion.Height/2-32)
 			};
 
 			mainFlowPanel = new FlowPanel()
@@ -216,6 +222,7 @@ namespace flakysalt.CharacterKeybinds.Views
             keybindFlowContainer.SetDropdownContent(keybindFlowContainer.CharacterNameDropdown, charaters);
             keybindFlowContainer.SetSpecializationContent(specializations);
             keybindFlowContainer.SetDropdownContent(keybindFlowContainer.KeymapDropdown, keymaps);
+            spinner.Visible = false;
         }
 
         public void SetKeybindValues(KeybindFlowContainer keybindFlowContainer, Keymap characterKeybind, int iconId)
@@ -235,6 +242,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
         public void ClearKeybindEntries()
         {
+	        spinner.Visible = true;
             for (int i = keybindScrollView.Children.Count - 1; i >= 0; i--)
             {
 	            ((KeybindFlowContainer)keybindScrollView.Children[i]).DisposeEvents();

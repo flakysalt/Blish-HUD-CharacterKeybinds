@@ -165,15 +165,15 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         {
             int specialisationId = 0;
 
-            if (SpecializationDropdown.SelectedItem != _defaultSpecializationEntry)
+            if (SpecializationDropdown.Items.Contains(SpecializationDropdown.SelectedItem))
             {
-                switch (SpecializationDropdown.SelectedItem)
+                switch (SpecializationDropdown.Items.IndexOf(SpecializationDropdown.SelectedItem))
                 {
-                    case _coreSpecialization:
-                        specialisationId = Keymap.CoreSpecializationId;
-                        break;
-                    case _wildcardSpecialization:
+                    case 0:
                         specialisationId = Keymap.AllSpecializationId;
+                        break;
+                    case 1:
+                        specialisationId = Keymap.CoreSpecializationId;
                         break;
                     default: 
                         specialisationId = _localizedSpecializations.FirstOrDefault( e=> e.displayName == SpecializationDropdown.SelectedItem).id;
@@ -183,9 +183,9 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             
             return new Keymap
             {
-                CharacterName = CharacterNameDropdown.SelectedItem == _defaultCharacterEntry ? null : CharacterNameDropdown.SelectedItem,
+                CharacterName = CharacterNameDropdown.Items.Contains(CharacterNameDropdown.SelectedItem) ? CharacterNameDropdown.SelectedItem : null,
                 SpecialisationId = specialisationId,
-                KeymapName = KeymapDropdown.SelectedItem == _defaultKeybindsEntry ? null : KeymapDropdown.SelectedItem,
+                KeymapName = KeymapDropdown.Items.Contains(KeymapDropdown.SelectedItem) ? KeymapDropdown.SelectedItem : null,
             };
         }
 

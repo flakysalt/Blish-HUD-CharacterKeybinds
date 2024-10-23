@@ -12,6 +12,7 @@ using flakysalt.CharacterKeybinds.Views;
 using System.ComponentModel;
 using flakysalt.CharacterKeybinds.Model;
 using flakysalt.CharacterKeybinds.Presenter;
+using flakysalt.CharacterKeybinds.Util;
 
 namespace flakysalt.CharacterKeybinds
 {
@@ -46,10 +47,13 @@ namespace flakysalt.CharacterKeybinds
         protected override void DefineSettings(SettingCollection settings)
         {
             settingsModel = new CharacterKeybindsSettings(settings);
+
         }
 
         protected override async Task LoadAsync()
         {
+            SaveDataMigration.MigrateToKeymaps(settingsModel, await ModuleParameters.Gw2ApiManager.Gw2ApiClient.V2.Specializations.AllAsync());
+
             _cornerTexture = ContentsManager.GetTexture("images/logo_small.png");
             autoclickerView = new Autoclicker();
             autoclickerView.Init(settingsModel, ContentsManager);
