@@ -8,7 +8,7 @@ namespace flakysalt.CharacterKeybinds.Model
 {
 	public class CharacterKeybindModel
 	{
-		CharacterKeybindsSettings _settings;
+		public CharacterKeybindsSettings Settings { get; }
 
 		//AccountData
 		Dictionary<Profession, List<Specialization>> ProfessionEliteSpecialization = new Dictionary<Profession, List<Specialization>>();
@@ -21,7 +21,7 @@ namespace flakysalt.CharacterKeybinds.Model
 
 		public CharacterKeybindModel(CharacterKeybindsSettings settings) 
 		{
-			_settings = settings;
+			Settings = settings;
 		}
 
 		#region Actions
@@ -98,26 +98,26 @@ namespace flakysalt.CharacterKeybinds.Model
 
 		public List<string> GetKeymapsNames()
 		{
-			return _settings.characterKeybinds.Value.Select(specialization => specialization.keymap).ToList();
+			return Settings.characterKeybinds.Value.Select(specialization => specialization.keymap).ToList();
 		}
 		public List<Keymap> GetKeymaps()
 		{
-			return _settings.Keymaps.Value;
+			return Settings.Keymaps.Value;
 		}
 
 		public string GetDefaultKeybind()
 		{
-			return _settings.defaultKeybinds.Value;
+			return Settings.defaultKeybinds.Value;
 		}
 
 		public string GetKeybindsFolder()
 		{
-			return _settings.gw2KeybindsFolder.Value;
+			return Settings.gw2KeybindsFolder.Value;
 		}
 
 		public Keymap GetKeymapName(string characterName, Specialization specialization) 
 		{
-			foreach (var keybindData in _settings.Keymaps.Value)
+			foreach (var keybindData in Settings.Keymaps.Value)
 			{
 				if (keybindData.CharacterName == characterName)
 				{
@@ -154,20 +154,20 @@ namespace flakysalt.CharacterKeybinds.Model
 		
 		public void RemoveKeymap(Keymap characterKeybind)
 		{
-			var element = _settings.Keymaps.Value.Find(e =>
+			var element = Settings.Keymaps.Value.Find(e =>
 			e.KeymapName == characterKeybind.KeymapName &&
 			e.CharacterName == characterKeybind.CharacterName &&
 			e.SpecialisationId == characterKeybind.SpecialisationId);
 			if (element != null)
 			{
-				_settings.Keymaps.Value.Remove(element);
+				Settings.Keymaps.Value.Remove(element);
 				OnKeymapChanged.Invoke();
 			}
 		}
 
 		public void AddKeymap()
 		{
-			_settings.Keymaps.Value.Add(new Keymap());
+			Settings.Keymaps.Value.Add(new Keymap());
 			OnKeymapChanged.Invoke();
 		}
 
@@ -176,14 +176,14 @@ namespace flakysalt.CharacterKeybinds.Model
 			if (oldValue == null)
 				return;
 
-			int index = _settings.Keymaps.Value.FindIndex(e =>
+			int index = Settings.Keymaps.Value.FindIndex(e =>
 			e.KeymapName == oldValue.KeymapName &&
 			e.CharacterName == oldValue.CharacterName &&
 			e.SpecialisationId == oldValue.SpecialisationId);
 
 			if (index != -1)
 			{
-				_settings.Keymaps.Value[index] = newValue;
+				Settings.Keymaps.Value[index] = newValue;
 				OnKeymapChanged.Invoke();
 			}
 		}
@@ -206,7 +206,7 @@ namespace flakysalt.CharacterKeybinds.Model
 
 		public void SetDefaultKeymap(string keymap)
 		{
-			_settings.defaultKeybinds.Value = keymap;
+			Settings.defaultKeybinds.Value = keymap;
 		}
 
 		public void ClearResources()

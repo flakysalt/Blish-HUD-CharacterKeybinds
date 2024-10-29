@@ -25,9 +25,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
         private static bool isTaskStarted;
 
         private double _updateCharactersRunningTime;
-        private double updateTime = dataFetched ? 60_000 : 5_000;
-        private static bool dataFetched = false;
-
+        private double _updateTime = 5_000;
 
         Gw2ApiManager _Gw2ApiManager;
         Autoclicker _autoClicker;
@@ -50,7 +48,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
         {
             _updateCharactersRunningTime += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (_updateCharactersRunningTime > updateTime)
+            if (_updateCharactersRunningTime > _updateTime)
             {
                 _updateCharactersRunningTime = 0;
                 Task.Run(LoadCharacterInformationAsync);
@@ -69,7 +67,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
         {
             Model.ClearResources();
             Task.Run(LoadCharacterInformationAsync);
-            dataFetched = false;
+            SetUpdateInterval(5_000);
         }
 
         public void Dispose()
@@ -261,9 +259,12 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
             IEnumerable<Specialization> specializations = new List<Specialization>();
             IEnumerable<Profession> professions = new List<Profession>();
-
+            
             professions = await _Gw2ApiManager.Gw2ApiClient.V2.Professions.AllAsync();
             specializations = await _Gw2ApiManager.Gw2ApiClient.V2.Specializations.AllAsync();
+            
+            SaveDataMigration.MigrateToKeymaps(Model.Settings, specializations);
+
 
             foreach (var specialization in specializations)
             {
@@ -272,7 +273,12 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 Profession profesion = professions.First(p => p.Id == specialization.Profession);
                 Model.AddProfessionEliteSpecialization(profesion, specialization);
             }
-            dataFetched = true;
+            SetUpdateInterval(60_000);
+        }
+
+        private void SetUpdateInterval(double interval)
+        {
+            _updateTime = interval;
         }
     }
 }

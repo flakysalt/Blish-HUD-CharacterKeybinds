@@ -52,7 +52,6 @@ namespace flakysalt.CharacterKeybinds
 
         protected override async Task LoadAsync()
         {
-            SaveDataMigration.MigrateToKeymaps(settingsModel, await ModuleParameters.Gw2ApiManager.Gw2ApiClient.V2.Specializations.AllAsync());
 
             _cornerTexture = ContentsManager.GetTexture("images/logo_small.png");
             autoclickerView = new Autoclicker();
