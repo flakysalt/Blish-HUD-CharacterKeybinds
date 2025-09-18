@@ -3,3 +3,5 @@ CharacterKeybinds/bin
 CharacterKeybinds/obj
 CharacterKeybinds/.idea
 CharacterKeybinds/CharacterKeybinds.sln.DotSettings.user
+Tests/CharacterKeybinds-Tests/obj
+Tests/CharacterKeybinds-Tests/bin

@@ -57,10 +57,16 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private void AttachToGameServices()
         {
-            GameService.Overlay.UserLocaleChanged += OnLocaleChange;
-            GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
-            GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged;
-
+            try
+            {
+                GameService.Overlay.UserLocaleChanged += OnLocaleChange;
+                GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
+                GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "[CharacterKeybindSettingsPresenter] Failed to attach to Game Services");
+            }
         }
 
         void OnLocaleChange(object sender ,ValueEventArgs<CultureInfo> info)
@@ -81,47 +87,75 @@ namespace flakysalt.CharacterKeybinds.Presenter
         }
         private void AttachViewHandler()
         {
-            View.OnAddButtonClicked += OnAddButtonPressed;
-            View.OnApplyDefaultKeymapClicked += OnApplyDefaultKeymap;
-            View.OnDefaultKeymapChanged += OnChangeDefaultKeymap;
+            try
+            {
+                View.OnAddButtonClicked += OnAddButtonPressed;
+                View.OnApplyDefaultKeymapClicked += OnApplyDefaultKeymap;
+                View.OnDefaultKeymapChanged += OnChangeDefaultKeymap;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "[CharacterKeybindSettingsPresenter]Failed to attach to View");
+            }
         }
 
         private void AttachModelHandler()
         {
-            Model.BindCharacterDataChanged(OnKeymapsChanged);
-            Model.BindKeymapChanged(OnKeymapsChanged);
+            try
+            {
+                Model.BindCharacterDataChanged(OnKeymapsChanged);
+                Model.BindKeymapChanged(OnKeymapsChanged);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "[CharacterKeybindSettingsPresenter]Failed to attach to Model");
+            }
         }
 
         void OnKeymapsChanged() 
         {
-            View.ClearKeybindEntries();
-
-            View.SetDefaultKeybindOptions(CharacterKeybindFileUtil.GetKeybindFiles(Model.GetKeybindsFolder()),
-                Model.GetDefaultKeybind());
-
-            foreach (var keymap in Model.GetKeymaps())
+            try
             {
-                var iconAssetId = 0;
-                var backgroundId = 0;
-                try
-                {
-                    var character = Model.GetCharacter(keymap.CharacterName);
+                View?.SetSpinner(true);
 
+                View?.ClearKeybindEntries();
+
+                var keybindsFolder = Model?.GetKeybindsFolder();
+                if (keybindsFolder == null) throw new InvalidOperationException("Keybinds folder is not initialized.");
+
+                View?.SetDefaultKeybindOptions(CharacterKeybindFileUtil.GetKeybindFiles(keybindsFolder),
+                    Model.GetDefaultKeybind());
+
+                foreach (var keymap in Model.GetKeymaps() ?? Enumerable.Empty<Keymap>())
+                {
+                    int iconAssetId = 0;
+
+                    var character = Model.GetCharacter(keymap.CharacterName);
                     if (character != null)
                     {
-                        iconAssetId = int.Parse(Path.GetFileNameWithoutExtension(Model.GetProfession(character.Profession).Icon.Url.AbsoluteUri));
+                        iconAssetId =
+                            int.Parse(Path.GetFileNameWithoutExtension(Model.GetProfession(character.Profession).Icon
+                                .Url.AbsoluteUri));
                     }
-                    var container = View.AddKeybind();
-                    View.SetKeybindOptions(container, Model.GetCharacterNames(),Model.GetProfessionSpecializations(keymap.CharacterName), CharacterKeybindFileUtil.GetKeybindFiles(Model.GetKeybindsFolder()));
-                    View.SetKeybindValues(container, keymap,iconAssetId);
-                    View.AttachListeners(container,OnApplyKeymap, OnKeymapChange, OnKeymapRemoved);
+
+                    var container = View?.AddKeybind();
+                    if (container == null) continue;
+
+                    View?.SetKeybindOptions(container, Model.GetCharacterNames(),
+                        Model.GetProfessionSpecializations(keymap.CharacterName),
+                        CharacterKeybindFileUtil.GetKeybindFiles(keybindsFolder));
+                    View?.SetKeybindValues(container, keymap, iconAssetId);
+                    View?.AttachListeners(container, OnApplyKeymap, OnKeymapChange, OnKeymapRemoved);
                 }
-                catch (Exception ex)
-                {
-                    Logger.Fatal(ex.Message);
-                }
+
+                View?.SetSpinner(false);
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal($"Exception in OnKeymapsChanged: {ex}");
             }
         }
+
         public void OnApplyKeymap(object sender, Keymap characterKeybind)
         {
 			_ = ChangeKeybinds(characterKeybind.KeymapName, Model.GetKeybindsFolder());
@@ -262,8 +296,14 @@ namespace flakysalt.CharacterKeybinds.Presenter
             
             professions = await _Gw2ApiManager.Gw2ApiClient.V2.Professions.AllAsync();
             specializations = await _Gw2ApiManager.Gw2ApiClient.V2.Specializations.AllAsync();
+
+            if (Model.Settings.characterKeybinds.Value.Any() || !Model.Settings.Keymaps.Value.Any())
+            {
+               var keymaps = SaveDataMigration.MigrateToKeymaps(Model.Settings.characterKeybinds.Value, specializations);
+               Model.Settings.Keymaps.Value = keymaps;
+            }
+
             
-            SaveDataMigration.MigrateToKeymaps(Model.Settings, specializations);
 
 
             foreach (var specialization in specializations)

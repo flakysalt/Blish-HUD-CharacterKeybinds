@@ -131,7 +131,14 @@ namespace flakysalt.CharacterKeybinds.Model
 					{
 						return keybindData;
 					}
-					
+				}
+			}
+			
+			//check in extra loop to make sure we always find tailored keybinds first
+			foreach (var keybindData in Settings.Keymaps.Value)
+			{
+				if (keybindData.CharacterName == characterName)
+				{
 					//Check for profession wildcard
 					if (keybindData.SpecialisationId == Keymap.AllSpecializationId)
 					{

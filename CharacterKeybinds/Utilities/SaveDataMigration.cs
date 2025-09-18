@@ -11,16 +11,13 @@ namespace flakysalt.CharacterKeybinds.Util
 {
     public class SaveDataMigration
     {
-        public static void MigrateToKeymaps(CharacterKeybindsSettings settings, IEnumerable<Specialization> specializations)
+        public static List<Keymap> MigrateToKeymaps(List<CharacterKeybind> characterKeybinds, IEnumerable<Specialization> specializations)
         {
-            if (!settings.characterKeybinds.Value.Any() || settings.Keymaps.Value.Any())
-                return;
-            
             try
             {
-                foreach (var keymap in settings.characterKeybinds.Value)
+                List<Keymap> migratedKeymaps = new List<Keymap>();
+                foreach (var keymap in characterKeybinds)
                 {
-
                     int id = 0;
                     switch (keymap.spezialisation)
                     {
@@ -36,20 +33,22 @@ namespace flakysalt.CharacterKeybinds.Util
                             if (specialization == null)
                             {                
                                 Logger.GetLogger<SaveDataMigration>().Warn($"Unable to find specialization {keymap.spezialisation} and migrate to new data");
-                                continue;
+                                //continue;
                             }
 
                             id = specialization.Id;
                             break;
                     }
                     
-                    settings.Keymaps.Value.Add(new Keymap
+                    migratedKeymaps.Add(new Keymap
                     {
                         KeymapName = keymap.keymap,
                         CharacterName = keymap.characterName,
                         SpecialisationId = id
                     });
                 }
+
+                return migratedKeymaps;
             }
             catch (Exception e)
             {

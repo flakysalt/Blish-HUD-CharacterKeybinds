@@ -20,60 +20,62 @@ namespace flakysalt.CharacterKeybinds
     public class CharacterKeybindModule : Module
     {
         internal static CharacterKeybindModule moduleInstance;
-        
+
         private Texture2D _cornerTexture;
         private CornerIcon _cornerIcon;
 
-        internal ContentsManager ContentsManager => this.ModuleParameters.ContentsManager;
-        internal Gw2ApiManager Gw2ApiManager => this.ModuleParameters.Gw2ApiManager;
-        public override IView GetSettingsView() => new SettingsWindow(settingsModel, moduleWindowView,autoclickerView);
+        private ContentsManager ContentsManager => ModuleParameters.ContentsManager;
+        private Gw2ApiManager Gw2ApiManager => ModuleParameters.Gw2ApiManager;
 
-        public CharacterKeybindsSettings settingsModel;
+        public override IView GetSettingsView() =>
+            new SettingsWindow(_settingsModel, _moduleWindowView, _autoClickerView);
+
+        private CharacterKeybindsSettings _settingsModel;
 
         #region Views
-        private CharacterKeybindsTab moduleWindowView;
-        private CharacterKeybindSettingsPresenter presenter;
 
-        public Autoclicker autoclickerView;
+        private CharacterKeybindsTab _moduleWindowView;
+        private CharacterKeybindSettingsPresenter _presenter;
+
+        private Autoclicker _autoClickerView;
 
         #endregion
 
         [ImportingConstructor]
-        public CharacterKeybindModule([Import("ModuleParameters")] ModuleParameters moduleParameters) : base(moduleParameters)
+        public CharacterKeybindModule([Import("ModuleParameters")] ModuleParameters moduleParameters) : base(
+            moduleParameters)
         {
             moduleInstance = this;
         }
 
         protected override void DefineSettings(SettingCollection settings)
         {
-            settingsModel = new CharacterKeybindsSettings(settings);
-
+            _settingsModel = new CharacterKeybindsSettings(settings);
         }
 
-        protected override async Task LoadAsync()
+        protected override Task LoadAsync()
         {
-
             _cornerTexture = ContentsManager.GetTexture("images/logo_small.png");
-            autoclickerView = new Autoclicker();
-            autoclickerView.Init(settingsModel, ContentsManager);
+            _autoClickerView = new Autoclicker();
+            _autoClickerView.Init(_settingsModel, ContentsManager);
 
             LoadModuleWindow();
 
             CreateCornerIconWithContextMenu();
+            return Task.CompletedTask;
         }
 
         private void LoadModuleWindow()
         {
-            moduleWindowView = new CharacterKeybindsTab(ContentsManager);
-            var model = new CharacterKeybindModel(settingsModel);
-            presenter = new CharacterKeybindSettingsPresenter(moduleWindowView, model,Gw2ApiManager, autoclickerView);
+            _moduleWindowView = new CharacterKeybindsTab(ContentsManager);
+            var model = new CharacterKeybindModel(_settingsModel);
+            _presenter =
+                new CharacterKeybindSettingsPresenter(_moduleWindowView, model, Gw2ApiManager, _autoClickerView);
         }
 
-
-
         private void CreateCornerIconWithContextMenu()
-		{
-            if (settingsModel.displayCornerIcon.Value) 
+        {
+            if (_settingsModel.displayCornerIcon.Value)
             {
                 _cornerIcon = new CornerIcon()
                 {
@@ -83,15 +85,14 @@ namespace flakysalt.CharacterKeybinds
                     Parent = GameService.Graphics.SpriteScreen,
                     Visible = true
                 };
-                _cornerIcon.Click += (s, e) => moduleWindowView.ToggleWindow();
-
+                _cornerIcon.Click += (s, e) => _moduleWindowView.ToggleWindow();
             }
 
-            settingsModel.displayCornerIcon.PropertyChanged += EnableOrCreateCornerIcon;
-		}
+            _settingsModel.displayCornerIcon.PropertyChanged += EnableOrCreateCornerIcon;
+        }
 
-		private void EnableOrCreateCornerIcon(object sender, PropertyChangedEventArgs e)
-		{
+        private void EnableOrCreateCornerIcon(object sender, PropertyChangedEventArgs e)
+        {
             //TODO i dont know why it enables but this should work as a workaround for now
             if (_cornerIcon == null)
             {
@@ -103,26 +104,27 @@ namespace flakysalt.CharacterKeybinds
                     Parent = GameService.Graphics.SpriteScreen,
                 };
             }
-            _cornerIcon.Visible = settingsModel.displayCornerIcon.Value;
+
+            _cornerIcon.Visible = _settingsModel.displayCornerIcon.Value;
         }
 
 
-		protected override void Update(GameTime gameTime)
+        protected override void Update(GameTime gameTime)
         {
-            presenter.Update(gameTime);
+            _presenter.Update(gameTime);
         }
 
         protected override void Unload()
         {
-            moduleWindowView?.Dispose();
+            _moduleWindowView?.Dispose();
 
-            autoclickerView?.Dispose();
+            _autoClickerView?.Dispose();
 
             _cornerIcon?.Dispose();
             _cornerTexture?.Dispose();
-            
-            moduleWindowView = null;
-            autoclickerView = null;
+
+            _moduleWindowView = null;
+            _autoClickerView = null;
             moduleInstance = null;
         }
     }

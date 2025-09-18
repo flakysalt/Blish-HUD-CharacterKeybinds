@@ -222,7 +222,12 @@ namespace flakysalt.CharacterKeybinds.Views
             keybindFlowContainer.SetDropdownContent(keybindFlowContainer.CharacterNameDropdown, charaters);
             keybindFlowContainer.SetSpecializationContent(specializations);
             keybindFlowContainer.SetDropdownContent(keybindFlowContainer.KeymapDropdown, keymaps);
-            spinner.Visible = false;
+        }
+
+        public void SetSpinner(bool state)
+        {
+	        spinner.Visible = state;
+
         }
 
         public void SetKeybindValues(KeybindFlowContainer keybindFlowContainer, Keymap characterKeybind, int iconId)
@@ -242,7 +247,6 @@ namespace flakysalt.CharacterKeybinds.Views
 
         public void ClearKeybindEntries()
         {
-	        spinner.Visible = true;
             for (int i = keybindScrollView.Children.Count - 1; i >= 0; i--)
             {
 	            ((KeybindFlowContainer)keybindScrollView.Children[i]).DisposeEvents();
