@@ -13,7 +13,7 @@ namespace flakysalt.CharacterKeybinds.Views
     public class SettingsWindow : View
 	{
         private CharacterKeybindsSettings model;
-        private CharacterKeybindsTab characterKeybindWindow;
+        private CharacterKeybindsWindow moduleWindow;
         private Autoclicker troubleshootWindow;
 
         private FlowPanel _settingFlowPanel;
@@ -22,11 +22,10 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private StandardButton characterKeybindSettinsButton, openTroubleshootWindowButton, faqButton;
         
-        public SettingsWindow(CharacterKeybindsSettings model, CharacterKeybindsTab assignmentWindow, Autoclicker autoclickView)
+        public SettingsWindow(CharacterKeybindsSettings model, CharacterKeybindsWindow moduleWindow, Autoclicker autoclickView)
 		{
             this.model = model;
-
-            this.characterKeybindWindow = assignmentWindow;
+            this.moduleWindow = moduleWindow;
             this.troubleshootWindow = autoclickView;
         }
 
@@ -124,18 +123,16 @@ namespace flakysalt.CharacterKeybinds.Views
 			faqButton.Click += FaqButton_Click;
             reportBugButton.Click += ReportBugButton_Click;
 			fairMacroUseButton.Click += FairMacroUseButton_Click;
-			characterKeybindSettinsButton.Click += OpenCharacterKeybindsSettingButton_Click;
+			characterKeybindSettinsButton.Click += delegate
+            {
+                moduleWindow.Show();
+            };
             openTroubleshootWindowButton.Click += OpenTroubleshootWindowButton_Click;
         }
 
 		private void FaqButton_Click(object sender, MouseEventArgs e)
 		{
             System.Diagnostics.Process.Start("https://blishhud.com/modules/?module=flakysalt.CharacterKeybinds");
-        }
-
-        private void OpenCharacterKeybindsSettingButton_Click(object sender, MouseEventArgs e)
-		{
-            characterKeybindWindow?.Show();
         }
 
 		private void OpenTroubleshootWindowButton_Click(object sender, MouseEventArgs e)

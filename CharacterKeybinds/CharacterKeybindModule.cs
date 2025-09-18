@@ -1,18 +1,17 @@
 ﻿using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using Blish_HUD;
-using Blish_HUD.Controls;
+using Blish_HUD.Content;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Modules;
 using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using flakysalt.CharacterKeybinds.Views;
-using System.ComponentModel;
 using flakysalt.CharacterKeybinds.Model;
 using flakysalt.CharacterKeybinds.Presenter;
-using flakysalt.CharacterKeybinds.Util;
+using flakysalt.CharacterKeybinds.Services;
+using ContentService = flakysalt.CharacterKeybinds.Services.ContentService;
 
 namespace flakysalt.CharacterKeybinds
 {
@@ -20,22 +19,20 @@ namespace flakysalt.CharacterKeybinds
     public class CharacterKeybindModule : Module
     {
         internal static CharacterKeybindModule moduleInstance;
-
-        private Texture2D _cornerTexture;
-        private CornerIcon _cornerIcon;
-
+        
         private ContentsManager ContentsManager => ModuleParameters.ContentsManager;
         private Gw2ApiManager Gw2ApiManager => ModuleParameters.Gw2ApiManager;
-
         public override IView GetSettingsView() =>
-            new SettingsWindow(_settingsModel, _moduleWindowView, _autoClickerView);
+            new SettingsWindow(_settingsModel, _moduleWindow, _autoClickerView);
 
         private CharacterKeybindsSettings _settingsModel;
 
         #region Views
 
-        private CharacterKeybindsTab _moduleWindowView;
-        private CharacterKeybindSettingsPresenter _presenter;
+        private CharacterKeybindsWindow _moduleWindow;
+        private CharacterKeybindsTab _moduleTabView;
+        private CharacterKeybindPresenter _presenter;
+        private CharacterKeybindsCornerButton _cornerButtonView;
 
         private Autoclicker _autoClickerView;
 
@@ -55,59 +52,37 @@ namespace flakysalt.CharacterKeybinds
 
         protected override Task LoadAsync()
         {
-            _cornerTexture = ContentsManager.GetTexture("images/logo_small.png");
+            // In your module initialization
+            var contentService = new ContentService(ContentsManager);
+            _cornerButtonView = new CharacterKeybindsCornerButton(contentService,_settingsModel);
+            
             _autoClickerView = new Autoclicker();
             _autoClickerView.Init(_settingsModel, ContentsManager);
 
             LoadModuleWindow();
 
-            CreateCornerIconWithContextMenu();
             return Task.CompletedTask;
         }
 
         private void LoadModuleWindow()
         {
-            _moduleWindowView = new CharacterKeybindsTab(ContentsManager);
-            var model = new CharacterKeybindModel(_settingsModel);
+            var apiService = new Gw2ApiService(Gw2ApiManager);
+            
+            // Create the window that will hold all tabs
+            _moduleWindow = new CharacterKeybindsWindow(ContentsManager,
+                AsyncTexture2D.FromAssetId(155997),
+                new Rectangle(24, 30, 545, 600),
+                new Rectangle(82, 30, 467, 600)
+                );
+            
+            // Get access to the main tab and set up its presenter
+            _moduleTabView = _moduleWindow.GetCharacterKeybindsTab();
+            var model = new CharacterKeybindsModel(_settingsModel, apiService);
             _presenter =
-                new CharacterKeybindSettingsPresenter(_moduleWindowView, model, Gw2ApiManager, _autoClickerView);
+                new CharacterKeybindPresenter(_moduleTabView, model, apiService, _settingsModel, _autoClickerView);
+            
+            _cornerButtonView.OnCornerButtonClicked += _moduleWindow.ToggleWindow;
         }
-
-        private void CreateCornerIconWithContextMenu()
-        {
-            if (_settingsModel.displayCornerIcon.Value)
-            {
-                _cornerIcon = new CornerIcon()
-                {
-                    Icon = _cornerTexture,
-                    BasicTooltipText = $"{Name}",
-                    Priority = 1,
-                    Parent = GameService.Graphics.SpriteScreen,
-                    Visible = true
-                };
-                _cornerIcon.Click += (s, e) => _moduleWindowView.ToggleWindow();
-            }
-
-            _settingsModel.displayCornerIcon.PropertyChanged += EnableOrCreateCornerIcon;
-        }
-
-        private void EnableOrCreateCornerIcon(object sender, PropertyChangedEventArgs e)
-        {
-            //TODO i dont know why it enables but this should work as a workaround for now
-            if (_cornerIcon == null)
-            {
-                _cornerIcon = new CornerIcon()
-                {
-                    Icon = _cornerTexture,
-                    BasicTooltipText = $"{Name}",
-                    Priority = 1,
-                    Parent = GameService.Graphics.SpriteScreen,
-                };
-            }
-
-            _cornerIcon.Visible = _settingsModel.displayCornerIcon.Value;
-        }
-
 
         protected override void Update(GameTime gameTime)
         {
@@ -116,16 +91,18 @@ namespace flakysalt.CharacterKeybinds
 
         protected override void Unload()
         {
-            _moduleWindowView?.Dispose();
+            _cornerButtonView.OnCornerButtonClicked -= _moduleWindow.ToggleWindow;
 
+            _moduleWindow?.Dispose();
             _autoClickerView?.Dispose();
+            _cornerButtonView?.Dispose();
 
-            _cornerIcon?.Dispose();
-            _cornerTexture?.Dispose();
-
-            _moduleWindowView = null;
+            _cornerButtonView = null;
+            _moduleWindow = null;
+            _moduleTabView = null;
             _autoClickerView = null;
             moduleInstance = null;
+            Logger.GetLogger<CharacterKeybindModule>().Info(GameService.Graphics.SpriteScreen.ToString());
         }
     }
 }

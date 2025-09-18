@@ -31,9 +31,10 @@ namespace flakysalt.CharacterKeybinds.Util
                             Specialization specialization = specializations.FirstOrDefault(e=> e.Name == keymap.spezialisation);
 
                             if (specialization == null)
-                            {                
+                            {
+                                id = Keymap.Invalid;
                                 Logger.GetLogger<SaveDataMigration>().Warn($"Unable to find specialization {keymap.spezialisation} and migrate to new data");
-                                //continue;
+                                continue;
                             }
 
                             id = specialization.Id;

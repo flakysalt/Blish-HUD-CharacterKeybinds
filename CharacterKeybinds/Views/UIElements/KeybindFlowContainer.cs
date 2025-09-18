@@ -176,7 +176,8 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
                         specialisationId = Keymap.CoreSpecializationId;
                         break;
                     default: 
-                        specialisationId = _localizedSpecializations.FirstOrDefault( e=> e.displayName == SpecializationDropdown.SelectedItem).id;
+                        LocalizedSpecialization localizedSpecialization = _localizedSpecializations.FirstOrDefault( e=> e.displayName == SpecializationDropdown.SelectedItem);
+                        specialisationId = localizedSpecialization?.id ?? Keymap.Invalid;
                         break;
                 }
             }
@@ -206,7 +207,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             SpecializationDropdown.SelectedItem = _defaultSpecializationEntry;
 
             OnDataChanged?.Invoke(this, GetKeymapArgs());
-            this._oldCharacterKeymap = GetKeymap();
+            _oldCharacterKeymap = GetKeymap();
         }
         void OnApplyClick(object sender, MouseEventArgs args)
         {
