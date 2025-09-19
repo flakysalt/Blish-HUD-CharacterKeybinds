@@ -23,18 +23,20 @@ namespace flakysalt.CharacterKeybinds
         private ContentsManager ContentsManager => ModuleParameters.ContentsManager;
         private Gw2ApiManager Gw2ApiManager => ModuleParameters.Gw2ApiManager;
         public override IView GetSettingsView() =>
-            new SettingsWindow(_settingsModel, _moduleWindow, _autoClickerView);
+            new SettingsWindow(_settingsModel, mainWindowView, _autoClickerView);
 
         private CharacterKeybindsSettings _settingsModel;
 
         #region Views
 
-        private CharacterKeybindsWindow _moduleWindow;
-        private CharacterKeybindsTab _moduleTabView;
-        private CharacterKeybindPresenter _presenter;
+        private MainWindowView mainWindowView;
+        private MainWindowPresenter mainWindowPresenter;
         private CharacterKeybindsCornerButton _cornerButtonView;
 
-        private Autoclicker _autoClickerView;
+        private AutoClickerView _autoClickerView;
+        private ContentService contentService;
+        private Gw2ApiService apiService;
+        private MainWindowModel mainWindowModel;
 
         #endregion
 
@@ -53,56 +55,61 @@ namespace flakysalt.CharacterKeybinds
         protected override Task LoadAsync()
         {
             // In your module initialization
-            var contentService = new ContentService(ContentsManager);
-            _cornerButtonView = new CharacterKeybindsCornerButton(contentService,_settingsModel);
+            CreateServices();
             
-            _autoClickerView = new Autoclicker();
-            _autoClickerView.Init(_settingsModel, ContentsManager);
-
-            LoadModuleWindow();
+            CreateViews();
+            CreatePresenters();
+            AttachEvents();
 
             return Task.CompletedTask;
         }
-
-        private void LoadModuleWindow()
+        
+        private void CreatePresenters()
         {
-            var apiService = new Gw2ApiService(Gw2ApiManager);
+            mainWindowPresenter =
+                new MainWindowPresenter(apiService,_settingsModel, mainWindowView,new MainWindowModel());
+        }
+
+        private void CreateViews()
+        {
+            _cornerButtonView = new CharacterKeybindsCornerButton(contentService,_settingsModel);
+            _autoClickerView = new AutoClickerView(_settingsModel, ContentsManager);
             
-            // Create the window that will hold all tabs
-            _moduleWindow = new CharacterKeybindsWindow(ContentsManager,
+            mainWindowView = new MainWindowView(ContentsManager,
                 AsyncTexture2D.FromAssetId(155997),
                 new Rectangle(24, 30, 545, 600),
                 new Rectangle(82, 30, 467, 600)
-                );
-            
-            // Get access to the main tab and set up its presenter
-            _moduleTabView = _moduleWindow.GetCharacterKeybindsTab();
-            var model = new CharacterKeybindsModel(_settingsModel, apiService);
-            _presenter =
-                new CharacterKeybindPresenter(_moduleTabView, model, apiService, _settingsModel, _autoClickerView);
-            
-            _cornerButtonView.OnCornerButtonClicked += _moduleWindow.ToggleWindow;
+            );
+        }
+
+        private void CreateServices()
+        {
+            contentService = new ContentService(ContentsManager);
+            apiService = new Gw2ApiService(Gw2ApiManager);
+        }
+
+        private void AttachEvents()
+        {
+            _cornerButtonView.OnCornerButtonClicked += mainWindowView.ToggleWindow;
         }
 
         protected override void Update(GameTime gameTime)
         {
-            _presenter.Update(gameTime);
+            mainWindowPresenter.Update(gameTime);
         }
 
         protected override void Unload()
         {
-            _cornerButtonView.OnCornerButtonClicked -= _moduleWindow.ToggleWindow;
+            _cornerButtonView.OnCornerButtonClicked -= mainWindowView.ToggleWindow;
 
-            _moduleWindow?.Dispose();
+            mainWindowView?.Dispose();
             _autoClickerView?.Dispose();
             _cornerButtonView?.Dispose();
 
             _cornerButtonView = null;
-            _moduleWindow = null;
-            _moduleTabView = null;
+            mainWindowView = null;
             _autoClickerView = null;
             moduleInstance = null;
-            Logger.GetLogger<CharacterKeybindModule>().Info(GameService.Graphics.SpriteScreen.ToString());
         }
     }
 }

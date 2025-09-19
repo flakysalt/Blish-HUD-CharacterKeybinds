@@ -14,21 +14,25 @@ using Blish_HUD.Modules.Managers;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
-	public class Autoclicker
+	public class AutoClickerView
 	{
+        public static AutoClickerView Instance;
+        
         public  StandardWindow WindowView;
         private StandardButton ToggleVisibilityButton, resetPositionButton, testClickerButton;
 
         private bool markerVisible;
         private List<DraggableMarker> markers = new List<DraggableMarker>();
         CharacterKeybindsSettings settingsModel;
+        
 
-        public void Init(CharacterKeybindsSettings settingsModel, ContentsManager ContentsManager)
+        public AutoClickerView(CharacterKeybindsSettings settingsModel, ContentsManager ContentsManager)
         {
+            Instance = this;
             this.settingsModel = settingsModel;
 
             var windowBackgroundTexture = AsyncTexture2D.FromAssetId(155997);
-            var _emblem = ContentsManager.GetTexture("images/logo.png");
+            var emblem = ContentsManager.GetTexture("images/logo.png");
 
             WindowView = new StandardWindow(
                 windowBackgroundTexture,
@@ -36,11 +40,11 @@ namespace flakysalt.CharacterKeybinds.Views
                 new Rectangle(40, 50, 540, 590),
                 new Point(560, 400))
             {
-                Emblem = _emblem,
+                Emblem = emblem,
                 Parent = GameService.Graphics.SpriteScreen,
                 Title = "Troubleshoot Window",
                 SavesPosition = true,
-                Id = $"flakysalt_{nameof(Autoclicker)}",
+                Id = $"flakysalt_{nameof(AutoClickerView)}",
                 CanClose = true
             };
 

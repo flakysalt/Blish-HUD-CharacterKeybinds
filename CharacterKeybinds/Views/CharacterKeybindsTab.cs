@@ -4,7 +4,6 @@ using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using flakysalt.CharacterKeybinds.Views.UiElements;
 using flakysalt.CharacterKeybinds.Data;
 
@@ -21,6 +20,8 @@ namespace flakysalt.CharacterKeybinds.Views
         public EventHandler<string> OnApplyDefaultKeymapClicked;
         public EventHandler<string> OnDefaultKeymapChanged;
         public EventHandler OnAddButtonClicked;
+        public EventHandler OnMigrationButtonClicked;
+
 
         protected override void Build(Container buildPanel)
         {

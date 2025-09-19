@@ -15,10 +15,10 @@ using flakysalt.CharacterKeybinds.Services;
 
 namespace flakysalt.CharacterKeybinds.Presenter
 {
-    public class CharacterKeybindPresenter : Presenter<CharacterKeybindsTab, CharacterKeybindsModel>,
+    public class CharacterKeybindsTabPresenter : Presenter<CharacterKeybindsTab, CharacterKeybindsModel>,
         IDisposable
     {
-        private readonly Logger Logger = Logger.GetLogger<CharacterKeybindPresenter>();
+        private readonly Logger Logger = Logger.GetLogger<CharacterKeybindsTabPresenter>();
 
         private static object taskLock = new object();
         private static bool isTaskStarted;
@@ -28,17 +28,17 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private readonly Gw2ApiService _apiService;
         private CharacterKeybindsSettings _settingsModel;
-        private readonly Autoclicker _autoClicker;
+        private readonly AutoClickerView _autoClicker;
 
-        public CharacterKeybindPresenter(
+        public CharacterKeybindsTabPresenter(
             CharacterKeybindsTab view, 
             CharacterKeybindsModel model,
             Gw2ApiService apiService,
             CharacterKeybindsSettings settingsModel,
-            Autoclicker autoclicker) : base(view, model)
+            AutoClickerView autoClickerView) : base(view, model)
         {
             _apiService = apiService;
-            _autoClicker = autoclicker;
+            _autoClicker = autoClickerView;
             _settingsModel = settingsModel;
 
             AttachToGameServices();

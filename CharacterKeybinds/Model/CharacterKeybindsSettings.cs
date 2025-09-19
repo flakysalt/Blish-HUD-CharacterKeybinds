@@ -39,7 +39,7 @@ namespace flakysalt.CharacterKeybinds.Model
 			"GW2 Keybind Path",
 			TargetFolderPath,
 			"Keybins Folder Path",
-			"Path to the Keybinds folder.\n Usually somewhere inside your documents folder");
+			"Path to the Keybinds folder.\nIf you dont know where this is, export your keybinds via the GW2 ingame menu and the location is shown in the ingame chat");
 
 			optionsKeybind = settings.DefineSetting(nameof(optionsKeybind),
 			new KeyBinding(Keys.F11),

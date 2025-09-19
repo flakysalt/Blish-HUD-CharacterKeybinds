@@ -1,4 +1,5 @@
-﻿using Blish_HUD.Controls;
+﻿using System.IO;
+using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Input;
 using Blish_HUD.Settings.UI.Views;
@@ -13,8 +14,8 @@ namespace flakysalt.CharacterKeybinds.Views
     public class SettingsWindow : View
 	{
         private CharacterKeybindsSettings model;
-        private CharacterKeybindsWindow moduleWindow;
-        private Autoclicker troubleshootWindow;
+        private MainWindowView moduleWindowView;
+        private AutoClickerView troubleshootWindow;
 
         private FlowPanel _settingFlowPanel;
         private ViewContainer _lastSettingContainer;
@@ -22,10 +23,10 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private StandardButton characterKeybindSettinsButton, openTroubleshootWindowButton, faqButton;
         
-        public SettingsWindow(CharacterKeybindsSettings model, CharacterKeybindsWindow moduleWindow, Autoclicker autoclickView)
+        public SettingsWindow(CharacterKeybindsSettings model, MainWindowView moduleWindowView, AutoClickerView autoclickView)
 		{
             this.model = model;
-            this.moduleWindow = moduleWindow;
+            this.moduleWindowView = moduleWindowView;
             this.troubleshootWindow = autoclickView;
         }
 
@@ -59,6 +60,29 @@ namespace flakysalt.CharacterKeybinds.Views
                 Left = 10,
                 Size = new Point(200, 50),
                 Text = "Keybind Settings"
+            };
+            
+            var topFlowPanel = new FlowPanel()
+            {
+                Width = _settingFlowPanel.Width,
+                FlowDirection = ControlFlowDirection.LeftToRight,
+                ControlPadding = new Vector2(5, 2),
+                HeightSizingMode = SizingMode.AutoSize,
+                AutoSizePadding = new Point(0, 15),
+                Parent = _settingFlowPanel,
+                Visible = !Directory.Exists(model.gw2KeybindsFolder.Value)
+            };
+            model.gw2KeybindsFolder.PropertyChanged += delegate
+            {
+                topFlowPanel.Visible = !Directory.Exists(model.gw2KeybindsFolder.Value);
+            };
+            new Label
+            {
+                Parent = topFlowPanel,
+                Width = topFlowPanel.Width,
+                Text = "This Path is not valid! Please change it to where GW2 is storing its keybinds.",
+                TextColor = Color.OrangeRed,
+                AutoSizeHeight = true,
             };
 
             foreach (var setting in model.settingsCollection.Where(s => s.SessionDefined))
@@ -125,7 +149,7 @@ namespace flakysalt.CharacterKeybinds.Views
 			fairMacroUseButton.Click += FairMacroUseButton_Click;
 			characterKeybindSettinsButton.Click += delegate
             {
-                moduleWindow.Show();
+                moduleWindowView.Show();
             };
             openTroubleshootWindowButton.Click += OpenTroubleshootWindowButton_Click;
         }

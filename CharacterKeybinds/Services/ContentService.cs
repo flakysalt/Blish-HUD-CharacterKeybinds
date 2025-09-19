@@ -28,8 +28,5 @@ namespace flakysalt.CharacterKeybinds.Services
                 return null;
             }
         }
-
-        // You can add more methods for other content types as needed
-        // For example: GetSound, GetFont, etc.
     }
 }
