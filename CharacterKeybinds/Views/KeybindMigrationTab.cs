@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Blish_HUD;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
@@ -7,8 +9,14 @@ namespace flakysalt.CharacterKeybinds.Views
 {
     public class KeybindMigrationTab : View 
     {
-        
         private FlowPanel mainFlowPanel;
+        private Checkbox confirmationCheckbox;
+        private StandardButton StartMigrtionButton,DeleteOldDataButton;
+
+        private Label resultLabel, explinationLabel;
+        
+        public EventHandler OnMigrateClicked;
+        public EventHandler OnDeleteClicked;
 
         protected override void Build(Container buildPanel)
         {
@@ -21,14 +29,90 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = buildPanel
             };
             
-            new Label()
+            new Label
             {
                 Parent = mainFlowPanel,
                 Width = mainFlowPanel.Width,
                 Text = "Migration Tab",
                 Font = GameService.Content.DefaultFont18
             };
+            
+            explinationLabel = new Label
+            {
+                Parent = mainFlowPanel,
+                Width = mainFlowPanel.Width,
+                AutoSizeHeight = true,
+                Text = "This tab allows you to migrate your keybindings from the old version of the module to the new version.\n" +
+                       "Some specialications might no be translated perfecrlty so please check after the process if your keybinds look fine.\n" +
+                       "Dont worry, you will not lose your old keybind data in this process. You can delete it afterwards if you want to.\n" +
+                       "(This will probably be the only time you have to do this!)"
+            };
+            StartMigrtionButton = new StandardButton
+            {
+                Parent = mainFlowPanel,
+                Width = mainFlowPanel.Width,
+                Text = "Start Migration",
+                BasicTooltipText = "Starts the migration process from the old data to the new data format."
+            };
+            
+            confirmationCheckbox = new Checkbox()
+            {
+                Padding = new Thickness(50,0,0,0),
+                Parent = mainFlowPanel,
+                Width = mainFlowPanel.Width,
+                Text = "I understand deleting old data is irreversible.",
+                Checked = false
+            };
+            
+            DeleteOldDataButton = new StandardButton()
+            {
+                Parent = mainFlowPanel,
+                Width = mainFlowPanel.Width,
+                Text = "Delete Old Keybind Data",
+                BasicTooltipText = "Deletes the old keybind data from the previous version of the module.",
+                Enabled = confirmationCheckbox.Checked
+            };
+            
+            resultLabel = new Label
+            {
+                Parent = mainFlowPanel,
+                Width = mainFlowPanel.Width,
+                Text = "",
+                AutoSizeHeight = true,
+
+            };
+            
+            confirmationCheckbox.CheckedChanged += (s, e) =>
+            {
+                DeleteOldDataButton.Enabled = confirmationCheckbox.Checked;
+            };
+            
+                
+            StartMigrtionButton.Click += (sender, args) => OnMigrateClicked?.Invoke(sender, args);
+            DeleteOldDataButton.Click += (sender, args) => OnDeleteClicked?.Invoke(sender, args);
+            
             base.Build(buildPanel);
+        }
+
+        public void SetMigrationResult(List<string> result)
+        {
+            resultLabel.Text = "";
+            if(result.Count == 0)
+            {
+                resultLabel.Text = "Migration completed successfully with no issues.";
+                resultLabel.TextColor = Color.LimeGreen;
+                return;
+            }
+            else
+            {
+                resultLabel.TextColor = Color.OrangeRed;
+                resultLabel.Text = "Problems found during migration. Please check the following specialcations manually:\n";
+
+                foreach (var VARIABLE in result)
+                {
+                    resultLabel.Text += VARIABLE + "\n";
+                }
+            }
         }
     }
 }

@@ -56,14 +56,6 @@ namespace flakysalt.CharacterKeybinds.Model
 
                 // Set the data
                 _characters = characters.ToList();
-                
-                // Handle legacy data migration if needed
-                /*if (Settings.characterKeybinds.Value.Any() && !Settings.Keymaps.Value.Any())
-                {
-                    //TODO RH move this into its own tab and dont do it automatically
-                    var keymaps = SaveDataMigration.MigrateToKeymaps(Settings.characterKeybinds.Value, specializations);
-                    Settings.Keymaps.Value = keymaps;
-                }*/
 
                 // Process elite specializations
                 foreach (var specialization in specializations)

@@ -16,6 +16,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
         Dictionary<IView,IPresenter> subPresenters;
         
         private CharacterKeybindsTabPresenter keybindsTabPresenter;
+        private MigrationTabPresenter migrationTabPresenter;
         private readonly Gw2ApiService _apiService;
         private readonly CharacterKeybindsSettings _settingsModel;
 
@@ -61,7 +62,14 @@ namespace flakysalt.CharacterKeybinds.Presenter
                     _apiService,
                     _settingsModel,
                     AutoClickerView.Instance);
+            
+            migrationTabPresenter =
+                new MigrationTabPresenter(View.MigrationTab,
+                    new MigrationTabModel(_settingsModel,_apiService));
+            
             subPresenters.Add(View.KeybindsTab,keybindsTabPresenter);
+            subPresenters.Add(View.MigrationTab,migrationTabPresenter);
+
 
         }
     }

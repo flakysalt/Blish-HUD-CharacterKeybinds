@@ -11,8 +11,9 @@ namespace flakysalt.CharacterKeybinds.Util
 {
     public class SaveDataMigration
     {
-        public static List<Keymap> MigrateToKeymaps(List<CharacterKeybind> characterKeybinds, IEnumerable<Specialization> specializations)
+        public static List<Keymap> MigrateToKeymaps(List<CharacterKeybind> characterKeybinds, IEnumerable<Specialization> specializations, out List<string> errors)
         {
+            errors = new List<string>();
             try
             {
                 List<Keymap> migratedKeymaps = new List<Keymap>();
@@ -28,16 +29,21 @@ namespace flakysalt.CharacterKeybinds.Util
                             id = Keymap.CoreSpecializationId;
                             break;
                         default:
-                            Specialization specialization = specializations.FirstOrDefault(e=> e.Name == keymap.spezialisation);
+                            Specialization specialization =
+                                specializations.FirstOrDefault(e => e.Name == keymap.spezialisation);
 
                             if (specialization == null)
                             {
                                 id = Keymap.Invalid;
-                                Logger.GetLogger<SaveDataMigration>().Warn($"Unable to find specialization {keymap.spezialisation} and migrate to new data");
-                                continue;
+                                Logger.GetLogger<SaveDataMigration>()
+                                    .Warn(
+                                        $"Unable to find specialization {keymap.spezialisation} and migrate to new data");
+                                errors.Add(keymap.spezialisation + " for character " + keymap.characterName);
                             }
-
-                            id = specialization.Id;
+                            else
+                            {
+                                id = specialization.Id;
+                            }
                             break;
                     }
                     

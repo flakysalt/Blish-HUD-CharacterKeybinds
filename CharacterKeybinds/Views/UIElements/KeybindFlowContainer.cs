@@ -30,6 +30,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 
         private const string _coreSpecialization = "Core";
         private const string _wildcardSpecialization = "All Specialization";
+        private const string _invalidSpecialcation = "Invalid";
 
         public event EventHandler<Keymap> OnApply;
         public event EventHandler<KeymapEventArgs> OnDataChanged;
@@ -132,6 +133,9 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
                 case Keymap.AllSpecializationId:
                     SpecializationDropdown.SelectedItem = _wildcardSpecialization;
                     break;
+                case Keymap.Invalid:
+                    SpecializationDropdown.SelectedItem = _invalidSpecialcation;
+                    break;
                 default: 
                     SpecializationDropdown.SelectedItem = _localizedSpecializations.FirstOrDefault( e=> e.id == keymap.SpecialisationId)?.displayName;
                     break;
@@ -174,7 +178,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         {
             int specialisationId = 0;
 
-            if (SpecializationDropdown.Items.Contains(SpecializationDropdown.SelectedItem))
+            if (SpecializationDropdown.Items.Contains(SpecializationDropdown.SelectedItem) || SpecializationDropdown.SelectedItem == _invalidSpecialcation)
             {
                 switch (SpecializationDropdown.Items.IndexOf(SpecializationDropdown.SelectedItem))
                 {
