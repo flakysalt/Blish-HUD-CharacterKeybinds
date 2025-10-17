@@ -33,7 +33,8 @@ namespace flakysalt.CharacterKeybinds.Views
                 SavesPosition = true,
                 Id = $"flakysalt_{nameof(CharacterKeybinds)}",
                 CanClose = true,
-                CanResize = true
+                CanResize = true,
+                SavesSize = true
             };
             InitializeTabs(contentsManager);
             window.Shown += WindowShownEvent;
