@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Blish_HUD;
 using Blish_HUD.Controls;
@@ -24,11 +25,21 @@ namespace flakysalt.CharacterKeybinds.Presenter
             subPresenters = new Dictionary<IView, IPresenter>();
             _settingsModel = settingsModel;
             _apiService = apiService;
-            View.TabChanged += OnTabChanged;
-
             CreateSubPresenters();
+
+            View.TabChanged += OnTabChanged;
+            View.WindowShown += OnWindowShown;
+
         }
-        
+
+        private void OnWindowShown(object sender, EventArgs e)
+        {
+            if (subPresenters.TryGetValue(View.SelectedTab.View.Invoke(), out IPresenter value))
+            {
+                value.DoUpdateView();
+            }
+        }
+
         public void Update(GameTime gameTime)
         {
             keybindsTabPresenter.Update(gameTime);

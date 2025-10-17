@@ -4,6 +4,7 @@ using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using Blish_HUD.Content;
 using flakysalt.CharacterKeybinds.Views.UiElements;
 using flakysalt.CharacterKeybinds.Data;
 
@@ -15,21 +16,21 @@ namespace flakysalt.CharacterKeybinds.Views
         private FlowPanel scrollView, mainFlowPanel, keybindScrollView;
         private Dropdown defaultKeybindDropdown;
         private LoadingSpinner _spinner;
-        private Label _blockerOverlay;
+        private Label defaultKeybindsLabel;
+        private Image errorInfoIcon;
         
         public EventHandler<string> OnApplyDefaultKeymapClicked;
         public EventHandler<string> OnDefaultKeymapChanged;
         public EventHandler OnAddButtonClicked;
-        public EventHandler OnMigrationButtonClicked;
-
 
         protected override void Build(Container buildPanel)
         {
+            
             mainFlowPanel = new FlowPanel
             {
                 ControlPadding = new Vector2(0, 10),
                 HeightSizingMode = SizingMode.Fill,
-                Width = buildPanel.Width,
+                Size = buildPanel.ContentRegion.Size,
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
                 Parent = buildPanel
             };
@@ -37,32 +38,30 @@ namespace flakysalt.CharacterKeybinds.Views
             // Create spinner inside this tab
             _spinner = new LoadingSpinner()
             {
-                Parent = mainFlowPanel,
+                Parent = buildPanel,
+                BasicTooltipText = "Loading Data from API...",
                 Location = new Point(mainFlowPanel.Width / 2 - 32, mainFlowPanel.Height / 2 - 32),
                 Size = new Point(64, 64),
                 ZIndex = 100,
                 Visible = false
             };
             
-            // Create blocker overlay specific to this tab
-            _blockerOverlay = new Label()
-            {
-                Parent = mainFlowPanel,
-                ZIndex = 90,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Size = mainFlowPanel.Size,
-                Visible = false,
-                Text = "",
-                BackgroundColor = Color.Black
-            };
-            
-            new Label()
+            defaultKeybindsLabel = new Label()
             {
                 Parent = mainFlowPanel,
                 Width = mainFlowPanel.Width,
-                BasicTooltipText = "Applies these keybindings in case there are no specific ones setup for a character.",
+                BasicTooltipText = "Applies these keybindings in case there are no specific ones setup for a character.\nCan be disabled in the settings.",
                 Text = "Default Keybinds",
                 Font = GameService.Content.DefaultFont18
+            };
+            
+            var texture = AsyncTexture2D.FromAssetId(155018);
+            errorInfoIcon = new Image(texture)
+            {
+                Parent = buildPanel,
+                Size = new Point(48, 48),
+                Visible = false,
+                Location = new Point(mainFlowPanel.Right - 64, mainFlowPanel.Top + 16)
             };
             
             var defaultKeybindFlowPanel = new FlowPanel()
@@ -103,7 +102,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 Width = mainFlowPanel.Width,
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
                 Parent = mainFlowPanel,
-                HeightSizingMode = SizingMode.Fill,
+                HeightSizingMode = SizingMode.Fill
             };
             
             keybindScrollView = new FlowPanel
@@ -130,13 +129,24 @@ namespace flakysalt.CharacterKeybinds.Views
             addEntryButton.Click += (sender, args) => OnAddButtonClicked?.Invoke(sender, args);
             applyDefaultKeybindButton.Click += (sender, args) => OnApplyDefaultKeymapClicked?.Invoke(sender, defaultKeybindDropdown.SelectedItem);
             defaultKeybindDropdown.ValueChanged += (sender, args) => OnDefaultKeymapChanged?.Invoke(sender, args.CurrentValue);
-            base.Build(buildPanel);
-        }
+            buildPanel.Resized += (sender, args) =>
+            {
+                Logger.GetLogger<CharacterKeybindsTab>().Debug($"Window{buildPanel.Size}| Content: {buildPanel.ContentRegion.Size},");
+                mainFlowPanel.Size = buildPanel.ContentRegion.Size;
+                defaultKeybindFlowPanel.Width = mainFlowPanel.Width;
+                scrollView.Width = mainFlowPanel.Width;
 
-		public void SetAddButtonState(bool state)
-        {
-            addEntryButton.Enabled = state;
-            addEntryButton.Text = state ? "+ Add Binding" : "Add Binding (Loading Characters...)";
+                keybindScrollView.Width = scrollView.Width;
+                
+                foreach (var scrollViewChild in keybindScrollView.Children)
+                {
+                    scrollViewChild.Width = scrollView.Width;
+                }
+                addEntryButton.Width = scrollView.Width;
+                _spinner.Location = new Point(buildPanel.ContentBounds.X / 2 - 32, buildPanel.ContentBounds.Y  / 2 - 32);
+                errorInfoIcon.Location = new Point(mainFlowPanel.Right - 64, mainFlowPanel.Top + 16);
+            };
+            base.Build(buildPanel);
         }
 
         public void SetSpinner(bool state)
@@ -144,13 +154,20 @@ namespace flakysalt.CharacterKeybinds.Views
             _spinner.Visible = state;
         }
         
-        public void SetBlocker(bool visibility)
+        public void SetErrorInfoIcon(bool isValid, bool isDataLoaded,string error)
         {
-            _blockerOverlay.Text = "API token missing or not available yet.\n\n" +
-                "Make sure you have added an API token to Blish HUD \nand it has the neccessary permissions!\n" +
-                "(Previously setup keybinds will still work!)";
+            errorInfoIcon.BasicTooltipText = error;
+            errorInfoIcon.Visible = !isValid;
+            SetKeybindContainerEnabled(isValid && isDataLoaded);
+        }
 
-            _blockerOverlay.Visible = visibility;
+        private void SetKeybindContainerEnabled(bool enabled)
+        {
+            var flowcontainers = keybindScrollView.GetChildrenOfType<KeybindFlowContainer>();
+            foreach (var container in flowcontainers)
+            {
+                container.SetEnabled(enabled);
+            }
         }
 
         public void SetDefaultKeybindOptions(List<string>options, string selectedOption)
@@ -187,7 +204,6 @@ namespace flakysalt.CharacterKeybinds.Views
         {
             keybindFlowContainer.SetValues(characterKeybind);
             keybindFlowContainer.SetProfessionIcon(iconId);
-
         }
         
         public void AttachListeners(KeybindFlowContainer keybindFlowContainer,

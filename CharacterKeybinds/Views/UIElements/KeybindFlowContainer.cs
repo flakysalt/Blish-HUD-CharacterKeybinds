@@ -96,6 +96,15 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             ApplyButton.Click += OnApplyClick;
             RemoveButton.Click += OnRemoveClick;
         }
+        
+        public void SetEnabled(bool enabled)
+        {
+            CharacterNameDropdown.Enabled = enabled;
+            SpecializationDropdown.Enabled = enabled;
+            KeymapDropdown.Enabled = enabled;
+            ApplyButton.Enabled = enabled;
+            RemoveButton.Enabled = enabled;
+        }
 
         public void SetDropdownContent(Dropdown dropdown, List<string> values)
         {

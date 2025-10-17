@@ -3,10 +3,10 @@ using flakysalt.CharacterKeybinds.Services;
 using Gw2Sharp.WebApi.V2.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blish_HUD;
-using flakysalt.CharacterKeybinds.Util;
 
 namespace flakysalt.CharacterKeybinds.Model
 {
@@ -21,15 +21,27 @@ namespace flakysalt.CharacterKeybinds.Model
         private List<Character> _characters = new List<Character>();
 
         public string CurrentKeybinds { get; set; }
-
+        public bool IsDataLoaded => _professionEliteSpecialization.Any();
+        public bool NeedsMigration => Settings.characterKeybinds.Value.Any() && !Settings.Keymaps.Value.Any();
+        
+        public bool KeybindsFoldersValid => Directory.Exists(GetKeybindsCacheFolder()) && Directory.Exists(GetKeybindsFolder());
+        
         private Action OnCharactersChanged;
         private Action OnKeymapChanged;
-
+        
         public CharacterKeybindsModel(CharacterKeybindsSettings settings, Gw2ApiService apiService) 
         {
             Settings = settings;
             _apiService = apiService;
+
+            Settings.gw2KeybindsFolder.SettingChanged += SettingsFolderChanegd;
         }
+
+        private void SettingsFolderChanegd(object sender, ValueChangedEventArgs<string> e)
+        {
+            OnKeymapChanged?.Invoke();
+        }
+
 
         #region Data Loading
 
@@ -46,12 +58,12 @@ namespace flakysalt.CharacterKeybinds.Model
                 _characters = characters.ToList();
                 
                 // Handle legacy data migration if needed
-                if (Settings.characterKeybinds.Value.Any() && !Settings.Keymaps.Value.Any())
+                /*if (Settings.characterKeybinds.Value.Any() && !Settings.Keymaps.Value.Any())
                 {
                     //TODO RH move this into its own tab and dont do it automatically
                     var keymaps = SaveDataMigration.MigrateToKeymaps(Settings.characterKeybinds.Value, specializations);
                     Settings.Keymaps.Value = keymaps;
-                }
+                }*/
 
                 // Process elite specializations
                 foreach (var specialization in specializations)
@@ -172,6 +184,10 @@ namespace flakysalt.CharacterKeybinds.Model
         public string GetKeybindsFolder()
         {
             return Settings.gw2KeybindsFolder.Value;
+        }
+        public string GetKeybindsCacheFolder()
+        {
+            return Path.Combine(Settings.gw2KeybindsFolder.Value, "Cache");
         }
 
         public Keymap GetKeymapName(string characterName, Specialization specialization) 

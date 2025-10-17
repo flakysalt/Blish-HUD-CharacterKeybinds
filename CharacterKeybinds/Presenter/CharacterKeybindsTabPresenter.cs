@@ -2,6 +2,7 @@ using Blish_HUD.Graphics.UI;
 using flakysalt.CharacterKeybinds.Views;
 using Blish_HUD;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using flakysalt.CharacterKeybinds.Views.UiElements;
@@ -44,8 +45,9 @@ namespace flakysalt.CharacterKeybinds.Presenter
             AttachToGameServices();
             AttachViewHandler();
             AttachModelHandler();
-
+            
             _ = LoadCharacterInformationAsync();
+            DoUpdateView();
         }
 
         public void Update(GameTime gameTime)
@@ -121,15 +123,12 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         protected override void UpdateView()
         {
+            //check for permissions first
             try
             {
-                View?.SetSpinner(true);
-
                 View?.ClearKeybindEntries();
 
-                var keybindsFolder = Model?.GetKeybindsFolder();
-                if (keybindsFolder == null) throw new InvalidOperationException("Keybinds folder is not initialized.");
-
+                var keybindsFolder = Model.GetKeybindsFolder();
                 View?.SetDefaultKeybindOptions(CharacterKeybindFileUtil.GetKeybindFiles(keybindsFolder),
                     Model.GetDefaultKeybind());
 
@@ -154,19 +153,53 @@ namespace flakysalt.CharacterKeybinds.Presenter
                     View?.SetKeybindValues(container, keymap, iconAssetId);
                     View?.AttachListeners(container, OnApplyKeymap, OnKeymapChange, OnKeymapRemoved);
                 }
-
             }
             catch (Exception ex)
             {
-                Logger.Fatal($"Exception in OnKeymapsChanged: {ex}");
+                Logger.Fatal($"UpdateView Failed: {ex}");
             }
             finally
             {
-                View?.SetSpinner(false);
+                View?.SetErrorInfoIcon(IsDataValid(out string error),Model.IsDataLoaded,error);
             }
             base.UpdateView();
         }
-        
+
+        bool IsDataValid(out string errorMessage)
+        {
+            List<string> errors = new List<string>();
+            errorMessage = string.Empty;
+
+            bool isValid = true;
+            
+            if (_apiService.HasRequiredPermissions() == false)
+            {
+                isValid = false;
+                errors.Add("Missing API key or insufficient permissions.");
+            }
+            
+            if (Model.NeedsMigration)
+            {
+                isValid = false;
+                errors.Add("Old keybinds format found. Please go to the Migration tab to update your keybinds.");
+            }
+            
+            if (Model.KeybindsFoldersValid == false)
+            {
+                isValid = false;
+                errors.Add( "The selected keybinds folder is invalid. Please check your settings.");
+            }
+
+            if (!isValid)
+            {
+                errorMessage = $"{errors.Count} Potential issues detected:\n\n";
+                errorMessage += string.Join(Environment.NewLine, errors);
+            }
+
+
+            return isValid;
+        }
+
 
         public void OnApplyKeymap(object sender, Keymap characterKeybind)
         {
@@ -298,22 +331,12 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private async Task LoadCharacterInformationAsync()
         {
-            // The presenter now just checks if the user has required permissions
-            // and delegates the actual data loading to the model
 
-            View.SetBlocker(!_apiService.HasRequiredPermissions());
-            if (!_apiService.HasRequiredPermissions())
-            {
-                return;
-            }
-            
-            View.SetSpinner(true);
             try
             {
-                // This is the key change - the model is now responsible for loading the data
+                View.SetSpinner(true);
                 await Model.LoadResourcesAsync();
                 SetUpdateInterval(300_000); // Set to 5 minute after initial load
-                // The view is updated via the event handler attached in AttachModelHandler
             }
             catch (Exception e)
             {

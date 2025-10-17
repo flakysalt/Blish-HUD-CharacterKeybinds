@@ -15,7 +15,12 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private TabbedWindow2 window;
 
+        public Tab SelectedTab => window.SelectedTab;
+
+
         public event EventHandler<ValueChangedEventArgs<Tab>> TabChanged;
+        public event EventHandler<EventArgs> WindowShown;
+
 
         public MainWindowView(ContentsManager contentsManager,
             AsyncTexture2D windowBackgroundTexture, Rectangle windowRegion, Rectangle contentRegion)
@@ -30,17 +35,19 @@ namespace flakysalt.CharacterKeybinds.Views
                 CanClose = true,
                 CanResize = true
             };
-
-            // Initialize the character keybinds tab
             InitializeTabs(contentsManager);
-            
-            // Add tab changed event after tabs are initialized
+            window.Shown += WindowShownEvent;
             window.TabChanged += TabChangedEvent;
         }
 
         private void TabChangedEvent(object sender, ValueChangedEventArgs<Tab> e)
         {
             TabChanged?.Invoke(sender,e);
+        }
+        
+        private void WindowShownEvent(object sender, EventArgs e)
+        {
+            WindowShown?.Invoke(sender,e);
         }
 
         private void InitializeTabs(ContentsManager contentsManager)
