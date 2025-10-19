@@ -67,9 +67,9 @@ namespace flakysalt.CharacterKeybinds.Views
             var defaultKeybindFlowPanel = new FlowPanel()
             {
                 Height = 30,
-                Width = mainFlowPanel.Width,
                 FlowDirection = ControlFlowDirection.SingleLeftToRight,
-                Parent = mainFlowPanel
+                Parent = mainFlowPanel,
+                WidthSizingMode = SizingMode.Fill
             };
             
             defaultKeybindDropdown = new Dropdown
@@ -99,19 +99,20 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 CanScroll = true,
                 ShowBorder = true,
-                Width = mainFlowPanel.Width,
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
                 Parent = mainFlowPanel,
-                HeightSizingMode = SizingMode.Fill
+                HeightSizingMode = SizingMode.Fill,
+                WidthSizingMode = SizingMode.Fill
             };
             
             keybindScrollView = new FlowPanel
             {
                 OuterControlPadding = new Vector2(0, 10),
-                Width = scrollView.Width,
+                ControlPadding = new Vector2(0,5),
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
                 Parent = scrollView,
-                HeightSizingMode = SizingMode.AutoSize
+                HeightSizingMode = SizingMode.AutoSize,
+                WidthSizingMode = SizingMode.Fill
             };
             
             new Scrollbar(scrollView)
@@ -123,7 +124,7 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Text = "+ Add Binding",
                 Parent = scrollView,
-                Width = scrollView.Width
+                Width = buildPanel.ContentRegion.Size.X
             };
 
             addEntryButton.Click += (sender, args) => OnAddButtonClicked?.Invoke(sender, args);
@@ -133,16 +134,7 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Logger.GetLogger<CharacterKeybindsTab>().Debug($"Window{buildPanel.Size}| Content: {buildPanel.ContentRegion.Size},");
                 mainFlowPanel.Size = buildPanel.ContentRegion.Size;
-                defaultKeybindFlowPanel.Width = mainFlowPanel.Width;
-                scrollView.Width = mainFlowPanel.Width;
-
-                keybindScrollView.Width = scrollView.Width;
-                
-                foreach (var scrollViewChild in keybindScrollView.Children)
-                {
-                    scrollViewChild.Width = scrollView.Width;
-                }
-                addEntryButton.Width = scrollView.Width;
+                addEntryButton.Width = buildPanel.ContentRegion.Size.X;
                 _spinner.Location = new Point(buildPanel.ContentBounds.X / 2 - 32, buildPanel.ContentBounds.Y  / 2 - 32);
                 errorInfoIcon.Location = new Point(mainFlowPanel.Right - 64, mainFlowPanel.Top + 16);
             };
@@ -163,8 +155,8 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private void SetKeybindContainerEnabled(bool enabled)
         {
-            var flowcontainers = keybindScrollView.GetChildrenOfType<KeybindFlowContainer>();
-            foreach (var container in flowcontainers)
+            var flowContainers = keybindScrollView.GetChildrenOfType<KeybindFlowContainer>();
+            foreach (var container in flowContainers)
             {
                 container.SetEnabled(enabled);
             }
@@ -191,11 +183,11 @@ namespace flakysalt.CharacterKeybinds.Views
         }
 
         public void SetKeybindOptions(KeybindFlowContainer keybindFlowContainer,
-            List<string> charaters,
+            List<string> characterList,
             List<LocalizedSpecialization> specializations,
             List<string> keymaps)
         {
-            keybindFlowContainer.SetDropdownContent(keybindFlowContainer.CharacterNameDropdown, charaters);
+            keybindFlowContainer.SetDropdownContent(keybindFlowContainer.CharacterNameDropdown, characterList);
             keybindFlowContainer.SetSpecializationContent(specializations);
             keybindFlowContainer.SetDropdownContent(keybindFlowContainer.KeymapDropdown, keymaps);
         }
@@ -207,11 +199,11 @@ namespace flakysalt.CharacterKeybinds.Views
         }
         
         public void AttachListeners(KeybindFlowContainer keybindFlowContainer,
-            EventHandler<Keymap> OnApplyAction,
-            EventHandler<KeymapEventArgs> OnDataChanged,
+            EventHandler<Keymap> onApplyAction,
+            EventHandler<KeymapEventArgs> onDataChanged,
             EventHandler<Keymap> OnDeleteAction) 
         {
-            keybindFlowContainer.AttachListeners(OnApplyAction, OnDataChanged, OnDeleteAction);
+            keybindFlowContainer.AttachListeners(onApplyAction, onDataChanged, OnDeleteAction);
         }
 
         public void ClearKeybindEntries()

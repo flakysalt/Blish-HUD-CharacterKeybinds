@@ -11,7 +11,7 @@ namespace flakysalt.CharacterKeybinds.Views
     {
         private FlowPanel mainFlowPanel;
         private Checkbox confirmationCheckbox;
-        private StandardButton StartMigrtionButton,DeleteOldDataButton;
+        private StandardButton startMigrtionButton,deleteOldDataButton;
 
         private Label resultLabel, explinationLabel;
         
@@ -25,8 +25,9 @@ namespace flakysalt.CharacterKeybinds.Views
                 ControlPadding = new Vector2(0, 10),
                 HeightSizingMode = SizingMode.Fill,
                 Width = buildPanel.Width,
+                WidthSizingMode = SizingMode.Fill,
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
-                Parent = buildPanel
+                Parent = buildPanel,
             };
             
             new Label
@@ -42,12 +43,13 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = mainFlowPanel,
                 Width = mainFlowPanel.Width,
                 AutoSizeHeight = true,
+                AutoSizeWidth = true,
                 Text = "This tab allows you to migrate your keybindings from the old version of the module to the new version.\n" +
-                       "Some specialications might no be translated perfecrlty so please check after the process if your keybinds look fine.\n" +
+                       "Some specialization might no be translated perfectly so please check after the process if your keybinds look fine.\n\n" +
                        "Dont worry, you will not lose your old keybind data in this process. You can delete it afterwards if you want to.\n" +
                        "(This will probably be the only time you have to do this!)"
             };
-            StartMigrtionButton = new StandardButton
+            startMigrtionButton = new StandardButton
             {
                 Parent = mainFlowPanel,
                 Width = mainFlowPanel.Width,
@@ -64,7 +66,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 Checked = false
             };
             
-            DeleteOldDataButton = new StandardButton()
+            deleteOldDataButton = new StandardButton()
             {
                 Parent = mainFlowPanel,
                 Width = mainFlowPanel.Width,
@@ -79,17 +81,17 @@ namespace flakysalt.CharacterKeybinds.Views
                 Width = mainFlowPanel.Width,
                 Text = "",
                 AutoSizeHeight = true,
-
+                AutoSizeWidth = true
             };
             
             confirmationCheckbox.CheckedChanged += (s, e) =>
             {
-                DeleteOldDataButton.Enabled = confirmationCheckbox.Checked;
+                deleteOldDataButton.Enabled = confirmationCheckbox.Checked;
             };
             
                 
-            StartMigrtionButton.Click += (sender, args) => OnMigrateClicked?.Invoke(sender, args);
-            DeleteOldDataButton.Click += (sender, args) => OnDeleteClicked?.Invoke(sender, args);
+            startMigrtionButton.Click += (sender, args) => OnMigrateClicked?.Invoke(sender, args);
+            deleteOldDataButton.Click += (sender, args) => OnDeleteClicked?.Invoke(sender, args);
             
             base.Build(buildPanel);
         }
@@ -101,7 +103,6 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 resultLabel.Text = "Migration completed successfully with no issues.";
                 resultLabel.TextColor = Color.LimeGreen;
-                return;
             }
             else
             {

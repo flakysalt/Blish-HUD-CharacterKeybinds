@@ -21,18 +21,15 @@ namespace flakysalt.CharacterKeybinds.Views
         {
             this.contentService = contentService;
             _settingsModel = settings;
-            LoadCornerIcon();
+            
+            _settingsModel.displayCornerIcon.PropertyChanged += EnableOrCreateCornerIcon;
+            
+            if (_settingsModel.displayCornerIcon.Value)
+            {
+                EnableOrCreateCornerIcon(null, null);
+            }
         }
         
-        private void LoadCornerIcon()
-        {
-            EnableOrCreateCornerIcon(null, null);
-
-            cornerIcon.Click += CornerIconClicked;
-            _settingsModel.displayCornerIcon.PropertyChanged += EnableOrCreateCornerIcon;
-
-        }
-
         private void EnableOrCreateCornerIcon(object sender, PropertyChangedEventArgs e)
         {
             if (cornerIcon == null)
@@ -42,12 +39,13 @@ namespace flakysalt.CharacterKeybinds.Views
                 {
                     Icon = _cornerTexture,
                     BasicTooltipText = "Character Keybinds",
-                    //Priority = 1,
-                    Parent = GameService.Graphics.SpriteScreen,
-                    Visible = _settingsModel.displayCornerIcon.Value
+                    Parent = GameService.Graphics.SpriteScreen
                 };
+                cornerIcon.Click += CornerIconClicked;
             }
             cornerIcon.Visible = _settingsModel.displayCornerIcon.Value;
+            cornerIcon.Enabled = _settingsModel.displayCornerIcon.Value;
+
         }
 
         private void CornerIconClicked(object sender, MouseEventArgs e)
@@ -58,7 +56,10 @@ namespace flakysalt.CharacterKeybinds.Views
         public  void Dispose()
         {
             _cornerTexture?.Dispose();
-            cornerIcon.Click -= CornerIconClicked;
+            if (cornerIcon != null)
+            {
+                cornerIcon.Click -= CornerIconClicked;
+            }
             _settingsModel.displayCornerIcon.PropertyChanged -= EnableOrCreateCornerIcon;
 
             cornerIcon?.Dispose();

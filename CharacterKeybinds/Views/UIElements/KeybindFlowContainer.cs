@@ -15,7 +15,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         public Keymap NewCharacterKeymap;
     }
 
-    public class KeybindFlowContainer : FlowPanel
+    public sealed class KeybindFlowContainer : FlowPanel
     {
         private StandardButton RemoveButton { get;}
         private StandardButton ApplyButton { get; }
@@ -23,14 +23,16 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         public Dropdown CharacterNameDropdown { get; }
         public Dropdown SpecializationDropdown { get; }
         public Dropdown KeymapDropdown { get; }
+        
+        readonly int _minDropdownWidth = 130;
 
-        private readonly string _defaultCharacterEntry = "Select Character";
-        private readonly string _defaultKeybindsEntry = "Keybinds";
-        private readonly string _defaultSpecializationEntry = "Specialization";
+        private const string DefaultCharacterEntry = "Select Character";
+        private const string DefaultKeybindsEntry = "Keybinds";
+        private const string DefaultSpecializationEntry = "Specialization";
 
-        private const string _coreSpecialization = "Core";
-        private const string _wildcardSpecialization = "All Specialization";
-        private const string _invalidSpecialcation = "Invalid";
+        private const string CoreSpecialization = "Core";
+        private const string WildcardSpecialization = "All Specialization";
+        private const string InvalidSpecialization = "Invalid";
 
         public event EventHandler<Keymap> OnApply;
         public event EventHandler<KeymapEventArgs> OnDataChanged;
@@ -44,8 +46,9 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         {
             OuterControlPadding = new Vector2(10,0);
             ControlPadding = new Vector2(2,0);
-            Height = 45;
             FlowDirection = ControlFlowDirection.LeftToRight;
+            WidthSizingMode = SizingMode.Fill;
+            HeightSizingMode = SizingMode.AutoSize;
             
             ProfessionImage = new Image
             {
@@ -57,23 +60,23 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             {
                 Height = 30,
                 Parent = this,
-                Width = 120
+                Width = _minDropdownWidth
             };
 
             SpecializationDropdown = new Dropdown
             {
                 Height = 30,
                 Parent = this,
-                Width = 120
+                Width = _minDropdownWidth,
             };
-            SpecializationDropdown.Items.Add(_wildcardSpecialization);
-            SpecializationDropdown.Items.Add(_coreSpecialization);
+            SpecializationDropdown.Items.Add(WildcardSpecialization);
+            SpecializationDropdown.Items.Add(CoreSpecialization);
 
             KeymapDropdown = new Dropdown
             {
                 Height = 30,
                 Parent = this,
-                Width = 120
+                Width = _minDropdownWidth
             };
             
             ApplyButton = new StandardButton
@@ -88,7 +91,6 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
                 Parent = this,
                 Text = "Delete",
                 Size = new Point(60, 30),
-                
             };
             
             KeymapDropdown.ValueChanged += OnKeymapChanged;
@@ -96,8 +98,20 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             CharacterNameDropdown.ValueChanged += OnCharacterChanged;
             ApplyButton.Click += OnApplyClick;
             RemoveButton.Click += OnRemoveClick;
+            Resized += OnResized;
         }
-        
+
+        private void OnResized(object sender, ResizedEventArgs e)
+        {
+            //40 magic number padding for scrollbar
+            var desiredSize = (int)(e.CurrentSize.X - ProfessionImage.Width - ApplyButton.Width - RemoveButton.Width - ControlPadding.X * 6 - 40) / 3;
+            var width = MathHelper.Clamp(desiredSize, _minDropdownWidth, desiredSize);
+            CharacterNameDropdown.Width = width;
+            SpecializationDropdown.Width = width;
+            KeymapDropdown.Width = width;
+        }
+
+
         public void SetEnabled(bool enabled)
         {
             CharacterNameDropdown.Enabled = enabled;
@@ -120,28 +134,28 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         public void SetValues(Keymap keymap)
         {
             _oldCharacterKeymap = keymap;
-            CharacterNameDropdown.SelectedItem = string.IsNullOrEmpty(keymap.CharacterName) ? _defaultCharacterEntry : keymap.CharacterName;
+            CharacterNameDropdown.SelectedItem = string.IsNullOrEmpty(keymap.CharacterName) ? DefaultCharacterEntry : keymap.CharacterName;
             
             switch (keymap.SpecialisationId)
             {
                 case 0:
-                    SpecializationDropdown.SelectedItem = _defaultSpecializationEntry;
+                    SpecializationDropdown.SelectedItem = DefaultSpecializationEntry;
                     break;
                 case Keymap.CoreSpecializationId:
-                    SpecializationDropdown.SelectedItem = _coreSpecialization;
+                    SpecializationDropdown.SelectedItem = CoreSpecialization;
                     break;
                 case Keymap.AllSpecializationId:
-                    SpecializationDropdown.SelectedItem = _wildcardSpecialization;
+                    SpecializationDropdown.SelectedItem = WildcardSpecialization;
                     break;
                 case Keymap.Invalid:
-                    SpecializationDropdown.SelectedItem = _invalidSpecialcation;
+                    SpecializationDropdown.SelectedItem = InvalidSpecialization;
                     break;
                 default: 
                     SpecializationDropdown.SelectedItem = _localizedSpecializations.FirstOrDefault( e=> e.id == keymap.SpecialisationId)?.displayName;
                     break;
             }
             
-            KeymapDropdown.SelectedItem = string.IsNullOrEmpty(keymap.KeymapName) ? _defaultKeybindsEntry : keymap.KeymapName;
+            KeymapDropdown.SelectedItem = string.IsNullOrEmpty(keymap.KeymapName) ? DefaultKeybindsEntry : keymap.KeymapName;
         }
 
         public void SetProfessionIcon(int iconId)
@@ -149,19 +163,19 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             ProfessionImage.Texture = AsyncTexture2D.FromAssetId(iconId);
         }
 
-        public void AttachListeners(EventHandler<Keymap> OnApplyAction,
-            EventHandler<KeymapEventArgs> OnDataChanged,
-            EventHandler<Keymap> OnDeleteAction) 
+        public void AttachListeners(EventHandler<Keymap> onApplyAction,
+            EventHandler<KeymapEventArgs> onDataChanged,
+            EventHandler<Keymap> onDeleteAction) 
         {
-            this.OnDataChanged += OnDataChanged;
-            this.OnApply += OnApplyAction;
-            this.OnRemove += OnDeleteAction;
+            OnDataChanged += onDataChanged;
+            OnApply += onApplyAction;
+            OnRemove += onDeleteAction;
 
             RemoveButton.Click += (o, eventArgs) =>
             {
-                this.OnDataChanged -= OnDataChanged;
-                this.OnApply -= OnApplyAction;
-                this.OnRemove -= OnDeleteAction;
+                OnDataChanged -= onDataChanged;
+                OnApply -= onApplyAction;
+                OnRemove -= onDeleteAction;
             };
         }
 
@@ -170,7 +184,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             return new KeymapEventArgs
             {
                 NewCharacterKeymap = GetKeymap(),
-                OldCharacterKeymap = this._oldCharacterKeymap
+                OldCharacterKeymap = _oldCharacterKeymap
             };
         }
 
@@ -178,7 +192,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         {
             int specialisationId = 0;
 
-            if (SpecializationDropdown.Items.Contains(SpecializationDropdown.SelectedItem) || SpecializationDropdown.SelectedItem == _invalidSpecialcation)
+            if (SpecializationDropdown.Items.Contains(SpecializationDropdown.SelectedItem) || SpecializationDropdown.SelectedItem == InvalidSpecialization)
             {
                 switch (SpecializationDropdown.Items.IndexOf(SpecializationDropdown.SelectedItem))
                 {
@@ -203,31 +217,35 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             };
         }
 
-        void OnKeymapChanged(object sender, ValueChangedEventArgs args)
+        private void OnKeymapChanged(object sender, ValueChangedEventArgs args)
         {
-            ApplyButton.Enabled = KeymapDropdown.SelectedItem != _defaultKeybindsEntry;
+            ApplyButton.Enabled = KeymapDropdown.SelectedItem != DefaultKeybindsEntry;
 
             OnDataChanged?.Invoke(this, GetKeymapArgs());
             this._oldCharacterKeymap = GetKeymap();
         }
-        void OnSpecializationChanged(object sender, ValueChangedEventArgs args)
+
+        private void OnSpecializationChanged(object sender, ValueChangedEventArgs args)
         {
             OnDataChanged?.Invoke(this, GetKeymapArgs());
             this._oldCharacterKeymap = GetKeymap();
-        }        
-        void OnCharacterChanged(object sender, ValueChangedEventArgs args)
+        }
+
+        private void OnCharacterChanged(object sender, ValueChangedEventArgs args)
         {
-            SpecializationDropdown.SelectedItem = _defaultSpecializationEntry;
+            SpecializationDropdown.SelectedItem = DefaultSpecializationEntry;
 
             OnDataChanged?.Invoke(this, GetKeymapArgs());
             _oldCharacterKeymap = GetKeymap();
         }
-        void OnApplyClick(object sender, MouseEventArgs args)
+
+        private void OnApplyClick(object sender, MouseEventArgs args)
         {
             OnApply?.Invoke(sender, GetKeymap());
 
         }
-        void OnRemoveClick(object sender, MouseEventArgs args)
+
+        private void OnRemoveClick(object sender, MouseEventArgs args)
         {
             OnRemove?.Invoke(0, GetKeymap());
             DisposeEvents();
