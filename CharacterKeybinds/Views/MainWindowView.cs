@@ -1,14 +1,12 @@
 using System;
-using System.Drawing;
 using Blish_HUD;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Modules.Managers;
+using flakysalt.CharacterKeybinds.Resources;
+using flakysalt.CharacterKeybinds.Services;
 using Microsoft.Xna.Framework;
-using SharpDX.Direct3D11;
-using Color = Microsoft.Xna.Framework.Color;
-using Image = Blish_HUD.Controls.Image;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -35,7 +33,7 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Emblem = contentsManager.GetTexture("images/logo.png"),
                 Parent = GameService.Graphics.SpriteScreen,
-                Title = "Character Keybinds",
+                Title = Loca.moduleName,
                 SavesPosition = true,
                 Id = $"flakysalt_{nameof(CharacterKeybinds)}",
                 CanClose = true,
@@ -46,6 +44,10 @@ namespace flakysalt.CharacterKeybinds.Views
             window.Shown += WindowShownEvent;
             window.TabChanged += TabChangedEvent;
             window.Resized += OnResized;
+            LocaService.Instance.LocaleChanged += (s, e) =>
+            {
+                window.Title = Loca.moduleName;
+            };
 
             //setting the window size so the background image is scaled properly
             window.Size = new Point(670, 600);
@@ -61,7 +63,6 @@ namespace flakysalt.CharacterKeybinds.Views
 
         private void TabChangedEvent(object sender, ValueChangedEventArgs<Tab> e)
         {
-            Logger.GetLogger<MainWindowView>().Debug($"Window:{window.Size} | ContenBounds:{window.ContentBounds.ToString()}");
             TabChanged?.Invoke(sender,e);
         }
         
@@ -77,8 +78,12 @@ namespace flakysalt.CharacterKeybinds.Views
             MigrationTab = new KeybindMigrationTab();
             
             var icon = AsyncTexture2D.FromAssetId(784346);
-            var keybindsTabItem = new Tab(contentsManager.GetTexture("images/logo_small.png"), () => KeybindsTab, "Character Keybinds");
-            var migrationTabItem = new Tab(icon, () => MigrationTab, "Migration");
+            var icon2 = AsyncTexture2D.FromAssetId(157113);
+
+            var keybindsTabItem = new Tab(contentsManager.GetTexture("images/Character_Keybinds_key_32.png"), () => KeybindsTab, "Character Keybinds");
+            //var keybindsTabItem = new Tab(icon2, () => KeybindsTab, Loca.moduleName);
+
+            var migrationTabItem = new Tab(icon, () => MigrationTab, Loca.migration);
             
             KeybindsTab.OnAddButtonClicked += (e, s) =>
             {

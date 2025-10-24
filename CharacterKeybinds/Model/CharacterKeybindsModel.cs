@@ -47,33 +47,25 @@ namespace flakysalt.CharacterKeybinds.Model
 
         public async Task LoadResourcesAsync()
         {
-            try
+            // Load characters, professions, and specializations from the API
+            var characters = await _apiService.GetCharactersAsync();
+            var professions = await _apiService.GetProfessionsAsync();
+            var specializations = await _apiService.GetSpecializationsAsync();
+
+            // Set the data
+            _characters = characters.ToList();
+
+            // Process elite specializations
+            foreach (var specialization in specializations)
             {
-                // Load characters, professions, and specializations from the API
-                var characters = await _apiService.GetCharactersAsync();
-                var professions = await _apiService.GetProfessionsAsync();
-                var specializations = await _apiService.GetSpecializationsAsync();
+                if (!specialization.Elite) continue;
 
-                // Set the data
-                _characters = characters.ToList();
-
-                // Process elite specializations
-                foreach (var specialization in specializations)
-                {
-                    if (!specialization.Elite) continue;
-
-                    Profession profession = professions.First(p => p.Id == specialization.Profession);
-                    AddProfessionEliteSpecialization(profession, specialization);
-                }
-
-                // Notify listeners that data has changed
-                OnCharactersChanged?.Invoke();
+                Profession profession = professions.First(p => p.Id == specialization.Profession);
+                AddProfessionEliteSpecialization(profession, specialization);
             }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Failed to load resources from API");
-                throw;
-            }
+
+            // Notify listeners that data has changed
+            OnCharactersChanged?.Invoke();
         }
 
         public void ClearResources()
@@ -122,6 +114,19 @@ namespace flakysalt.CharacterKeybinds.Model
                 foreach (var specialization in keyValuePair.Value)
                 {
                     if (specialization.Name == name)
+                        return specialization;
+                }
+            }
+            return null;
+        }
+        
+        public Specialization GetSpecializationById(int id)
+        {
+            foreach (var keyValuePair in _professionEliteSpecialization)
+            {
+                foreach (var specialization in keyValuePair.Value)
+                {
+                    if (specialization.Id == id)
                         return specialization;
                 }
             }

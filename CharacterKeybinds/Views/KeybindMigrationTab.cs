@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Blish_HUD;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
+using flakysalt.CharacterKeybinds.Resources;
 using Microsoft.Xna.Framework;
 
 namespace flakysalt.CharacterKeybinds.Views
@@ -34,7 +35,7 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Parent = mainFlowPanel,
                 Width = mainFlowPanel.Width,
-                Text = "Migration Tab",
+                Text = Loca.migration,
                 Font = GameService.Content.DefaultFont18
             };
             

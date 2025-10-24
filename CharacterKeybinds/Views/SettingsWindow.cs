@@ -1,13 +1,12 @@
 ﻿using System.IO;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Input;
 using Blish_HUD.Settings.UI.Views;
-using Microsoft.Xna.Framework;
 using flakysalt.CharacterKeybinds.Model;
-
-using System.Linq;
-using Blish_HUD.Modules.Managers;
+using flakysalt.CharacterKeybinds.Resources;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
@@ -32,7 +31,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
         protected override void Build(Container buildPanel)
 		{
-            _settingFlowPanel = new FlowPanel()
+            _settingFlowPanel = new FlowPanel
             {
                 Size = buildPanel.Size,
                 FlowDirection = ControlFlowDirection.SingleTopToBottom,
@@ -44,7 +43,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = buildPanel
             };
 
-            var topButtonPanel = new FlowPanel()
+            var topButtonPanel = new FlowPanel
             {
                 Width = _settingFlowPanel.Width,
                 FlowDirection = ControlFlowDirection.LeftToRight,
@@ -62,7 +61,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 Text = "Keybind Settings"
             };
             
-            var topFlowPanel = new FlowPanel()
+            var topFlowPanel = new FlowPanel
             {
                 Width = _settingFlowPanel.Width,
                 FlowDirection = ControlFlowDirection.LeftToRight,
@@ -120,28 +119,28 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Parent = bottombuttonFlowPanel,
                 Size = new Point(200, 30),
-                Text = "Help / FAQ"
+                Text = SettingsLoca.helpFaqButton
             };
 
             reportBugButton = new StandardButton
             {
                 Parent = bottombuttonFlowPanel,
                 Size = new Point(200, 30),
-                Text = "Report a Bug"
+                Text = SettingsLoca.reportBugButton
             };
             fairMacroUseButton = new StandardButton
             {
                 Parent = bottombuttonFlowPanel,
                 Left = 10,
                 Size = new Point(200, 30),
-                Text = "Arenanet Macro Policy"
+                Text = SettingsLoca.anetMacroPolicyButton
             };
 
             openTroubleshootWindowButton = new StandardButton
             {
                 Parent = _settingFlowPanel,
                 Size = new Point(200, 30),
-                Text = "Troubleshoot"
+                Text = SettingsLoca.troubleshootButton
             };
 
 			faqButton.Click += FaqButton_Click;

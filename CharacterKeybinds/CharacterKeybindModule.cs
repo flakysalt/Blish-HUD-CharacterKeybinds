@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.Composition;
 using System.Threading.Tasks;
-using Blish_HUD;
+using Microsoft.Xna.Framework;
 using Blish_HUD.Content;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Modules;
 using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
-using Microsoft.Xna.Framework;
-using flakysalt.CharacterKeybinds.Views;
 using flakysalt.CharacterKeybinds.Model;
 using flakysalt.CharacterKeybinds.Presenter;
 using flakysalt.CharacterKeybinds.Services;
+using flakysalt.CharacterKeybinds.Views;
 using ContentService = flakysalt.CharacterKeybinds.Services.ContentService;
 
 namespace flakysalt.CharacterKeybinds
@@ -56,7 +55,9 @@ namespace flakysalt.CharacterKeybinds
         {
             // In your module initialization
             CreateServices();
-            
+
+            var locaService = new LocaService();
+
             CreateViews();
             CreatePresenters();
             AttachEvents();

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blish_HUD.Content;
 using Blish_HUD.Input;
+using flakysalt.CharacterKeybinds.Resources;
 
 namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
@@ -26,14 +27,14 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         
         readonly int _minDropdownWidth = 130;
 
-        private const string DefaultCharacterEntry = "Select Character";
-        private const string DefaultKeybindsEntry = "Keybinds";
-        private const string DefaultSpecializationEntry = "Specialization";
+        private string DefaultCharacterEntry => Loca.defaultCharacterEntry;
+        private string DefaultKeybindsEntry => Loca.defaultKeybindsEntry;
+        private string DefaultSpecializationEntry => Loca.defaultSpecializationEntry;
 
-        private const string CoreSpecialization = "Core";
-        private const string WildcardSpecialization = "All Specialization";
-        private const string InvalidSpecialization = "Invalid";
-
+        private string CoreSpecialization => Loca.coreSpecializationName;
+        private string WildcardSpecialization = Loca.wildcardSpecializationName;
+        private string InvalidSpecialization = Loca.invalidSpecializationName;
+        
         public event EventHandler<Keymap> OnApply;
         public event EventHandler<KeymapEventArgs> OnDataChanged;
         public event EventHandler<Keymap> OnRemove;
@@ -49,11 +50,12 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             FlowDirection = ControlFlowDirection.LeftToRight;
             WidthSizingMode = SizingMode.Fill;
             HeightSizingMode = SizingMode.AutoSize;
+            CanScroll = false;
             
             ProfessionImage = new Image
             {
                 Parent = this,
-                Size = new Point(30, 30),
+                Size = new Point(32, 32),
             };
 
             CharacterNameDropdown = new Dropdown
@@ -65,6 +67,8 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 
             SpecializationDropdown = new Dropdown
             {
+                Padding = new Thickness(22,0,0,0),
+                
                 Height = 30,
                 Parent = this,
                 Width = _minDropdownWidth,
@@ -76,20 +80,21 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             {
                 Height = 30,
                 Parent = this,
-                Width = _minDropdownWidth
+                Width = _minDropdownWidth,
+                
             };
             
             ApplyButton = new StandardButton
             {
                 Parent = this,
-                Text = "Apply",
+                Text = Loca.apply,
                 Size = new Point(60, 30),
             };
             
             RemoveButton = new StandardButton
             {
                 Parent = this,
-                Text = "Delete",
+                Text = Loca.delete,
                 Size = new Point(60, 30),
             };
             

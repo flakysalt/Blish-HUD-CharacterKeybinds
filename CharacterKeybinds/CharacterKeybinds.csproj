@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
+    <RootNamespace>flakysalt.CharacterKeybinds</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,36 @@
 
   <ItemGroup>
     <Folder Include="ref\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Loca.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Loca.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SettingsLoca.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SettingsLoca.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Loca.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Loca.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SettingsLoca.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SettingsLoca.resx</DependentUpon>
+    </Compile>
+    <Compile Update="LocaAutomation\Usings.cs">
+      <Link>Loca_Automation\Usings.cs</Link>
+    </Compile>
+    <Compile Update="LocaAutomation\UnitTest1.cs">
+      <Link>Loca_Automation\UnitTest1.cs</Link>
+    </Compile>
   </ItemGroup>
 
 </Project>

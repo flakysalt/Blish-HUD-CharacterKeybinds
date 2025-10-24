@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="moduleName" xml:space="preserve">
+        <value>Character Keybinds</value>
+    </data>
+    <data name="defaultCharacterEntry" xml:space="preserve">
+        <value>Select Character</value>
+    </data>
+    <data name="defaultKeybindsEntry" xml:space="preserve">
+        <value>Keybinds</value>
+    </data>
+    <data name="defaultSpecializationEntry" xml:space="preserve">
+        <value>Specialization</value>
+    </data>
+    <data name="coreSpecializationName" xml:space="preserve">
+        <value>Core Specialization</value>
+    </data>
+    <data name="wildcardSpecializationName" xml:space="preserve">
+        <value>All Specialization</value>
+    </data>
+    <data name="invalidSpecializationName" xml:space="preserve">
+        <value>Invalid</value>
+    </data>
+    <data name="apply" xml:space="preserve">
+        <value>Apply</value>
+    </data>
+    <data name="delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="troubleshootWindowName" xml:space="preserve">
+        <value>Troubleshoot</value>
+    </data>
+    <data name="troubleshootText" xml:space="preserve">
+        <value>Only change the position of the markes if you erxperience problems. \n\nEnable the markers by pressing 'Toggle Marker Visibility'\nMove the marker to the following positions if they do not allign automatically:\n1. The Options menu tab\n2. The dropdown at the bottom right of the options menu\n3. The first entry of the dropdown when opening it\n4. The 'Yes' button of the confirmation popup when importing key binds</value>
+    </data>
+    <data name="troubleshootMarkers" xml:space="preserve">
+        <value>Toggle Marker Visibility</value>
+    </data>
+    <data name="troubleshootResetMarkers" xml:space="preserve">
+        <value>Reset Marker Positions</value>
+    </data>
+    <data name="troubleshootTestButtonText" xml:space="preserve">
+        <value>Test</value>
+    </data>
+    <data name="troubleshootTestButtonHint" xml:space="preserve">
+        <value>This will simulate the sequence of clicks</value>
+    </data>
+    <data name="switchKeybindsNotificationText" xml:space="preserve">
+        <value>Switching keybinds...</value>
+    </data>
+    <data name="addNewBindingButtonText" xml:space="preserve">
+        <value>+ Add new binding</value>
+    </data>
+    <data name="apiLoadingHint" xml:space="preserve">
+        <value>Loading Data from API...</value>
+    </data>
+    <data name="defaultKeybind" xml:space="preserve">
+        <value>Default Keybinds</value>
+    </data>
+    <data name="defaultKeybindHint" xml:space="preserve">
+        <value>Applies these keybindings in case there are no specific ones setup for a character.\nCan be disabled in the settings.</value>
+    </data>
+    <data name="characterSpecificKeybinds" xml:space="preserve">
+        <value>Character Specific Keybinds</value>
+    </data>
+    <data name="characterSpecificKeybindsHint" xml:space="preserve">
+        <value>Keybinding to use for a specific character or specializations</value>
+    </data>
+    <data name="migration" xml:space="preserve">
+        <value>Migration</value>
+    </data>
+    <data name="errorMessageMissingApiPermissions" xml:space="preserve">
+        <value>Missing API key or insufficient permissions.</value>
+    </data>
+    <data name="errorMessageNeedsMigration" xml:space="preserve">
+        <value>Old keybinds format found. Please go to the Migration tab to update your keybinds.</value>
+    </data>
+    <data name="errorMessageInvalidFolder" xml:space="preserve">
+        <value>The selected keybinds folder is invalid. Please check your settings.</value>
+    </data>
+    <data name="errorMessageIssueCounter" xml:space="preserve">
+        <value>Potential issues detected</value>
+    </data>
+</root>

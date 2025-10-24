@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Blish_HUD.Content;
+using flakysalt.CharacterKeybinds.Resources;
 using flakysalt.CharacterKeybinds.Views.UiElements;
 using flakysalt.CharacterKeybinds.Data;
 
@@ -39,8 +40,8 @@ namespace flakysalt.CharacterKeybinds.Views
             _spinner = new LoadingSpinner()
             {
                 Parent = buildPanel,
-                BasicTooltipText = "Loading Data from API...",
-                Location = new Point(mainFlowPanel.Width / 2 - 32, mainFlowPanel.Height / 2 - 32),
+                BasicTooltipText = Loca.apiLoadingHint,
+                Location = new Point(buildPanel.ContentRegion.Size.X / 2 - 32, buildPanel.ContentRegion.Size.Y / 2 - 32),
                 Size = new Point(64, 64),
                 ZIndex = 100,
                 Visible = false
@@ -50,8 +51,8 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Parent = mainFlowPanel,
                 Width = mainFlowPanel.Width,
-                BasicTooltipText = "Applies these keybindings in case there are no specific ones setup for a character.\nCan be disabled in the settings.",
-                Text = "Default Keybinds",
+                BasicTooltipText = Loca.defaultKeybindHint,
+                Text = Loca.defaultKeybind,
                 Font = GameService.Content.DefaultFont18
             };
             
@@ -82,7 +83,7 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Width = 60,
                 Height = 30,
-                Text = "Apply",
+                Text = Loca.apply,
                 Parent = defaultKeybindFlowPanel
             };
             
@@ -90,8 +91,8 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Parent = mainFlowPanel,
                 Width = mainFlowPanel.Width,
-                BasicTooltipText = "Keybinding to use for a specific character or specializations",
-                Text = "Character Specific Keybinds",
+                BasicTooltipText = Loca.characterSpecificKeybindsHint,
+                Text = Loca.characterSpecificKeybinds,
                 Font = GameService.Content.DefaultFont18
             };
             
@@ -122,7 +123,7 @@ namespace flakysalt.CharacterKeybinds.Views
             
             addEntryButton = new StandardButton()
             {
-                Text = "+ Add Binding",
+                Text = Loca.addNewBindingButtonText,
                 Parent = scrollView,
                 Width = buildPanel.ContentRegion.Size.X
             };
@@ -132,10 +133,9 @@ namespace flakysalt.CharacterKeybinds.Views
             defaultKeybindDropdown.ValueChanged += (sender, args) => OnDefaultKeymapChanged?.Invoke(sender, args.CurrentValue);
             buildPanel.Resized += (sender, args) =>
             {
-                Logger.GetLogger<CharacterKeybindsTab>().Debug($"Window{buildPanel.Size}| Content: {buildPanel.ContentRegion.Size},");
                 mainFlowPanel.Size = buildPanel.ContentRegion.Size;
                 addEntryButton.Width = buildPanel.ContentRegion.Size.X;
-                _spinner.Location = new Point(buildPanel.ContentBounds.X / 2 - 32, buildPanel.ContentBounds.Y  / 2 - 32);
+                _spinner.Location = new Point(buildPanel.ContentRegion.Size.X / 2 - 32, buildPanel.ContentRegion.Size.Y  / 2 - 32);
                 errorInfoIcon.Location = new Point(mainFlowPanel.Right - 64, mainFlowPanel.Top + 16);
             };
             base.Build(buildPanel);
@@ -173,10 +173,7 @@ namespace flakysalt.CharacterKeybinds.Views
         {
             var keybindFlowContainer = new KeybindFlowContainer()
             {
-                Parent = keybindScrollView,
-                Width = keybindScrollView.Width,
-                CanScroll = false,
-                FlowDirection = ControlFlowDirection.LeftToRight,
+                Parent = keybindScrollView
             };
 
             return keybindFlowContainer;
@@ -201,9 +198,9 @@ namespace flakysalt.CharacterKeybinds.Views
         public void AttachListeners(KeybindFlowContainer keybindFlowContainer,
             EventHandler<Keymap> onApplyAction,
             EventHandler<KeymapEventArgs> onDataChanged,
-            EventHandler<Keymap> OnDeleteAction) 
+            EventHandler<Keymap> onDeleteAction) 
         {
-            keybindFlowContainer.AttachListeners(onApplyAction, onDataChanged, OnDeleteAction);
+            keybindFlowContainer.AttachListeners(onApplyAction, onDataChanged, onDeleteAction);
         }
 
         public void ClearKeybindEntries()

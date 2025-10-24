@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Blish_HUD.Input;
 using Blish_HUD.Settings;
+using flakysalt.CharacterKeybinds.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using flakysalt.CharacterKeybinds.Data;
@@ -38,32 +39,34 @@ namespace flakysalt.CharacterKeybinds.Model
 			gw2KeybindsFolder = settings.DefineSetting(
 			"GW2 Keybind Path",
 			TargetFolderPath,
-			"Keybins Folder Path",
-			"Path to the Keybinds folder.\nIf you dont know where this is, export your keybinds via the GW2 ingame menu and the location is shown in the ingame chat");
+			() => SettingsLoca.keybindsDirectorySetting,
+			() => SettingsLoca.keybindsDirectoryHint);
 
 			optionsKeybind = settings.DefineSetting(nameof(optionsKeybind),
 			new KeyBinding(Keys.F11),
-				() => "Options Menu Keybind");
+				() => SettingsLoca.optionsMenuKeybindsSetting);
+			
 			useDefaultKeybinds = settings.DefineSetting(
 				"Use Default Keybinds",
 				true,
-				"Use Default Keybinds",
-				"Switching to default keybinds when no others are defined for a character or specialization.");
+				() => SettingsLoca.useDefaultKeybindsSetting,
+				() => SettingsLoca.useDefaultKeybindsHint);
 
 			changeKeybindsWhenSwitchingSpecialization = settings.DefineSetting(
 				"Change Keybinds When Switching Specialization",
 				true,
-				"Change keybinds When Switching Specialization",
-				"Automatically change keybinds when switching elite specializations on the same character.");
+				() => SettingsLoca.changeKeybindsOnSpecSwitchSetting,
+				() => SettingsLoca.changeKeybindsOnSpecSwitchHint);
 
 			displayCornerIcon = settings.DefineSetting(nameof(displayCornerIcon),
 				true,
-				"Show corner icon",
-				"Show/Hide the corner icon to open the keybinds window.");
+				() => SettingsLoca.showCornerIconSetting,
+				() => SettingsLoca.showCornerIconHint);
+			
 			autoClickSpeedMultiplier = settings.DefineSetting(nameof(autoClickSpeedMultiplier),
 				1.0f,
-				"Keybindings Apply Speed",
-				"Adjusts how fast the keybindings will be applied.\nLower (Left) this if your system is weaker and has trouble applying the keybindings.");
+				() => SettingsLoca.autoClickSpeedMultiplierSetting,
+				() => SettingsLoca.autoClickSpeedMultiplierHint);
 			autoClickSpeedMultiplier.SetRange(0.5f,2.5f);
 
 			internalSettingsCollection = settings.AddSubCollection("internal Settings");

@@ -1,0 +1,47 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="moduleName" xml:space="preserve">
+        <value>Charakter Tastenbindung</value>
+    </data>
+    <data name="defaultCharacterEntry" xml:space="preserve">
+        <value>Charakter Auswählen</value>
+    </data>
+    <data name="wildcardSpecializationName" xml:space="preserve">
+        <value>Alle Spezialisierungen</value>
+    </data>
+    <data name="invalidSpecializationName" xml:space="preserve">
+        <value>Ungültig</value>
+    </data>
+    <data name="defaultSpecializationEntry" xml:space="preserve">
+        <value>Spezialisierung</value>
+    </data>
+    <data name="defaultKeybindsEntry" xml:space="preserve">
+        <value>Tastenbindung</value>
+    </data>
+    <data name="coreSpecializationName" xml:space="preserve">
+        <value>Kern Spezialisierung</value>
+    </data>
+    <data name="apply" xml:space="preserve">
+        <value>Anwenden</value>
+    </data>
+    <data name="delete" xml:space="preserve">
+        <value>Löschen</value>
+    </data>
+    <data name="troubleshootWindowName" xml:space="preserve">
+        <value>Fehlerbehebung</value>
+    </data>
+    <data name="addNewBindingButtonText" xml:space="preserve">
+        <value>a</value>
+    </data>
+</root>

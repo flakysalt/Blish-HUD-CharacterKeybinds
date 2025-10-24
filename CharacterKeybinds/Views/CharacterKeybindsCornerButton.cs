@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Blish_HUD;
 using Blish_HUD.Controls;
 using Blish_HUD.Input;
+using flakysalt.CharacterKeybinds.Resources;
 using flakysalt.CharacterKeybinds.Model;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -38,7 +39,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 cornerIcon = new CornerIcon
                 {
                     Icon = _cornerTexture,
-                    BasicTooltipText = "Character Keybinds",
+                    BasicTooltipText = Loca.moduleName,
                     Parent = GameService.Graphics.SpriteScreen
                 };
                 cornerIcon.Click += CornerIconClicked;

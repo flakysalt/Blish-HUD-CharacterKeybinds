@@ -11,6 +11,7 @@ using flakysalt.CharacterKeybinds.Model;
 using flakysalt.CharacterKeybinds.Views.UiElements;
 using System.Linq;
 using Blish_HUD.Modules.Managers;
+using flakysalt.CharacterKeybinds.Resources;
 
 namespace flakysalt.CharacterKeybinds.Views
 {
@@ -42,7 +43,7 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Emblem = emblem,
                 Parent = GameService.Graphics.SpriteScreen,
-                Title = "Troubleshoot Window",
+                Title = Loca.troubleshootWindowName,
                 SavesPosition = true,
                 Id = $"flakysalt_{nameof(AutoClickerView)}",
                 CanClose = true
@@ -58,13 +59,7 @@ namespace flakysalt.CharacterKeybinds.Views
             };
             var troubleshootText = new Label
             {
-                Text = "Only change the position of the markes if you erxperience problems. \n\n" +
-                "Enable the markers by pressing 'Toggle Marker Visibility'\n" +
-                "Move the marker to the following positions if they do not allign automatically:\n" +
-                "1. The Options menu tab\n" +
-                "2. The dropdown at the bottom right of the options menu\n" +
-                "3. The first entry of the dropdown when opening it\n" +
-                "4. The 'Yes' button of the confirmation popup when importing key binds",
+                Text = Loca.troubleshootText,
                 Width = mainFlowPanel.Width,
                 Height = 150,
                 Parent = mainFlowPanel,
@@ -81,22 +76,22 @@ namespace flakysalt.CharacterKeybinds.Views
 
             ToggleVisibilityButton = new StandardButton()
             {
-                Text = "Toggle Marker Visibility",
+                Text = Loca.troubleshootMarkers,
                 Width = 160,
                 Parent = buttonFlowPanel,
             };
 
             resetPositionButton = new StandardButton()
             {
-                Text = "Reset Marker Positions",
+                Text = Loca.troubleshootResetMarkers,
                 Width = 160,
                 Parent = buttonFlowPanel
             };
 
             testClickerButton = new StandardButton()
             {
-                Text = "Test Markers",
-                BasicTooltipText = "This will simulate the sequence of clicks",
+                Text = Loca.troubleshootTestButtonText,
+                BasicTooltipText = Loca.troubleshootTestButtonHint,
                 Width = 160,
                 Parent = buttonFlowPanel
             };
@@ -175,7 +170,7 @@ namespace flakysalt.CharacterKeybinds.Views
         
         public async Task ClickInOrder()
         {
-            ScreenNotification.ShowNotification("Switching keybinds... ", ScreenNotification.NotificationType.Red,
+            ScreenNotification.ShowNotification(Loca.switchKeybindsNotificationText, ScreenNotification.NotificationType.Red,
                 duration: 4 - (int)settingsModel.autoClickSpeedMultiplier.Value);
             var keyboardShortcut = settingsModel.optionsKeybind.Value.PrimaryKey;
             await Task.Delay(1000);

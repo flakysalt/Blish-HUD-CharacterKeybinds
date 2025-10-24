@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.33529.622
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharacterKeybinds", "CharacterKeybinds.csproj", "{4052F050-6788-472E-AEE3-B393F3C1D54B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharacterKeybinds-Tests", "..\Tests\CharacterKeybinds-Tests\CharacterKeybinds-Tests.csproj", "{91E2EDB1-8268-4A76-8E41-DC4FD1AAD2EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocaAutomation", "..\LocaAutomation\LocaAutomation.csproj", "{DFA80448-86E6-4A6E-BE89-BFEC9476B2E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{4052F050-6788-472E-AEE3-B393F3C1D54B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4052F050-6788-472E-AEE3-B393F3C1D54B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4052F050-6788-472E-AEE3-B393F3C1D54B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91E2EDB1-8268-4A76-8E41-DC4FD1AAD2EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91E2EDB1-8268-4A76-8E41-DC4FD1AAD2EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91E2EDB1-8268-4A76-8E41-DC4FD1AAD2EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91E2EDB1-8268-4A76-8E41-DC4FD1AAD2EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFA80448-86E6-4A6E-BE89-BFEC9476B2E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA80448-86E6-4A6E-BE89-BFEC9476B2E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA80448-86E6-4A6E-BE89-BFEC9476B2E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA80448-86E6-4A6E-BE89-BFEC9476B2E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,3 +5,5 @@ CharacterKeybinds/.idea
 CharacterKeybinds/CharacterKeybinds.sln.DotSettings.user
 Tests/CharacterKeybinds-Tests/obj
 Tests/CharacterKeybinds-Tests/bin
+LocaAutomation/bin
+LocaAutomation/obj

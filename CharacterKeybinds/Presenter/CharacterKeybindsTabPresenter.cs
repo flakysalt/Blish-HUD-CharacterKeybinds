@@ -9,6 +9,7 @@ using flakysalt.CharacterKeybinds.Views.UiElements;
 using flakysalt.CharacterKeybinds.Model;
 using System.Globalization;
 using System.Linq;
+using flakysalt.CharacterKeybinds.Resources;
 using flakysalt.CharacterKeybinds.Util;
 using flakysalt.CharacterKeybinds.Data;
 using Microsoft.Xna.Framework;
@@ -104,7 +105,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
             }
             catch (Exception e)
             {
-                Logger.Error(e, "[CharacterKeybindSettingsPresenter] Failed to attach to View");
+                Logger.Error(e, "Failed to attach to View");
             }
         }
 
@@ -117,7 +118,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
             }
             catch (Exception e)
             {
-                Logger.Error(e, "[CharacterKeybindSettingsPresenter] Failed to attach to Model");
+                Logger.Error(e, "Failed to attach to Model");
             }
         }
 
@@ -139,9 +140,18 @@ namespace flakysalt.CharacterKeybinds.Presenter
                     var character = Model.GetCharacter(keymap.CharacterName);
                     if (character != null)
                     {
-                        iconAssetId =
-                            int.Parse(Path.GetFileNameWithoutExtension(Model.GetProfession(character.Profession).Icon
-                                .Url.AbsoluteUri));
+                        var spec = Model.GetSpecializationById(keymap.SpecialisationId);
+                        if (spec?.ProfessionIconBig != null)
+                        {
+                            iconAssetId =
+                                int.Parse(Path.GetFileNameWithoutExtension(spec.ProfessionIconBig.Value.Url.AbsoluteUri));
+                        }
+                        else
+                        {
+                            iconAssetId = 
+                                int.Parse(Path.GetFileNameWithoutExtension(Model.GetProfession(character.Profession).IconBig
+                                    .Url.AbsoluteUri));
+                        }
                     }
 
                     var container = View?.AddKeybind();
@@ -175,24 +185,24 @@ namespace flakysalt.CharacterKeybinds.Presenter
             if (_apiService.HasRequiredPermissions() == false)
             {
                 isValid = false;
-                errors.Add("Missing API key or insufficient permissions.");
+                errors.Add(Loca.errorMessageMissingApiPermissions);
             }
             
             if (Model.NeedsMigration)
             {
                 isValid = false;
-                errors.Add("Old keybinds format found. Please go to the Migration tab to update your keybinds.");
+                errors.Add(Loca.errorMessageNeedsMigration);
             }
             
             if (Model.KeybindsFoldersValid == false)
             {
                 isValid = false;
-                errors.Add( "The selected keybinds folder is invalid. Please check your settings.");
+                errors.Add(Loca.errorMessageInvalidFolder);
             }
 
             if (!isValid)
             {
-                errorMessage = $"{errors.Count} Potential issues detected:\n\n";
+                errorMessage = $"{errors.Count} {Loca.errorMessageIssueCounter}:\n\n";
                 errorMessage += string.Join(Environment.NewLine, errors);
             }
 
@@ -331,7 +341,6 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private async Task LoadCharacterInformationAsync()
         {
-
             try
             {
                 View.SetSpinner(true);
