@@ -34,7 +34,7 @@
         <value>Core Specialization</value>
     </data>
     <data name="wildcardSpecializationName" xml:space="preserve">
-        <value>All Specialization</value>
+        <value>All Specializations</value>
     </data>
     <data name="invalidSpecializationName" xml:space="preserve">
         <value>Invalid</value>

@@ -20,4 +20,40 @@
     <data name="optionsMenuKeybindsSetting" xml:space="preserve">
         <value>Optionsmenü Tastenbindung</value>
     </data>
+    <data name="anetMacroPolicyButton" xml:space="preserve">
+        <value>Arenanet Macro Politik</value>
+    </data>
+    <data name="autoClickSpeedMultiplierHint" xml:space="preserve">
+        <value>Passt an, wie schnell die Schlüsselbindungen angewendet werden. \nLower (links) dies, wenn Ihr System schwächer ist und Schwierigkeiten hat, die Schlüsselbindungen anzuwenden.</value>
+    </data>
+    <data name="autoClickSpeedMultiplierSetting" xml:space="preserve">
+        <value>Schlüsselanbindungen Apply Speed</value>
+    </data>
+    <data name="changeKeybindsOnSpecSwitchHint" xml:space="preserve">
+        <value>Ändern Sie Tastenkombinationen automatisch beim Schalten von Elite-Spezialisierungen auf dem gleichen Zeichen.</value>
+    </data>
+    <data name="changeKeybindsOnSpecSwitchSetting" xml:space="preserve">
+        <value>Schlüsselbänder ändern Beim Umschalten Spezialisierung</value>
+    </data>
+    <data name="helpFaqButton" xml:space="preserve">
+        <value>Hilfe / FAQ</value>
+    </data>
+    <data name="reportBugButton" xml:space="preserve">
+        <value>Einen Fehler melden</value>
+    </data>
+    <data name="showCornerIconHint" xml:space="preserve">
+        <value>Zeige das Ecksymbol an, um das Keybind-Fenster zu öffnen.</value>
+    </data>
+    <data name="showCornerIconSetting" xml:space="preserve">
+        <value>Ecksymbol anzeigen</value>
+    </data>
+    <data name="troubleshootButton" xml:space="preserve">
+        <value>Fehlerbehebung</value>
+    </data>
+    <data name="useDefaultKeybindsHint" xml:space="preserve">
+        <value>Umschalten auf Standard-Keybinden, wenn keine anderen für ein Zeichen oder Spezialisierung definiert sind.</value>
+    </data>
+    <data name="useDefaultKeybindsSetting" xml:space="preserve">
+        <value>Default Keybinds verwenden</value>
+    </data>
 </root>

@@ -63,4 +63,7 @@
     <data name="troubleshootButton" xml:space="preserve">
         <value>Troubleshoot</value>
     </data>
+    <data name="test" xml:space="preserve">
+        <value />
+    </data>
 </root>

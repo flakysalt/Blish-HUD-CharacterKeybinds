@@ -21,7 +21,7 @@ namespace flakysalt.CharacterKeybinds.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Loca {
+    internal class Loca {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -294,7 +294,7 @@ namespace flakysalt.CharacterKeybinds.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to All Specialization.
+        ///   Looks up a localized string similar to All Specializations.
         /// </summary>
         internal static string wildcardSpecializationName {
             get {

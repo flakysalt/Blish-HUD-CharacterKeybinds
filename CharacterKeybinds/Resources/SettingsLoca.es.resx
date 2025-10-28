@@ -11,4 +11,49 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    <data name="anetMacroPolicyButton" xml:space="preserve">
+        <value>Arenanet Macro Policy</value>
+    </data>
+    <data name="autoClickSpeedMultiplierHint" xml:space="preserve">
+        <value>Ajusta lo rápido que se aplicarán las teclas. \nLower (izquierda) esto si su sistema es más débil y tiene problemas para aplicar las keybindings.</value>
+    </data>
+    <data name="autoClickSpeedMultiplierSetting" xml:space="preserve">
+        <value>Keybindings Aplique Speed</value>
+    </data>
+    <data name="changeKeybindsOnSpecSwitchHint" xml:space="preserve">
+        <value>Cambiar automáticamente llaveros al cambiar las especializaciones de élite en el mismo personaje.</value>
+    </data>
+    <data name="changeKeybindsOnSpecSwitchSetting" xml:space="preserve">
+        <value>Cambio de componentes clave Cuando se cambia la especialización</value>
+    </data>
+    <data name="helpFaqButton" xml:space="preserve">
+        <value>Ayuda / FAQ</value>
+    </data>
+    <data name="keybindsDirectoryHint" xml:space="preserve">
+        <value>Camino a la carpeta Keybinds.\n Si no sabes dónde es esto, exporta tus pulsadores a través del menú del juego GW2 y la ubicación se muestra en el chat del juego</value>
+    </data>
+    <data name="keybindsDirectorySetting" xml:space="preserve">
+        <value>Keybinds Carpeta</value>
+    </data>
+    <data name="optionsMenuKeybindsSetting" xml:space="preserve">
+        <value>Menú de opciones</value>
+    </data>
+    <data name="reportBugButton" xml:space="preserve">
+        <value>Reportar un error</value>
+    </data>
+    <data name="showCornerIconHint" xml:space="preserve">
+        <value>Mostrar/Idear el icono de la esquina para abrir la ventana de llaveros.</value>
+    </data>
+    <data name="showCornerIconSetting" xml:space="preserve">
+        <value>Mostrar icono de esquina</value>
+    </data>
+    <data name="troubleshootButton" xml:space="preserve">
+        <value>Solución de problemas</value>
+    </data>
+    <data name="useDefaultKeybindsHint" xml:space="preserve">
+        <value>Cambiar a botones predeterminados cuando no se definen otros para un carácter o especialización.</value>
+    </data>
+    <data name="useDefaultKeybindsSetting" xml:space="preserve">
+        <value>Use Keybinds por defecto</value>
+    </data>
 </root>

@@ -11,4 +11,79 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    <data name="addNewBindingButtonText" xml:space="preserve">
+        <value>+ Añadir nuevo enlace</value>
+    </data>
+    <data name="apiLoadingHint" xml:space="preserve">
+        <value>Cargando datos de API...</value>
+    </data>
+    <data name="apply" xml:space="preserve">
+        <value>Aplicar</value>
+    </data>
+    <data name="characterSpecificKeybinds" xml:space="preserve">
+        <value>Keybinds específicos de carácter</value>
+    </data>
+    <data name="characterSpecificKeybindsHint" xml:space="preserve">
+        <value>Keybinding a utilizar para un carácter o especializaciones específicos</value>
+    </data>
+    <data name="coreSpecializationName" xml:space="preserve">
+        <value>Core Specialization</value>
+    </data>
+    <data name="defaultCharacterEntry" xml:space="preserve">
+        <value>Seleccionar caracteres</value>
+    </data>
+    <data name="defaultKeybind" xml:space="preserve">
+        <value>Keybinds predeterminados</value>
+    </data>
+    <data name="defaultKeybindsEntry" xml:space="preserve">
+        <value>Keybinds</value>
+    </data>
+    <data name="defaultSpecializationEntry" xml:space="preserve">
+        <value>Especialización</value>
+    </data>
+    <data name="delete" xml:space="preserve">
+        <value>Suprimir</value>
+    </data>
+    <data name="errorMessageInvalidFolder" xml:space="preserve">
+        <value>La carpeta seleccionada de llaveros es inválida. Por favor, compruebe su configuración.</value>
+    </data>
+    <data name="errorMessageIssueCounter" xml:space="preserve">
+        <value>Posibles problemas detectados</value>
+    </data>
+    <data name="errorMessageNeedsMigration" xml:space="preserve">
+        <value>El formato antiguo de llaveros encontrado. Por favor, vaya a la pestaña Migración para actualizar sus teclados.</value>
+    </data>
+    <data name="invalidSpecializationName" xml:space="preserve">
+        <value>Inválidos</value>
+    </data>
+    <data name="migration" xml:space="preserve">
+        <value>Migración</value>
+    </data>
+    <data name="moduleName" xml:space="preserve">
+        <value>Caracter Keybinds</value>
+    </data>
+    <data name="switchKeybindsNotificationText" xml:space="preserve">
+        <value>Intercambiando llaveros...</value>
+    </data>
+    <data name="troubleshootMarkers" xml:space="preserve">
+        <value>Toggle Marker Visibilidad</value>
+    </data>
+    <data name="troubleshootResetMarkers" xml:space="preserve">
+        <value>Reiniciar las posiciones del marcador</value>
+    </data>
+    <data name="troubleshootTestButtonHint" xml:space="preserve">
+        <value>Esto simulará la secuencia de clics</value>
+    </data>
+    <data name="troubleshootTestButtonText" xml:space="preserve">
+        <value>Prueba</value>
+    </data>
+    <data name="troubleshootText" xml:space="preserve">
+        <value>Sólo cambia la posición de las marcas si tienes problemas de experiencia. \n\nEnable los marcadores pulsando 'Toggle Marker Visibilidad'\n Mueva el marcador a las siguientes posiciones si no alinean automáticamente:\n1. La pestaña del menú Opciones\n2. El desplegable en la parte inferior derecha del menú de opciones\n3. La primera entrada de la desplegable al abrirla\n4. El botón 'Sí' del popup de confirmación al importar las teclas se une</value>
+    </data>
+    <data name="troubleshootWindowName" xml:space="preserve">
+        <value>Solución de problemas</value>
+    </data>
+    <data name="wildcardSpecializationName" xml:space="preserve">
+        <value>Todas las Especializaciones</value>
+    </data>
 </root>

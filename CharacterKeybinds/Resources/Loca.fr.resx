@@ -11,4 +11,79 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    <data name="addNewBindingButtonText" xml:space="preserve">
+        <value>+ Ajouter une nouvelle liaison</value>
+    </data>
+    <data name="apiLoadingHint" xml:space="preserve">
+        <value>Chargement des données de l'API...</value>
+    </data>
+    <data name="apply" xml:space="preserve">
+        <value>Appliquer</value>
+    </data>
+    <data name="characterSpecificKeybinds" xml:space="preserve">
+        <value>Claviers spécifiques aux caractères</value>
+    </data>
+    <data name="characterSpecificKeybindsHint" xml:space="preserve">
+        <value>Reliure à utiliser pour un caractère ou des spécialisations spécifiques</value>
+    </data>
+    <data name="coreSpecializationName" xml:space="preserve">
+        <value>Spécialisation de base</value>
+    </data>
+    <data name="defaultCharacterEntry" xml:space="preserve">
+        <value>Sélectionner le caractère</value>
+    </data>
+    <data name="defaultKeybind" xml:space="preserve">
+        <value>Claviers par défaut</value>
+    </data>
+    <data name="defaultKeybindsEntry" xml:space="preserve">
+        <value>Boutons-clés</value>
+    </data>
+    <data name="defaultSpecializationEntry" xml:space="preserve">
+        <value>Spécialisation</value>
+    </data>
+    <data name="delete" xml:space="preserve">
+        <value>Supprimer</value>
+    </data>
+    <data name="errorMessageInvalidFolder" xml:space="preserve">
+        <value>Le dossier keybinds sélectionné est invalide. Veuillez vérifier vos paramètres.</value>
+    </data>
+    <data name="errorMessageIssueCounter" xml:space="preserve">
+        <value>Problèmes potentiels détectés</value>
+    </data>
+    <data name="errorMessageNeedsMigration" xml:space="preserve">
+        <value>Ancien format de keybinds trouvé. Allez dans l'onglet Migration pour mettre à jour vos keybinds.</value>
+    </data>
+    <data name="invalidSpecializationName" xml:space="preserve">
+        <value>Non valable</value>
+    </data>
+    <data name="migration" xml:space="preserve">
+        <value>Migrations</value>
+    </data>
+    <data name="moduleName" xml:space="preserve">
+        <value>Clés de caractères</value>
+    </data>
+    <data name="switchKeybindsNotificationText" xml:space="preserve">
+        <value>Changer les boutons...</value>
+    </data>
+    <data name="troubleshootMarkers" xml:space="preserve">
+        <value>Basculer la visibilité du marqueur</value>
+    </data>
+    <data name="troubleshootResetMarkers" xml:space="preserve">
+        <value>Réinitialiser les positions du marqueur</value>
+    </data>
+    <data name="troubleshootTestButtonHint" xml:space="preserve">
+        <value>Ceci simulera la séquence de clics</value>
+    </data>
+    <data name="troubleshootTestButtonText" xml:space="preserve">
+        <value>Essai</value>
+    </data>
+    <data name="troubleshootText" xml:space="preserve">
+        <value>Ne changer la position des marques que si vous avez des problèmes d'erxpérience. \n\nActiver les marqueurs en appuyant sur 'Toggle Marker Visibility'\n Déplacer le marqueur vers les positions suivantes s'ils ne s'alignent pas automatiquement :\n1. Le menu Options onglet\n2. Le menu déroulant en bas à droite du menu des options\n3. La première entrée du menu déroulant lors de son ouverture\n4. Le bouton « Oui » du popup de confirmation lors de l'importation de la clé se lie</value>
+    </data>
+    <data name="troubleshootWindowName" xml:space="preserve">
+        <value>Dépannage</value>
+    </data>
+    <data name="wildcardSpecializationName" xml:space="preserve">
+        <value>Toutes spécialisations</value>
+    </data>
 </root>

@@ -21,7 +21,7 @@ namespace flakysalt.CharacterKeybinds.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class SettingsLoca {
+    internal class SettingsLoca {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -38,7 +38,7 @@ namespace flakysalt.CharacterKeybinds.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CharacterKeybinds.Resources.SettingsLoca", typeof(SettingsLoca).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("flakysalt.CharacterKeybinds.Resources.SettingsLoca", typeof(SettingsLoca).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -164,6 +164,15 @@ namespace flakysalt.CharacterKeybinds.Resources {
         internal static string showCornerIconSetting {
             get {
                 return ResourceManager.GetString("showCornerIconSetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string test {
+            get {
+                return ResourceManager.GetString("test", resourceCulture);
             }
         }
         

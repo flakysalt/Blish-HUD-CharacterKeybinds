@@ -4,9 +4,11 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blish_HUD;
 using Blish_HUD.Content;
 using Blish_HUD.Input;
 using flakysalt.CharacterKeybinds.Resources;
+using Dropdown = flakysalt.CharacterKeybinds.Views.UiElements;
 
 namespace flakysalt.CharacterKeybinds.Views.UiElements
 {
@@ -21,11 +23,12 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
         private StandardButton RemoveButton { get;}
         private StandardButton ApplyButton { get; }
         private Image ProfessionImage { get; }
-        public Dropdown CharacterNameDropdown { get; }
-        public Dropdown SpecializationDropdown { get; }
-        public Dropdown KeymapDropdown { get; }
+        public Dropdown<string>  CharacterNameDropdown { get; }
+        public Dropdown<string> SpecializationDropdown { get; }
+        public Dropdown<string> KeymapDropdown { get; }
         
         readonly int _minDropdownWidth = 130;
+        readonly int maxDropdownHeight = 300;
 
         private string DefaultCharacterEntry => Loca.defaultCharacterEntry;
         private string DefaultKeybindsEntry => Loca.defaultKeybindsEntry;
@@ -58,30 +61,32 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
                 Size = new Point(32, 32),
             };
 
-            CharacterNameDropdown = new Dropdown
+            CharacterNameDropdown = new Dropdown<string>
             {
                 Height = 30,
                 Parent = this,
-                Width = _minDropdownWidth
+                Width = _minDropdownWidth,
+                PanelHeight = maxDropdownHeight
             };
 
-            SpecializationDropdown = new Dropdown
+            SpecializationDropdown = new Dropdown<string>
             {
                 Padding = new Thickness(22,0,0,0),
                 
                 Height = 30,
                 Parent = this,
                 Width = _minDropdownWidth,
+                PanelHeight = maxDropdownHeight
             };
             SpecializationDropdown.Items.Add(WildcardSpecialization);
             SpecializationDropdown.Items.Add(CoreSpecialization);
 
-            KeymapDropdown = new Dropdown
+            KeymapDropdown = new Dropdown<string>
             {
                 Height = 30,
                 Parent = this,
                 Width = _minDropdownWidth,
-                
+                PanelHeight = maxDropdownHeight
             };
             
             ApplyButton = new StandardButton
@@ -126,7 +131,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             RemoveButton.Enabled = enabled;
         }
 
-        public void SetDropdownContent(Dropdown dropdown, List<string> values)
+        public void SetDropdownContent(Dropdown<string> dropdown, List<string> values)
         {
             values.ForEach(e => dropdown.Items.Add(e));
         }
@@ -222,7 +227,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             };
         }
 
-        private void OnKeymapChanged(object sender, ValueChangedEventArgs args)
+        private void OnKeymapChanged(object sender, ValueChangedEventArgs<string> args)
         {
             ApplyButton.Enabled = KeymapDropdown.SelectedItem != DefaultKeybindsEntry;
 
@@ -230,13 +235,13 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             this._oldCharacterKeymap = GetKeymap();
         }
 
-        private void OnSpecializationChanged(object sender, ValueChangedEventArgs args)
+        private void OnSpecializationChanged(object sender, ValueChangedEventArgs<string> args)
         {
             OnDataChanged?.Invoke(this, GetKeymapArgs());
             this._oldCharacterKeymap = GetKeymap();
         }
 
-        private void OnCharacterChanged(object sender, ValueChangedEventArgs args)
+        private void OnCharacterChanged(object sender, ValueChangedEventArgs<string> args)
         {
             SpecializationDropdown.SelectedItem = DefaultSpecializationEntry;
 

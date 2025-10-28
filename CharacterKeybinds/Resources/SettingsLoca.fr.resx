@@ -11,4 +11,49 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    <data name="anetMacroPolicyButton" xml:space="preserve">
+        <value>Politique de Macro Arenanet</value>
+    </data>
+    <data name="autoClickSpeedMultiplierHint" xml:space="preserve">
+        <value>Ajuste la rapidité avec laquelle les touches seront appliquées. \nLower (Left) ceci si votre système est plus faible et a du mal à appliquer les touches.</value>
+    </data>
+    <data name="autoClickSpeedMultiplierSetting" xml:space="preserve">
+        <value>Clés d'application Vitesse</value>
+    </data>
+    <data name="changeKeybindsOnSpecSwitchHint" xml:space="preserve">
+        <value>Changer automatiquement les keybinds lors de la commutation des spécialisations élite sur le même caractère.</value>
+    </data>
+    <data name="changeKeybindsOnSpecSwitchSetting" xml:space="preserve">
+        <value>Changer les keybinds Lors du changement de spécialisation</value>
+    </data>
+    <data name="helpFaqButton" xml:space="preserve">
+        <value>Aide / FAQ</value>
+    </data>
+    <data name="keybindsDirectoryHint" xml:space="preserve">
+        <value>Chemin vers le dossier Keybinds.\n Si vous ne savez pas où c'est, exportez vos keybinds via le menu GW2 ingame et l'emplacement est affiché dans le chat ingame</value>
+    </data>
+    <data name="keybindsDirectorySetting" xml:space="preserve">
+        <value>Chemin du dossier Keybinds</value>
+    </data>
+    <data name="optionsMenuKeybindsSetting" xml:space="preserve">
+        <value>Menu des options</value>
+    </data>
+    <data name="reportBugButton" xml:space="preserve">
+        <value>Signaler un bug</value>
+    </data>
+    <data name="showCornerIconHint" xml:space="preserve">
+        <value>Afficher/Cacher l'icône du coin pour ouvrir la fenêtre des boutons.</value>
+    </data>
+    <data name="showCornerIconSetting" xml:space="preserve">
+        <value>Afficher l'icône du coin</value>
+    </data>
+    <data name="troubleshootButton" xml:space="preserve">
+        <value>Dépannage</value>
+    </data>
+    <data name="useDefaultKeybindsHint" xml:space="preserve">
+        <value>Passage aux keybinds par défaut quand aucun autre n'est défini pour un caractère ou une spécialisation.</value>
+    </data>
+    <data name="useDefaultKeybindsSetting" xml:space="preserve">
+        <value>Utiliser par défaut Keybinds</value>
+    </data>
 </root>

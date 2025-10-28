@@ -42,6 +42,48 @@
         <value>Fehlerbehebung</value>
     </data>
     <data name="addNewBindingButtonText" xml:space="preserve">
-        <value>a</value>
+        <value>+ Neue Tastenbindung hinzufügen</value>
+    </data>
+    <data name="apiLoadingHint" xml:space="preserve">
+        <value>Daten von API laden...</value>
+    </data>
+    <data name="characterSpecificKeybinds" xml:space="preserve">
+        <value>Charakterspezifische Tastenkombinationen</value>
+    </data>
+    <data name="characterSpecificKeybindsHint" xml:space="preserve">
+        <value>Schlüsselbindung für einen bestimmten Charakter oder Spezialisierungen</value>
+    </data>
+    <data name="defaultKeybind" xml:space="preserve">
+        <value>Standart Keybinds</value>
+    </data>
+    <data name="errorMessageInvalidFolder" xml:space="preserve">
+        <value>Der ausgewählte Keybinds-Ordner ist ungültig. Bitte überprüfen Sie Ihre Einstellungen.</value>
+    </data>
+    <data name="errorMessageIssueCounter" xml:space="preserve">
+        <value>Mögliche Probleme erkannt</value>
+    </data>
+    <data name="errorMessageNeedsMigration" xml:space="preserve">
+        <value>Old keybinds Format gefunden. Bitte gehen Sie auf die Registerkarte Migration, um Ihre Keybinds zu aktualisieren.</value>
+    </data>
+    <data name="migration" xml:space="preserve">
+        <value>Migration</value>
+    </data>
+    <data name="switchKeybindsNotificationText" xml:space="preserve">
+        <value>Schlüsselanhänger...</value>
+    </data>
+    <data name="troubleshootMarkers" xml:space="preserve">
+        <value>Toggle Marker Sichtbarkeit</value>
+    </data>
+    <data name="troubleshootResetMarkers" xml:space="preserve">
+        <value>Marker-Positionen zurücksetzen</value>
+    </data>
+    <data name="troubleshootTestButtonHint" xml:space="preserve">
+        <value>Dies simuliert die Reihenfolge der Klicks</value>
+    </data>
+    <data name="troubleshootTestButtonText" xml:space="preserve">
+        <value>Prüfung</value>
+    </data>
+    <data name="troubleshootText" xml:space="preserve">
+        <value>Ändern Sie nur die Position der Markierungen, wenn Sie Erxperience Probleme. \n\nDie Marker durch Drücken 'Toggle Marker Sichtbarkeit'\n Verschieben Sie den Marker in die folgenden Positionen, wenn er nicht automatisch ausschaltet:\n1. Die Menükarte Optionen\n2. Die Dropdown rechts unten im Menü Optionen\n3. Der erste Eintrag des Dropdowns beim Öffnen. Die 'Ja' Taste der Bestätigung Popup beim Import von Schlüssel binden</value>
     </data>
 </root>
