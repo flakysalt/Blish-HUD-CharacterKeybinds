@@ -4,6 +4,7 @@ using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Blish_HUD.Content;
 using flakysalt.CharacterKeybinds.Resources;
 using flakysalt.CharacterKeybinds.Views.UiElements;
@@ -146,11 +147,21 @@ namespace flakysalt.CharacterKeybinds.Views
             _spinner.Visible = state;
         }
         
-        public void SetErrorInfoIcon(bool isValid, bool isDataLoaded,string error)
+        public async Task SetErrorInfoIcon(Task<List<string>> errorTask, bool isDataLoaded)
         {
-            errorInfoIcon.BasicTooltipText = error;
-            errorInfoIcon.Visible = !isValid;
-            SetKeybindContainerEnabled(isValid && isDataLoaded);
+            string errorMessage = string.Empty;
+
+            List<string> errors = await errorTask;
+            bool containsErrors = errors.Count > 0;
+            
+            if (containsErrors)
+            {
+                errorMessage = $"{errors.Count} {Loca.errorMessageIssueCounter}:\n\n";
+                errorMessage += string.Join(Environment.NewLine, errors);
+            }
+            errorInfoIcon.BasicTooltipText = errorMessage;
+            errorInfoIcon.Visible = containsErrors;
+            SetKeybindContainerEnabled(!containsErrors && isDataLoaded);
         }
 
         private void SetKeybindContainerEnabled(bool enabled)

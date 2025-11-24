@@ -14,6 +14,8 @@ using flakysalt.CharacterKeybinds.Util;
 using flakysalt.CharacterKeybinds.Data;
 using Microsoft.Xna.Framework;
 using flakysalt.CharacterKeybinds.Services;
+using Gw2Sharp.WebApi.V2.Models;
+using File = System.IO.File;
 
 namespace flakysalt.CharacterKeybinds.Presenter
 {
@@ -21,6 +23,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
         IDisposable
     {
         private readonly Logger Logger = Logger.GetLogger<CharacterKeybindsTabPresenter>();
+        private int errorRetryCount = 0;
 
         private static object taskLock = new object();
         private static bool isTaskStarted;
@@ -33,7 +36,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
         private readonly AutoClickerView _autoClicker;
 
         public CharacterKeybindsTabPresenter(
-            CharacterKeybindsTab view, 
+            CharacterKeybindsTab view,
             CharacterKeybindsModel model,
             Gw2ApiService apiService,
             CharacterKeybindsSettings settingsModel,
@@ -46,7 +49,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
             AttachToGameServices();
             AttachViewHandler();
             AttachModelHandler();
-            
+
             _ = LoadCharacterInformationAsync();
             DoUpdateView();
         }
@@ -69,14 +72,19 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 GameService.Overlay.UserLocaleChanged += OnLocaleChange;
                 GameService.Gw2Mumble.PlayerCharacter.NameChanged += PlayerCharacter_NameChanged;
                 GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged += PlayerCharacter_SpecializationChanged;
-                
+                _apiService.SubtokenUpdated += OnSubtokenUpdated;
+
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "[CharacterKeybindSettingsPresenter] Failed to attach to Game Services");
             }
         }
-
+        private void OnSubtokenUpdated(object sender, ValueEventArgs<IEnumerable<TokenPermission>> e)
+        {
+            Task.Run(LoadCharacterInformationAsync);
+            SetUpdateInterval(5_000);
+        }
         void OnLocaleChange(object sender, ValueEventArgs<CultureInfo> info)
         {
             Model.ClearResources();
@@ -89,6 +97,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
             GameService.Overlay.UserLocaleChanged -= OnLocaleChange;
             GameService.Gw2Mumble.PlayerCharacter.NameChanged -= PlayerCharacter_NameChanged;
             GameService.Gw2Mumble.PlayerCharacter.SpecializationChanged -= PlayerCharacter_SpecializationChanged;
+            _apiService.SubtokenUpdated -= OnSubtokenUpdated;
 
             View.OnAddButtonClicked -= OnAddButtonPressed;
             View.OnApplyDefaultKeymapClicked -= OnApplyDefaultKeymap;
@@ -148,7 +157,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
                         }
                         else
                         {
-                            iconAssetId = 
+                            iconAssetId =
                                 int.Parse(Path.GetFileNameWithoutExtension(Model.GetProfession(character.Profession).IconBig
                                     .Url.AbsoluteUri));
                         }
@@ -170,44 +179,41 @@ namespace flakysalt.CharacterKeybinds.Presenter
             }
             finally
             {
-                View?.SetErrorInfoIcon(IsDataValid(out string error),Model.IsDataLoaded,error);
+
+                View?.SetErrorInfoIcon(HasErrors(), Model.IsDataLoaded);
             }
             base.UpdateView();
         }
 
-        bool IsDataValid(out string errorMessage)
+        async Task<List<string>> HasErrors()
         {
             List<string> errors = new List<string>();
-            errorMessage = string.Empty;
 
-            bool isValid = true;
-            
-            if (_apiService.HasRequiredPermissions() == false)
+            if (await _apiService.IsApiAvailable() == false)
             {
-                isValid = false;
+                errors.Add(Loca.errorMessageMissingApiDown);
+            }
+            if (_apiService.HasSubtoken() == false)
+            {
+                errors.Add(Loca.errorMessageMissingSubtoken);
+            }
+            
+            if (_apiService.HasSubtoken() && _apiService.HasRequiredPermissions() == false)
+            {
                 errors.Add(Loca.errorMessageMissingApiPermissions);
             }
-            
+
             if (Model.NeedsMigration)
             {
-                isValid = false;
                 errors.Add(Loca.errorMessageNeedsMigration);
             }
-            
+
             if (Model.KeybindsFoldersValid == false)
             {
-                isValid = false;
                 errors.Add(Loca.errorMessageInvalidFolder);
             }
 
-            if (!isValid)
-            {
-                errorMessage = $"{errors.Count} {Loca.errorMessageIssueCounter}:\n\n";
-                errorMessage += string.Join(Environment.NewLine, errors);
-            }
-
-
-            return isValid;
+            return errors;
         }
 
 
@@ -262,7 +268,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 if (_settingsModel.useDefaultKeybinds.Value)
                 {
                     keymap = Model.GetKeymapName(newCharacterName, currentSpecialization)?.KeymapName ??
-                                 Model.GetDefaultKeybind();
+                             Model.GetDefaultKeybind();
                 }
                 else
                 {
@@ -315,7 +321,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private void PlayerCharacter_SpecializationChanged(object sender, ValueEventArgs<int> newSpecialization)
         {
-            if(_settingsModel.changeKeybindsWhenSwitchingSpecialization.Value == false) return;
+            if (_settingsModel.changeKeybindsWhenSwitchingSpecialization.Value == false) return;
             lock (taskLock)
             {
                 if (!isTaskStarted)
@@ -341,14 +347,26 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private async Task LoadCharacterInformationAsync()
         {
+            if (!_apiService.HasSubtoken())
+            {
+                return;
+            }
+            
             try
             {
                 View.SetSpinner(true);
                 await Model.LoadResourcesAsync();
                 SetUpdateInterval(300_000); // Set to 5 minute after initial load
+                errorRetryCount = 0;
             }
             catch (Exception e)
             {
+                errorRetryCount++;
+                if (errorRetryCount % 5 == 0)
+                {
+                    Logger.Error($"Failed to load data from the API! Retries: {errorRetryCount} \n {e}");
+
+                }
                 Logger.Info($"Failed to load data from the API \n {e}");
             }
             finally

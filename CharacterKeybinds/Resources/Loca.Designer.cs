@@ -186,11 +186,29 @@ namespace flakysalt.CharacterKeybinds.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GW2 API is experiencing issues. This could impact the modules performance..
+        /// </summary>
+        internal static string errorMessageMissingApiDown {
+            get {
+                return ResourceManager.GetString("errorMessageMissingApiDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing API key or insufficient permissions..
         /// </summary>
         internal static string errorMessageMissingApiPermissions {
             get {
                 return ResourceManager.GetString("errorMessageMissingApiPermissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a character to load the API key!.
+        /// </summary>
+        internal static string errorMessageMissingSubtoken {
+            get {
+                return ResourceManager.GetString("errorMessageMissingSubtoken", resourceCulture);
             }
         }
         

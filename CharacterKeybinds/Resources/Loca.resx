@@ -99,4 +99,10 @@
     <data name="errorMessageIssueCounter" xml:space="preserve">
         <value>Potential issues detected</value>
     </data>
+    <data name="errorMessageMissingApiDown" xml:space="preserve">
+        <value>GW2 API is experiencing issues. This could impact the modules performance.</value>
+    </data>
+    <data name="errorMessageMissingSubtoken" xml:space="preserve">
+        <value>Select a character to load the API key!</value>
+    </data>
 </root>
