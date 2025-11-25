@@ -1,10 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using Blish_HUD;
 using Microsoft.Xna.Framework;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Input;
 using Blish_HUD.Settings.UI.Views;
+using flakysalt.CharacterKeybinds.Data.Tutorial;
 using flakysalt.CharacterKeybinds.Model;
 using flakysalt.CharacterKeybinds.Resources;
 
@@ -20,7 +23,8 @@ namespace flakysalt.CharacterKeybinds.Views
         private ViewContainer _lastSettingContainer;
         private StandardButton reportBugButton, fairMacroUseButton;
 
-        private StandardButton characterKeybindSettinsButton, openTroubleshootWindowButton, faqButton;
+        private StandardButton characterKeybindSettinsButton, openTroubleshootWindowButton, faqButton, tutorialButton;
+        private Action onCloseAction;
         
         public SettingsWindow(CharacterKeybindsSettings model, MainWindowView moduleWindowView, AutoClickerView autoclickView)
 		{
@@ -52,13 +56,33 @@ namespace flakysalt.CharacterKeybinds.Views
                 AutoSizePadding = new Point(0, 15),
                 Parent = _settingFlowPanel,
             };
+            
+            tutorialButton = new StandardButton
+            {
+                Parent = topButtonPanel,
+                Left = 10,
+                Size = new Point(200, 50),
+                Text = SettingsLoca.tutorialButton
+            };
+            
+            onCloseAction += delegate
+            {
+                model.experiencedFtue.Value = true;
+            };
+            
+            tutorialButton.Click += delegate
+            {
+                var tutorialView = new TutorialView(onCloseAction);
+                tutorialView.Show(new SetupTutorial());
+                GameService.Overlay.BlishHudWindow.Hide();
+            };
 
             characterKeybindSettinsButton = new StandardButton
             {
                 Parent = topButtonPanel,
                 Left = 10,
                 Size = new Point(200, 50),
-                Text = "Keybind Settings"
+                Text = SettingsLoca.keybindSettingsButton
             };
             
             var topFlowPanel = new FlowPanel

@@ -56,4 +56,7 @@
     <data name="useDefaultKeybindsSetting" xml:space="preserve">
         <value>Default Keybinds verwenden</value>
     </data>
+    <data name="keybindSettingsButton" xml:space="preserve">
+        <value>Öffne Module Einstellungen</value>
+    </data>
 </root>

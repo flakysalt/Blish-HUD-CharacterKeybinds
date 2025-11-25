@@ -21,6 +21,8 @@ namespace flakysalt.CharacterKeybinds.Model
 		public SettingEntry<bool> useDefaultKeybinds;
 		public SettingEntry<bool> changeKeybindsWhenSwitchingSpecialization;
 		public SettingEntry<bool> displayCornerIcon;
+		public SettingEntry<bool> experiencedFtue;
+
 
 		//invisible settings
 		public SettingCollection internalSettingsCollection { get; private set; }
@@ -70,6 +72,8 @@ namespace flakysalt.CharacterKeybinds.Model
 			autoClickSpeedMultiplier.SetRange(0.5f,2.5f);
 
 			internalSettingsCollection = settings.AddSubCollection("internal Settings");
+			
+			experiencedFtue = internalSettingsCollection.DefineSetting(nameof(experiencedFtue), false);
 
 			defaultKeybinds = internalSettingsCollection.DefineSetting("defaultKeybinds", "");
 			

@@ -63,7 +63,10 @@
     <data name="troubleshootButton" xml:space="preserve">
         <value>Troubleshoot</value>
     </data>
-    <data name="test" xml:space="preserve">
-        <value />
+    <data name="tutorialButton" xml:space="preserve">
+        <value>Tutorial</value>
+    </data>
+    <data name="keybindSettingsButton" xml:space="preserve">
+        <value>Open Module Settings</value>
     </data>
 </root>

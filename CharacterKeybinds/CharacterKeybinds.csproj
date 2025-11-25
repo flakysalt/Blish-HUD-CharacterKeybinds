@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ref\images\" />
+    <Folder Include="ref\images\tutorial\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +28,10 @@
     <EmbeddedResource Update="Resources\SettingsLoca.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SettingsLoca.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TutorialLoca.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TutorialLoca.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -47,6 +51,11 @@
     </Compile>
     <Compile Update="LocaAutomation\UnitTest1.cs">
       <Link>Loca_Automation\UnitTest1.cs</Link>
+    </Compile>
+    <Compile Update="Resources\TutorialLoca.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TutorialLoca.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 

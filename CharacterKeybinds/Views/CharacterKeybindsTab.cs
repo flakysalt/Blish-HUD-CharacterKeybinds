@@ -16,7 +16,7 @@ namespace flakysalt.CharacterKeybinds.Views
     {
         private StandardButton addEntryButton, applyDefaultKeybindButton;
         private FlowPanel scrollView, mainFlowPanel, keybindScrollView;
-        private Dropdown defaultKeybindDropdown;
+        private Dropdown<string> defaultKeybindDropdown;
         private LoadingSpinner _spinner;
         private Label defaultKeybindsLabel;
         private Image errorInfoIcon;
@@ -74,10 +74,11 @@ namespace flakysalt.CharacterKeybinds.Views
                 WidthSizingMode = SizingMode.Fill
             };
             
-            defaultKeybindDropdown = new Dropdown
+            defaultKeybindDropdown = new Dropdown<string>
             {
                 Parent = defaultKeybindFlowPanel,
                 Height = 30,
+                PanelHeight = 300
             };
             
             applyDefaultKeybindButton = new StandardButton()
@@ -131,7 +132,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
             addEntryButton.Click += (sender, args) => OnAddButtonClicked?.Invoke(sender, args);
             applyDefaultKeybindButton.Click += (sender, args) => OnApplyDefaultKeymapClicked?.Invoke(sender, defaultKeybindDropdown.SelectedItem);
-            defaultKeybindDropdown.ValueChanged += (sender, args) => OnDefaultKeymapChanged?.Invoke(sender, args.CurrentValue);
+            defaultKeybindDropdown.ValueChanged += (sender, args) => OnDefaultKeymapChanged?.Invoke(sender, args.NewValue);
             buildPanel.Resized += (sender, args) =>
             {
                 mainFlowPanel.Size = buildPanel.ContentRegion.Size;

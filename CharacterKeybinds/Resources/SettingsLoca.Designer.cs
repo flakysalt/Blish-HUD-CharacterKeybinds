@@ -132,6 +132,15 @@ namespace flakysalt.CharacterKeybinds.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Module Settings.
+        /// </summary>
+        internal static string keybindSettingsButton {
+            get {
+                return ResourceManager.GetString("keybindSettingsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Options Menu Keybind.
         /// </summary>
         internal static string optionsMenuKeybindsSetting {
@@ -168,20 +177,20 @@ namespace flakysalt.CharacterKeybinds.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string test {
-            get {
-                return ResourceManager.GetString("test", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Troubleshoot.
         /// </summary>
         internal static string troubleshootButton {
             get {
                 return ResourceManager.GetString("troubleshootButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tutorial.
+        /// </summary>
+        internal static string tutorialButton {
+            get {
+                return ResourceManager.GetString("tutorialButton", resourceCulture);
             }
         }
         
