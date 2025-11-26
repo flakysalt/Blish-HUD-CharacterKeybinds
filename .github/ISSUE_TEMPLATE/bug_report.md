@@ -7,21 +7,25 @@ assignees: flakysalt
 
 ---
 
-**Describe the bug**
+## Describe the bug
 A clear and concise description of what the bug is.
 
-**Version**
+## Version
 What version do you use?
 
-**To Reproduce**
+## To Reproduce
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Screenshots**
+## Logs
+Please attach the logs either as attachment or text!
+You can find them here **"Documents\Guild Wars 2\addons\blishhud\logs"**
+
+## Screenshots*
 If applicable, add screenshots to help explain your problem.
 
-**Additional context**
+## Additional context
 Add any other context about the problem here.
