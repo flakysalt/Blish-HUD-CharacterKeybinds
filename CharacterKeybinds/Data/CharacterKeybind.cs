@@ -2,6 +2,7 @@
 
 namespace flakysalt.CharacterKeybinds.Data
 {
+	[Obsolete("Use Keymap class instead")]
 	[Serializable]
 	public class CharacterKeybind
 	{

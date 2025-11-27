@@ -11,9 +11,12 @@ namespace flakysalt.CharacterKeybinds.Services
         private readonly ContentsManager _contentsManager;
         private readonly Logger _logger = Logger.GetLogger<ContentService>();
 
+        public static ContentService Instance { get; private set; }
+
         public ContentService(ContentsManager contentsManager)
         {
             _contentsManager = contentsManager;
+            Instance = this;
         }
 
         public Texture2D GetTexture(string path)

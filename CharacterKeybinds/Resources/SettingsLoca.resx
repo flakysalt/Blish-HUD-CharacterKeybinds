@@ -69,4 +69,10 @@
     <data name="keybindSettingsButton" xml:space="preserve">
         <value>Open Module Settings</value>
     </data>
+    <data name="keybindsDirectoryValid" xml:space="preserve">
+        <value />
+    </data>
+    <data name="keybindsDirectoryInvalid" xml:space="preserve">
+        <value>This path is not valid! Please change it to where GW2 is storing its keybinds.</value>
+    </data>
 </root>

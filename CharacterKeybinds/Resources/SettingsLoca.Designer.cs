@@ -123,11 +123,29 @@ namespace flakysalt.CharacterKeybinds.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This path is not valid! Please change it to where GW2 is storing its keybinds..
+        /// </summary>
+        internal static string keybindsDirectoryInvalid {
+            get {
+                return ResourceManager.GetString("keybindsDirectoryInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keybinds Folder Path.
         /// </summary>
         internal static string keybindsDirectorySetting {
             get {
                 return ResourceManager.GetString("keybindsDirectorySetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string keybindsDirectoryValid {
+            get {
+                return ResourceManager.GetString("keybindsDirectoryValid", resourceCulture);
             }
         }
         

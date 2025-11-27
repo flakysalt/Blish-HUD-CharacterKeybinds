@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.Composition;
 using System.Threading.Tasks;
+using Blish_HUD;
 using Microsoft.Xna.Framework;
 using Blish_HUD.Content;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Modules;
 using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
+using flakysalt.CharacterKeybinds.Data.Tutorial;
 using flakysalt.CharacterKeybinds.Model;
 using flakysalt.CharacterKeybinds.Presenter;
 using flakysalt.CharacterKeybinds.Services;
@@ -36,6 +38,7 @@ namespace flakysalt.CharacterKeybinds
         private ContentService contentService;
         private Gw2ApiService apiService;
         private MainWindowModel mainWindowModel;
+        private TutorialView tutorialView;
 
         #endregion
 
@@ -81,6 +84,19 @@ namespace flakysalt.CharacterKeybinds
                 new Rectangle(24, 30, 545, 600),
                 new Rectangle(82, 30, 467, 600)
             );
+
+            Ftue();
+        }
+        private void Ftue()
+        {
+            tutorialView = new TutorialView(_settingsModel);
+
+            if (_settingsModel.experiencedFtue.Value == false && 
+                _settingsModel.Keymaps.Value.Count == 0)
+            {
+                tutorialView.Show(new SetupTutorial());
+                GameService.Overlay.BlishHudWindow.Hide();
+            }
         }
 
         private void CreateServices()

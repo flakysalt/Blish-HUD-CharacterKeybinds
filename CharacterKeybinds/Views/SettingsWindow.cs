@@ -72,8 +72,7 @@ namespace flakysalt.CharacterKeybinds.Views
             
             tutorialButton.Click += delegate
             {
-                var tutorialView = new TutorialView(onCloseAction);
-                tutorialView.Show(new SetupTutorial());
+                TutorialView.Instance.Show(new SetupTutorial());
                 GameService.Overlay.BlishHudWindow.Hide();
             };
 
@@ -91,21 +90,25 @@ namespace flakysalt.CharacterKeybinds.Views
                 FlowDirection = ControlFlowDirection.LeftToRight,
                 ControlPadding = new Vector2(5, 2),
                 HeightSizingMode = SizingMode.AutoSize,
-                AutoSizePadding = new Point(0, 15),
+                AutoSizePadding = new Point(0, 5),
                 Parent = _settingFlowPanel,
                 Visible = !Directory.Exists(model.gw2KeybindsFolder.Value)
             };
-            model.gw2KeybindsFolder.PropertyChanged += delegate
-            {
-                topFlowPanel.Visible = !Directory.Exists(model.gw2KeybindsFolder.Value);
-            };
-            new Label
+
+            var folderLabel = new Label
             {
                 Parent = topFlowPanel,
                 Width = topFlowPanel.Width,
-                Text = "This Path is not valid! Please change it to where GW2 is storing its keybinds.",
+                Text = Directory.Exists(model.gw2KeybindsFolder.Value) ? SettingsLoca.keybindsDirectoryValid : SettingsLoca.keybindsDirectoryInvalid,
                 TextColor = Color.OrangeRed,
                 AutoSizeHeight = true,
+            };
+            
+            model.gw2KeybindsFolder.PropertyChanged += delegate
+            {
+                bool valid = Directory.Exists(model.gw2KeybindsFolder.Value);
+                folderLabel.Text = valid ? SettingsLoca.keybindsDirectoryValid : SettingsLoca.keybindsDirectoryInvalid;
+                folderLabel.TextColor = valid? Color.GreenYellow : Color.OrangeRed;
             };
 
             foreach (var setting in model.settingsCollection.Where(s => s.SessionDefined))
@@ -114,7 +117,7 @@ namespace flakysalt.CharacterKeybinds.Views
 
                 if ((settingView = SettingView.FromType(setting, _settingFlowPanel.Width)) != null)
                 {
-                    _lastSettingContainer = new ViewContainer()
+                    _lastSettingContainer = new ViewContainer
                     {
                         WidthSizingMode = SizingMode.AutoSize,
                         HeightSizingMode = SizingMode.AutoSize,

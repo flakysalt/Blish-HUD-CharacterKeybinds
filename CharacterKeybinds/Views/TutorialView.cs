@@ -3,8 +3,10 @@ using Blish_HUD;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using flakysalt.CharacterKeybinds.Data;
+using flakysalt.CharacterKeybinds.Model;
 using flakysalt.CharacterKeybinds.Resources;
 using Microsoft.Xna.Framework;
+using ContentService = flakysalt.CharacterKeybinds.Services.ContentService;
 using View = Blish_HUD.Graphics.UI.View;
 
 namespace flakysalt.CharacterKeybinds.Views
@@ -21,10 +23,14 @@ namespace flakysalt.CharacterKeybinds.Views
         private int currentPanelIndex;
 
         private readonly Action onCloseAction;
+        private CharacterKeybindsSettings _settings;
 
-        public TutorialView(Action onCloseAction)
+        public static TutorialView Instance { get; private set; }
+
+        public TutorialView(CharacterKeybindsSettings settings)
         {
-            this.onCloseAction = onCloseAction;
+            Instance = this;
+            _settings = settings;
             Build(GameService.Graphics.SpriteScreen);
         }
         
@@ -35,7 +41,8 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = buildPanel,
                 Width = buildPanel.Width,
                 Height = buildPanel.Height,
-                BackgroundColor = new Color(0,0,0,200)
+                BackgroundColor = new Color(0,0,0,230),
+                Visible = false,
             };
             
             headerTextBox = new Label
@@ -53,8 +60,8 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Parent = mainPanel,
                 Location = new Point(0,150),
-                Width = 1920/2,
-                Height = 1080/2,
+                Width = (int)(1920 * 0.6f),
+                Height = (int)(1080 * 0.6f),
             };
             CalculateCenteredHorizontalPosition(mainPanel, tutorialImage);
             
@@ -73,8 +80,8 @@ namespace flakysalt.CharacterKeybinds.Views
             panelCounterFlowPanel = new FlowPanel
             {
                 Parent = mainPanel,
-                Height = 30,
-                Width = 340,
+                Height = 50,
+                Width = 500,
                 ControlPadding = new Vector2(10,0),
                 FlowDirection = ControlFlowDirection.LeftToRight,
                 Location = new Point(0, mainPanel.Bottom - 200)
@@ -85,8 +92,8 @@ namespace flakysalt.CharacterKeybinds.Views
             PreviousButton = new StandardButton
             {
                 Parent = panelCounterFlowPanel,
-                Width = 100,
-                Height = 30,
+                Width = 150,
+                Height = panelCounterFlowPanel.Height,
                 Text = TutorialLoca.previousButtonText,
             };
             
@@ -94,29 +101,40 @@ namespace flakysalt.CharacterKeybinds.Views
             {
                 Parent = panelCounterFlowPanel,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Width = 100,
-                Height = 30,
+                Width = 150,
+                Height = panelCounterFlowPanel.Height,
             };
             
             NextButton = new StandardButton
             {
                 Parent = panelCounterFlowPanel,
                 Text = TutorialLoca.nextButtonText,
-                Width = 100,
-                Height = 30,
+                Width = 150,
+                Height = panelCounterFlowPanel.Height,
             };
             
             CloseButton = new Image(AsyncTexture2D.FromAssetId(156012))
             {
                 Parent = mainPanel,
-                Width = 32,
-                Height = 32,
-                Location = new Point(mainPanel.Width - 42, 10),
+                Width = 64,
+                Height = 64,
+                Location = new Point(mainPanel.Width - 74, 10),
                 BasicTooltipText = TutorialLoca.closeButtonText,
             };
             
             
             CloseButton.Click += CloseButtonOnClick;
+            mainPanel.Click += (s, e) =>
+            {
+                if (PreviousButton.MouseOver || NextButton.MouseOver || CloseButton.MouseOver)
+                    return;
+                
+                if (currentPanelIndex < data.Panels.Count - 1)
+                {
+                    currentPanelIndex++;
+                    UpdateContent(data.Panels[currentPanelIndex]);
+                }
+            };
             NextButton.Click += (s, e) =>
             {
                 if (currentPanelIndex < data.Panels.Count - 1)
@@ -138,16 +156,17 @@ namespace flakysalt.CharacterKeybinds.Views
         }
         private void OnResize(object sender, ResizedEventArgs e)
         {
-            mainPanel.Size = e.CurrentSize;
+            mainPanel.Size = mainPanel.Parent.Size;
             panelCounterFlowPanel.Location = new Point(panelCounterFlowPanel.Location.X, mainPanel.Bottom - 200);
-            CloseButton.Location = new Point(mainPanel.Width - 42, 10);
+            CloseButton.Location = new Point(mainPanel.Width - 74, 10);
+            
+            headerTextBox.Width = mainPanel.Width;
+            descriptionTextBox.Width = Math.Min(mainPanel.Width - 100, 800);
             
             CalculateCenteredHorizontalPosition(mainPanel, headerTextBox);
             CalculateCenteredHorizontalPosition(mainPanel, tutorialImage);
             CalculateCenteredHorizontalPosition(mainPanel, descriptionTextBox);
             CalculateCenteredHorizontalPosition(mainPanel, panelCounterFlowPanel);
-            
-
         }
 
         public void Show(TutorialData data)
@@ -158,19 +177,15 @@ namespace flakysalt.CharacterKeybinds.Views
             headerTextBox.Text = data.Header;
             UpdateContent(data.Panels[currentPanelIndex]);
             mainPanel.Show();
+            OnResize(this, null);
         }
         private void UpdateContent(TutorialPanel panelData)
         {
             NextButton.Enabled = currentPanelIndex < data.Panels.Count - 1;
             PreviousButton.Enabled = currentPanelIndex > 0;
-            
-            tutorialImage.Texture = GameService.Content.GetTexture(panelData.ImagePath);
+
+            tutorialImage.Texture = ContentService.Instance.GetTexture(panelData.ImagePath);
             descriptionTextBox.Text = panelData.Description;
-            
-            descriptionTextBox.Text = "This is a long description to test\n how the \ntext wrapping and alignment works in this tutorial view.\n It should be centered and properly wrapped within the designated area.\n" +
-                                      "Here is some more text\n" +
-                                      "and we keep going to see how it handles multiple lines of text.\n ";
-            
             panelCounterTextBox.Text = $"{currentPanelIndex + 1} / {data.Panels.Count}";
         }
         
@@ -182,8 +197,7 @@ namespace flakysalt.CharacterKeybinds.Views
         private void CloseButtonOnClick(object sender, EventArgs e)
         {
             mainPanel.Hide();
-            //TODO uncomment this
-            //onCloseAction.Invoke();
+            _settings.experiencedFtue.Value = true;
         }
     }
 }

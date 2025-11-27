@@ -17,6 +17,7 @@ namespace flakysalt.CharacterKeybinds.Model
 		public SettingEntry<float> autoClickSpeedMultiplier { get; private set; }
 		public SettingEntry<string> gw2KeybindsFolder;
 		public SettingEntry<string> defaultKeybinds;
+		[Obsolete("Use optionsKeybind instead")]
 		public SettingEntry<KeyBinding> optionsKeybind;
 		public SettingEntry<bool> useDefaultKeybinds;
 		public SettingEntry<bool> changeKeybindsWhenSwitchingSpecialization;

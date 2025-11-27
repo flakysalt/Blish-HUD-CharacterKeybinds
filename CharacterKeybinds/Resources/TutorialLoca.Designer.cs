@@ -78,11 +78,64 @@ namespace flakysalt.CharacterKeybinds.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Some Text here.
+        ///   Looks up a localized string similar to Welcome to Character Keybinds!
+        ///
+        ///If you have not done so already, please provide an API key to Blish HUD..
         /// </summary>
         internal static string initialSetupPanel1 {
             get {
                 return ResourceManager.GetString("initialSetupPanel1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To set up your Guild Wars 2 keybinds, go to your settings menu and then to the Control Options Tab.
+        ///
+        ///In here, press the Export button at the bottom of the page.
+        ///
+        ///This will save your current keybindings to be used in the module..
+        /// </summary>
+        internal static string initialSetupPanel2 {
+            get {
+                return ResourceManager.GetString("initialSetupPanel2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repeat this step for every unique set of keybinds you want to create.
+        ///
+        ///You can also repeat this step at any time in the future..
+        /// </summary>
+        internal static string initialSetupPanel3 {
+            get {
+                return ResourceManager.GetString("initialSetupPanel3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Now you can open the module itself from the top left of your screen. 
+        ///
+        ///Here you can specify your default keybinds, which will be used 
+        ///for all characters and specializations that have no keybinds assigned in this menu.
+        ///
+        ///Below, you can specify keybinds per character or specialization..
+        /// </summary>
+        internal static string initialSetupPanel4 {
+            get {
+                return ResourceManager.GetString("initialSetupPanel4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you have any questions or suggestions,
+        ///you can find the FAQ and other useful functions 
+        ///at the bottom of the module settings page.
+        ///
+        ///Feel free to reach out to me directly on the Blish HUD Discord server for further support &lt;3.
+        /// </summary>
+        internal static string initialSetupPanel5 {
+            get {
+                return ResourceManager.GetString("initialSetupPanel5", resourceCulture);
             }
         }
         

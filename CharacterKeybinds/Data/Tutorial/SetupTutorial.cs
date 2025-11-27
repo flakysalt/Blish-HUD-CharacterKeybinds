@@ -11,8 +11,28 @@ namespace flakysalt.CharacterKeybinds.Data.Tutorial
         {
             new TutorialPanel()
             {
-                ImagePath = @"images/tutorial/setup_1.png",
+                ImagePath = "images/tutorial/setup_1.png",
                 Description = TutorialLoca.initialSetupPanel1
+            },
+            new TutorialPanel()
+            {
+                ImagePath = "images/tutorial/setup_2.png",
+                Description = TutorialLoca.initialSetupPanel2
+            },
+            new TutorialPanel()
+            {
+                ImagePath = "images/tutorial/setup_2.png",
+                Description = TutorialLoca.initialSetupPanel3
+            },
+            new TutorialPanel()
+            {
+                ImagePath = "images/tutorial/setup_3.png",
+                Description = TutorialLoca.initialSetupPanel4
+            },
+            new TutorialPanel()
+            {
+                ImagePath = "images/tutorial/setup_4.png",
+                Description = TutorialLoca.initialSetupPanel5
             }
         };
     }
