@@ -45,7 +45,7 @@ jobs:
 
       - name: Commit and push changes
         env:
-          TARGET_BRANCH: your-target-branch
+          TARGET_BRANCH: bhud-static/flakysalt.CharacterKeybinds
         run: |
           git add lookup_tables/
           git diff --staged --quiet || git commit -m "Automated update"
