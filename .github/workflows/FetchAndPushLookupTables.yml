@@ -21,10 +21,26 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Fetch GW2 API data
+        run: |
+          mkdir -p lookup_tables
+          ids=$(curl -s "https://api.guildwars2.com/v2/professions" | jq -r '.[]')
+          for lang in en de fr es; do
+            echo "[" > "lookup_tables/professions_${lang}.json"
+            first=1
+            for id in $ids; do
+              if [ $first -eq 0 ]; then echo "," >> "lookup_tables/professions_${lang}.json"; fi
+              curl -s "https://api.guildwars2.com/v2/professions/$id?lang=$lang" >> "lookup_tables/professions_${lang}.json"
+              first=0
+            done
+            echo "]" >> "lookup_tables/professions_${lang}.json"
+            curl -s "https://api.guildwars2.com/v2/specializations?lang=$lang" -o "lookup_tables/specializations_${lang}.json"
+          done
+
       - name: Commit and push changes
         env:
           TARGET_BRANCH: your-target-branch
         run: |
-          git add .
+          git add data_lookup/
           git diff --staged --quiet || git commit -m "Automated update"
           git push origin $TARGET_BRANCH
