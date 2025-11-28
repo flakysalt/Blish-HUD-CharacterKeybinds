@@ -24,18 +24,24 @@ jobs:
       - name: Fetch GW2 API data
         run: |
           mkdir -p lookup_tables
+          echo "Fetching profession IDs..."
           ids=$(curl -s "https://api.guildwars2.com/v2/professions" | jq -r '.[]')
+          echo "Found profession IDs: $ids"
           for lang in en de fr es; do
+            echo "Processing language: $lang"
             echo "[" > "lookup_tables/professions_${lang}.json"
             first=1
             for id in $ids; do
+              echo "Fetching profession $id for language $lang"
               if [ $first -eq 0 ]; then echo "," >> "lookup_tables/professions_${lang}.json"; fi
               curl -s "https://api.guildwars2.com/v2/professions/$id?lang=$lang" >> "lookup_tables/professions_${lang}.json"
               first=0
             done
             echo "]" >> "lookup_tables/professions_${lang}.json"
+            echo "Fetching specializations for language $lang"
             curl -s "https://api.guildwars2.com/v2/specializations?lang=$lang" -o "lookup_tables/specializations_${lang}.json"
           done
+          echo "All data fetched successfully"
 
       - name: Commit and push changes
         env:
