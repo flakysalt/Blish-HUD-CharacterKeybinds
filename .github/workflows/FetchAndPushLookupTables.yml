@@ -1,0 +1,30 @@
+name: Fetch and Update Lookup Tables
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: bhud-static/flakysalt.CharacterKeybinds
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push changes
+        env:
+          TARGET_BRANCH: your-target-branch
+        run: |
+          git add .
+          git diff --staged --quiet || git commit -m "Automated update"
+          git push origin $TARGET_BRANCH
