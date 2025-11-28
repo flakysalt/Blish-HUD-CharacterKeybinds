@@ -41,6 +41,6 @@ jobs:
         env:
           TARGET_BRANCH: your-target-branch
         run: |
-          git add data_lookup/
+          git add lookup_tables/
           git diff --staged --quiet || git commit -m "Automated update"
           git push origin $TARGET_BRANCH
