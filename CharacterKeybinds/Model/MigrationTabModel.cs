@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using flakysalt.CharacterKeybinds.Data;
 using flakysalt.CharacterKeybinds.Services;
 using flakysalt.CharacterKeybinds.Util;
 
@@ -22,6 +23,10 @@ namespace flakysalt.CharacterKeybinds.Model
             var keymaps = SaveDataMigration.MigrateToKeymaps(Settings.characterKeybinds.Value, specializations, out var migrationReport);
             Settings.Keymaps.Value = keymaps;
             return migrationReport;
+        }
+        public void DeleteOldData()
+        {
+            Settings.characterKeybinds.Value = null;
         }
     }
 }

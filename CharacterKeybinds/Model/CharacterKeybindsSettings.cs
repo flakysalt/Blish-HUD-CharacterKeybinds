@@ -17,7 +17,6 @@ namespace flakysalt.CharacterKeybinds.Model
 		public SettingEntry<float> autoClickSpeedMultiplier { get; private set; }
 		public SettingEntry<string> gw2KeybindsFolder;
 		public SettingEntry<string> defaultKeybinds;
-		[Obsolete("Use optionsKeybind instead")]
 		public SettingEntry<KeyBinding> optionsKeybind;
 		public SettingEntry<bool> useDefaultKeybinds;
 		public SettingEntry<bool> changeKeybindsWhenSwitchingSpecialization;
@@ -33,6 +32,7 @@ namespace flakysalt.CharacterKeybinds.Model
 		private static string TargetFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Guild Wars 2", "InputBinds");
 		
 		//legacy data
+		[Obsolete("Use optionsKeybind instead")]
 		public SettingEntry<List<CharacterKeybind>> characterKeybinds;
 		
 		public CharacterKeybindsSettings(SettingCollection settings) 

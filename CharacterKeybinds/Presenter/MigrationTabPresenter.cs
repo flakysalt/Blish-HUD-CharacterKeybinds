@@ -24,7 +24,8 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
         private void View_OnDeleteClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            Model.DeleteOldData();
+            View.SetDeletionText();
         }
 
 

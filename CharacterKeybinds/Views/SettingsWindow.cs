@@ -92,7 +92,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 HeightSizingMode = SizingMode.AutoSize,
                 AutoSizePadding = new Point(0, 5),
                 Parent = _settingFlowPanel,
-                Visible = !Directory.Exists(model.gw2KeybindsFolder.Value)
+                //Visible = !Directory.Exists(model.gw2KeybindsFolder.Value)
             };
 
             var folderLabel = new Label
@@ -100,7 +100,7 @@ namespace flakysalt.CharacterKeybinds.Views
                 Parent = topFlowPanel,
                 Width = topFlowPanel.Width,
                 Text = Directory.Exists(model.gw2KeybindsFolder.Value) ? SettingsLoca.keybindsDirectoryValid : SettingsLoca.keybindsDirectoryInvalid,
-                TextColor = Color.OrangeRed,
+                TextColor = Directory.Exists(model.gw2KeybindsFolder.Value) ? Color.GreenYellow : Color.OrangeRed,
                 AutoSizeHeight = true,
             };
             

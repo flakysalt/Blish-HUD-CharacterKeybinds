@@ -141,7 +141,7 @@ namespace flakysalt.CharacterKeybinds.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Valid folder found!.
         /// </summary>
         internal static string keybindsDirectoryValid {
             get {

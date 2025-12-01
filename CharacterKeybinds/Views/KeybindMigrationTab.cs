@@ -96,6 +96,11 @@ namespace flakysalt.CharacterKeybinds.Views
             
             base.Build(buildPanel);
         }
+        public void SetDeletionText()
+        {
+            resultLabel.Text = "Old Data Deleted Successfully.";
+            resultLabel.TextColor = Color.LimeGreen;
+        }
 
         public void SetMigrationResult(List<string> result)
         {
