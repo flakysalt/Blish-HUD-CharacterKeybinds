@@ -142,11 +142,15 @@ namespace flakysalt.CharacterKeybinds.Presenter
                 View?.SetDefaultKeybindOptions(CharacterKeybindFileUtil.GetKeybindFiles(keybindsFolder),
                     Model.GetDefaultKeybind());
 
-                foreach (var keymap in Model.GetKeymaps() ?? Enumerable.Empty<Keymap>())
+                foreach (var keymap in Model.GetKeymaps())
                 {
+                    var character = Model.GetCharacter(keymap.CharacterName);
+                    
+                    //safeguard for characters that do not exits and are not new entries
+                    if (keymap.CharacterName != null && character == null) continue;
+                    
                     int iconAssetId = 0;
 
-                    var character = Model.GetCharacter(keymap.CharacterName);
                     if (character != null)
                     {
                         var spec = Model.GetSpecializationById(keymap.SpecialisationId);
@@ -162,7 +166,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
                                     .Url.AbsoluteUri));
                         }
                     }
-
+                    
                     var container = View?.AddKeybind();
                     if (container == null) continue;
 

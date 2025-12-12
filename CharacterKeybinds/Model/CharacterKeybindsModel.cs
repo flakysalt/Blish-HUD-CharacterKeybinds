@@ -170,7 +170,7 @@ namespace flakysalt.CharacterKeybinds.Model
         
         public List<Keymap> GetKeymaps()
         {
-            return Settings.Keymaps.Value;
+            return Settings.Keymaps.Value ?? Enumerable.Empty<Keymap>().ToList();
         }
 
         public string GetDefaultKeybind()

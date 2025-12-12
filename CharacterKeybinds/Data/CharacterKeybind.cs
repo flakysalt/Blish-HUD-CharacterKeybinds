@@ -14,6 +14,14 @@ namespace flakysalt.CharacterKeybinds.Data
 	[Serializable]
 	public class Keymap
 	{
+		public Keymap(Keymap map)
+		{
+			CharacterName = map.CharacterName;
+			SpecialisationId = map.SpecialisationId;
+			KeymapName = map.KeymapName;
+		}
+		public Keymap() { }
+		
 		public string CharacterName;
 		//1- for Core, -2 for All, -10 for invalid
 		public int SpecialisationId = 0;

@@ -48,6 +48,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 
         public KeybindFlowContainer()
         {
+            _oldCharacterKeymap = new Keymap();
             OuterControlPadding = new Vector2(10,0);
             ControlPadding = new Vector2(2,0);
             FlowDirection = ControlFlowDirection.LeftToRight;
@@ -143,7 +144,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 
         public void SetValues(Keymap keymap)
         {
-            _oldCharacterKeymap = keymap;
+            _oldCharacterKeymap = new Keymap(keymap);
             CharacterNameDropdown.SelectedItem = string.IsNullOrEmpty(keymap.CharacterName) ? DefaultCharacterEntry : keymap.CharacterName;
             
             switch (keymap.SpecialisationId)
@@ -221,7 +222,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
             
             return new Keymap
             {
-                CharacterName = CharacterNameDropdown.Items.Contains(CharacterNameDropdown.SelectedItem) ? CharacterNameDropdown.SelectedItem : null,
+                CharacterName = CharacterNameDropdown.SelectedItem.Equals(DefaultCharacterEntry) ? null : CharacterNameDropdown.SelectedItem,
                 SpecialisationId = specialisationId,
                 KeymapName = KeymapDropdown.Items.Contains(KeymapDropdown.SelectedItem) ? KeymapDropdown.SelectedItem : null,
             };
@@ -257,7 +258,7 @@ namespace flakysalt.CharacterKeybinds.Views.UiElements
 
         private void OnRemoveClick(object sender, MouseEventArgs args)
         {
-            OnRemove?.Invoke(0, GetKeymap());
+            OnRemove?.Invoke(0, _oldCharacterKeymap);
             DisposeEvents();
             Dispose();
         }
