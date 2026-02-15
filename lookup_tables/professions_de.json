@@ -6,133 +6,46 @@
   "text": "unknown error"
 },
 {
-  "text": "unknown error"
-},
-{
-  "id": "Ranger",
-  "name": "Waldläufer",
-  "icon": "https://render.guildwars2.com/file/49B10316B424F4E20139EB5E51ADCF24A8724E9B/156640.png",
-  "icon_big": "https://render.guildwars2.com/file/FEF2479DC197D40758A8D6E95201F4A7996EB357/156639.png",
+  "id": "Engineer",
+  "name": "Ingenieur",
+  "icon": "https://render.guildwars2.com/file/5CCB361F44CCC7256132405D31E3A24DACCF440A/156632.png",
+  "icon_big": "https://render.guildwars2.com/file/A94D00911BD47CDE39A104F90C7D07DE623554ED/156631.png",
   "specializations": [
-    8,
-    30,
-    33,
-    25,
-    32,
-    5,
-    55,
-    72,
-    78
+    6,
+    38,
+    47,
+    29,
+    21,
+    43,
+    57,
+    70,
+    75
   ],
   "weapons": {
-    "Axe": {
-      "flags": [
-        "Mainhand",
-        "Offhand"
-      ],
-      "skills": [
-        {
-          "id": 12466,
-          "slot": "Weapon_1"
-        },
-        {
-          "id": 12480,
-          "slot": "Weapon_2"
-        },
-        {
-          "id": 12490,
-          "slot": "Weapon_3"
-        },
-        {
-          "id": 12638,
-          "slot": "Weapon_4"
-        },
-        {
-          "id": 12639,
-          "slot": "Weapon_5"
-        }
-      ]
-    },
-    "Dagger": {
-      "specialization": 55,
-      "flags": [
-        "Mainhand",
-        "Offhand"
-      ],
-      "skills": [
-        {
-          "id": 45426,
-          "slot": "Weapon_1"
-        },
-        {
-          "id": 43536,
-          "slot": "Weapon_2"
-        },
-        {
-          "id": 46123,
-          "slot": "Weapon_3"
-        },
-        {
-          "id": 12478,
-          "slot": "Weapon_4"
-        },
-        {
-          "id": 12477,
-          "slot": "Weapon_5"
-        }
-      ]
-    },
-    "Greatsword": {
-      "flags": [
-        "TwoHand"
-      ],
-      "skills": [
-        {
-          "id": 12474,
-          "slot": "Weapon_1"
-        },
-        {
-          "id": 12525,
-          "slot": "Weapon_2"
-        },
-        {
-          "id": 12521,
-          "slot": "Weapon_3"
-        },
-        {
-          "id": 12522,
-          "slot": "Weapon_4"
-        },
-        {
-          "id": 12475,
-          "slot": "Weapon_5"
-        }
-      ]
-    },
     "Hammer": {
-      "specialization": 72,
+      "specialization": 43,
       "flags": [
         "TwoHand"
       ],
       "skills": [
         {
-          "id": 63118,
+          "id": 30501,
           "slot": "Weapon_1"
         },
         {
-          "id": 69167,
+          "id": 30088,
           "slot": "Weapon_2"
         },
         {
-          "id": 69262,
+          "id": 30665,
           "slot": "Weapon_3"
         },
         {
-          "id": 69340,
+          "id": 29840,
           "slot": "Weapon_4"
         },
         {
-          "id": 69212,
+          "id": 30713,
           "slot": "Weapon_5"
         }
       ]
@@ -144,98 +57,113 @@
       ],
       "skills": [
         {
-          "id": 72922,
+          "id": 72944,
           "slot": "Weapon_1"
         },
         {
-          "id": 12553,
-          "slot": "Weapon_1"
-        },
-        {
-          "id": 73110,
+          "id": 73122,
           "slot": "Weapon_2"
         },
         {
-          "id": 12559,
-          "slot": "Weapon_2"
-        },
-        {
-          "id": 72928,
+          "id": 73002,
           "slot": "Weapon_3"
         },
         {
-          "id": 12557,
-          "slot": "Weapon_3"
-        },
-        {
-          "id": 73020,
+          "id": 72977,
           "slot": "Weapon_4"
         },
         {
-          "id": 12561,
-          "slot": "Weapon_4"
-        },
-        {
-          "id": 73008,
-          "slot": "Weapon_5"
-        },
-        {
-          "id": 12552,
-          "slot": "Weapon_5"
-        }
-      ]
-    },
-    "Longbow": {
-      "flags": [
-        "TwoHand"
-      ],
-      "skills": [
-        {
-          "id": 12510,
-          "slot": "Weapon_1"
-        },
-        {
-          "id": 12509,
-          "slot": "Weapon_2"
-        },
-        {
-          "id": 12573,
-          "slot": "Weapon_3"
-        },
-        {
-          "id": 12511,
-          "slot": "Weapon_4"
-        },
-        {
-          "id": 12469,
+          "id": 72974,
           "slot": "Weapon_5"
         }
       ]
     },
     "Mace": {
+      "specialization": 70,
+      "flags": [
+        "Mainhand"
+      ],
+      "skills": [
+        {
+          "id": 63186,
+          "slot": "Weapon_1"
+        },
+        {
+          "id": 63169,
+          "slot": "Weapon_2"
+        },
+        {
+          "id": 63234,
+          "slot": "Weapon_3"
+        }
+      ]
+    },
+    "Pistol": {
       "flags": [
         "Mainhand",
         "Offhand"
       ],
       "skills": [
         {
-          "id": 72088,
+          "id": 5827,
           "slot": "Weapon_1"
         },
         {
-          "id": 71999,
+          "id": 5828,
           "slot": "Weapon_2"
         },
         {
-          "id": 71963,
+          "id": 5829,
           "slot": "Weapon_3"
         },
         {
-          "id": 71903,
+          "id": 5831,
           "slot": "Weapon_4"
         },
         {
-          "id": 71841,
+          "id": 5830,
+          "slot": "Weapon_5"
+        }
+      ]
+    },
+    "Rifle": {
+      "flags": [
+        "TwoHand"
+      ],
+      "skills": [
+        {
+          "id": 6003,
+          "slot": "Weapon_1"
+        },
+        {
+          "id": 6153,
+          "slot": "Weapon_2"
+        },
+        {
+          "id": 6004,
+          "slot": "Weapon_3"
+        },
+        {
+          "id": 6154,
+          "slot": "Weapon_4"
+        },
+        {
+          "id": 6005,
+          "slot": "Weapon_5"
+        }
+      ]
+    },
+    "Shield": {
+      "flags": [
+        "Offhand"
+      ],
+      "skills": [
+        {
+          "id": 6053,
+          "slot": "Weapon_4"
+        },
+        {
+          "id": 6054,
           "slot": "Weapon_5"
         }
       ]
@@ -246,23 +174,23 @@
       ],
       "skills": [
         {
-          "id": 12470,
+          "id": 71873,
           "slot": "Weapon_1"
         },
         {
-          "id": 12468,
+          "id": 72052,
           "slot": "Weapon_2"
         },
         {
-          "id": 12517,
+          "id": 71882,
           "slot": "Weapon_3"
         },
         {
-          "id": 12507,
+          "id": 71870,
           "slot": "Weapon_4"
         },
         {
-          "id": 12508,
+          "id": 71888,
           "slot": "Weapon_5"
         }
       ]
@@ -274,1618 +202,1281 @@
       ],
       "skills": [
         {
-          "id": 12526,
+          "id": 6148,
           "slot": "Weapon_1"
         },
         {
-          "id": 12529,
+          "id": 6147,
           "slot": "Weapon_2"
         },
         {
-          "id": 12528,
+          "id": 50380,
           "slot": "Weapon_3"
         },
         {
-          "id": 12527,
+          "id": 6149,
           "slot": "Weapon_4"
         },
         {
-          "id": 12530,
-          "slot": "Weapon_5"
-        }
-      ]
-    },
-    "Staff": {
-      "specialization": 5,
-      "flags": [
-        "TwoHand"
-      ],
-      "skills": [
-        {
-          "id": 31710,
-          "slot": "Weapon_1"
-        },
-        {
-          "id": 31889,
-          "slot": "Weapon_2"
-        },
-        {
-          "id": 31535,
-          "slot": "Weapon_3"
-        },
-        {
-          "id": 31700,
-          "slot": "Weapon_4"
-        },
-        {
-          "id": 31496,
+          "id": 6145,
           "slot": "Weapon_5"
         }
       ]
     },
     "Sword": {
+      "specialization": 57,
       "flags": [
         "Mainhand"
       ],
       "skills": [
         {
-          "id": 12471,
+          "id": 43476,
           "slot": "Weapon_1"
         },
         {
-          "id": 69203,
+          "id": 70514,
+          "slot": "Weapon_1"
+        },
+        {
+          "id": 44110,
           "slot": "Weapon_2"
         },
         {
-          "id": 12482,
+          "id": 71121,
+          "slot": "Weapon_2"
+        },
+        {
+          "id": 40160,
           "slot": "Weapon_3"
-        }
-      ]
-    },
-    "Torch": {
-      "flags": [
-        "Offhand"
-      ],
-      "skills": [
-        {
-          "id": 12635,
-          "slot": "Weapon_4"
         },
         {
-          "id": 12504,
-          "slot": "Weapon_5"
-        }
-      ]
-    },
-    "Warhorn": {
-      "flags": [
-        "Offhand"
-      ],
-      "skills": [
-        {
-          "id": 12620,
-          "slot": "Weapon_4"
-        },
-        {
-          "id": 12621,
-          "slot": "Weapon_5"
+          "id": 69565,
+          "slot": "Weapon_3"
         }
       ]
     }
   },
-  "flags": [],
+  "flags": [
+    "NoWeaponSwap"
+  ],
   "skills": [
     {
-      "id": 31914,
+      "id": 5834,
       "slot": "Heal",
       "type": "Heal"
     },
     {
-      "id": 12483,
+      "id": 5802,
       "slot": "Heal",
       "type": "Heal"
     },
     {
-      "id": 12489,
+      "id": 21659,
       "slot": "Heal",
       "type": "Heal"
     },
     {
-      "id": 21773,
+      "id": 5857,
       "slot": "Heal",
       "type": "Heal"
     },
     {
-      "id": 12476,
+      "id": 5818,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12499,
+      "id": 5836,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12496,
+      "id": 5837,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12492,
+      "id": 5838,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12502,
+      "id": 5912,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12542,
+      "id": 5821,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12500,
+      "id": 5862,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12491,
+      "id": 5861,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12537,
+      "id": 5860,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12494,
+      "id": 5968,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12501,
+      "id": 5805,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12550,
+      "id": 5812,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12498,
+      "id": 5927,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12495,
+      "id": 5933,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12497,
+      "id": 5904,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12493,
+      "id": 6161,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12633,
+      "id": 5865,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12631,
+      "id": 5910,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12632,
+      "id": 5811,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 34309,
+      "id": 5825,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 12516,
+      "id": 5868,
       "slot": "Elite",
       "type": "Elite"
     },
     {
-      "id": 12580,
+      "id": 5832,
       "slot": "Elite",
       "type": "Elite"
     },
     {
-      "id": 12569,
+      "id": 30800,
       "slot": "Elite",
       "type": "Elite"
     },
     {
-      "id": 31407,
+      "id": 30357,
       "slot": "Heal",
       "type": "Heal"
     },
     {
-      "id": 31322,
+      "id": 30101,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 31746,
+      "id": 29739,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 31582,
+      "id": 31248,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 30238,
+      "id": 29921,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 31677,
+      "id": 30815,
       "slot": "Elite",
       "type": "Elite"
     },
     {
-      "id": 31869,
-      "slot": "Profession_5",
-      "type": "Profession"
-    },
-    {
-      "id": 45789,
-      "slot": "Utility",
-      "type": "Utility"
-    },
-    {
-      "id": 45717,
-      "slot": "Elite",
-      "type": "Elite"
-    },
-    {
-      "id": 45142,
-      "slot": "Utility",
-      "type": "Utility"
-    },
-    {
-      "id": 44948,
+      "id": 63049,
       "slot": "Heal",
       "type": "Heal"
     },
     {
-      "id": 45970,
+      "id": 63095,
+      "slot": "Elite",
+      "type": "Elite"
+    },
+    {
+      "id": 63262,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 40498,
+      "id": 63111,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 44991,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 42042,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 43136,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 43060,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 43726,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 42894,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 43068,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 41461,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 41537,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 41575,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 41524,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 45743,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 40625,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 44514,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 44384,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 40111,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 44617,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 43548,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 41406,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 46432,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 43788,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 43701,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 44097,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 43671,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 42717,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 44885,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 43186,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 41837,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 42797,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 44360,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 41206,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 45479,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 42907,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 40255,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 46386,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 41908,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 44626,
-      "slot": "Profession_3",
-      "type": "Profession"
-    },
-    {
-      "id": 45797,
-      "slot": "Profession_3",
-      "type": "Profession"
-    },
-    {
-      "id": 40588,
-      "slot": "Profession_3",
-      "type": "Profession"
-    },
-    {
-      "id": 43375,
-      "slot": "Profession_3",
-      "type": "Profession"
-    },
-    {
-      "id": 40729,
-      "slot": "Profession_3",
-      "type": "Profession"
-    },
-    {
-      "id": 42809,
-      "slot": "Profession_3",
-      "type": "Profession"
-    },
-    {
-      "id": 42944,
-      "slot": "Profession_5",
-      "type": "Profession"
-    },
-    {
-      "id": 43014,
-      "slot": "Profession_5",
-      "type": "Profession"
-    },
-    {
-      "id": 59554,
+      "id": 63050,
       "slot": "Profession_4",
       "type": "Profession"
     },
     {
-      "id": 63319,
+      "id": 63210,
+      "slot": "Profession_4",
+      "type": "Profession"
+    },
+    {
+      "id": 63089,
+      "slot": "Profession_4",
+      "type": "Profession"
+    },
+    {
+      "id": 63253,
+      "slot": "Utility",
+      "type": "Utility"
+    },
+    {
+      "id": 63113,
+      "slot": "Utility",
+      "type": "Utility"
+    },
+    {
+      "id": 56920,
+      "slot": "Profession_5",
+      "type": "Profession"
+    },
+    {
+      "id": 40507,
       "slot": "Heal",
       "type": "Heal"
     },
     {
-      "id": 63163,
+      "id": 42009,
       "slot": "Elite",
       "type": "Elite"
     },
     {
-      "id": 63157,
+      "id": 43739,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 63256,
+      "id": 42842,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 63195,
+      "id": 44646,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 63130,
+      "id": 41218,
       "slot": "Utility",
       "type": "Utility"
     },
     {
-      "id": 67382,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 64038,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 64882,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 64699,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 66258,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 63147,
+      "id": 42938,
       "slot": "Profession_5",
       "type": "Profession"
     },
     {
-      "id": 63344,
+      "id": 72114,
       "slot": "Profession_5",
       "type": "Profession"
     },
     {
-      "id": 63209,
-      "slot": "Profession_1",
+      "id": 72103,
+      "slot": "Profession_5",
       "type": "Profession"
     },
     {
-      "id": 63258,
+      "id": 76738,
+      "slot": "Heal",
+      "type": "Heal"
+    },
+    {
+      "id": 76993,
+      "slot": "Elite",
+      "type": "Elite"
+    },
+    {
+      "id": 77069,
+      "slot": "Utility",
+      "type": "Utility"
+    },
+    {
+      "id": 76908,
+      "slot": "Utility",
+      "type": "Utility"
+    },
+    {
+      "id": 77018,
+      "slot": "Utility",
+      "type": "Utility"
+    },
+    {
+      "id": 77209,
+      "slot": "Utility",
+      "type": "Utility"
+    },
+    {
+      "id": 77388,
       "slot": "Profession_2",
       "type": "Profession"
     },
     {
-      "id": 63094,
+      "id": 76790,
       "slot": "Profession_3",
       "type": "Profession"
     },
     {
-      "id": 71282,
-      "slot": "Profession_1",
+      "id": 77107,
+      "slot": "Profession_4",
       "type": "Profession"
     },
     {
-      "id": 70889,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 71499,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 71546,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 72851,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 72636,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 73733,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 73938,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 77271,
-      "slot": "Heal",
-      "type": "Heal"
-    },
-    {
-      "id": 76979,
-      "slot": "Elite",
-      "type": "Elite"
-    },
-    {
-      "id": 77264,
-      "slot": "Utility",
-      "type": "Utility"
-    },
-    {
-      "id": 77211,
-      "slot": "Utility",
-      "type": "Utility"
-    },
-    {
-      "id": 76619,
-      "slot": "Utility",
-      "type": "Utility"
-    },
-    {
-      "id": 76757,
-      "slot": "Utility",
-      "type": "Utility"
-    },
-    {
-      "id": 75771,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 75814,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 76787,
+      "id": 76642,
       "slot": "Profession_5",
       "type": "Profession"
     },
     {
-      "id": 77213,
+      "id": 76651,
       "slot": "Profession_5",
-      "type": "Profession"
-    },
-    {
-      "id": 79203,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 78091,
-      "slot": "Profession_2",
       "type": "Profession"
     }
   ],
   "training": [
     {
-      "id": 77,
+      "id": 21,
       "category": "Skills",
-      "name": "Siegel-Ausbildung",
+      "name": "Elixier-Ausbildung",
       "track": [
         {
           "cost": 2,
           "type": "Skill",
-          "skill_id": 12542
+          "skill_id": 5821
         },
         {
           "cost": 5,
           "type": "Skill",
-          "skill_id": 12491
+          "skill_id": 5860
         },
         {
-          "cost": 9,
+          "cost": 8,
           "type": "Skill",
-          "skill_id": 12500
+          "skill_id": 5968
         },
         {
-          "cost": 13,
+          "cost": 12,
           "type": "Skill",
-          "skill_id": 12502
+          "skill_id": 5861
+        },
+        {
+          "cost": 17,
+          "type": "Skill",
+          "skill_id": 5862
+        },
+        {
+          "cost": 25,
+          "type": "Skill",
+          "skill_id": 5832
         }
       ]
     },
     {
-      "id": 90,
+      "id": 95,
       "category": "Skills",
-      "name": "Fallen-Ausbildung",
+      "name": "Geschützturm-Ausbildung",
       "track": [
         {
           "cost": 2,
           "type": "Skill",
-          "skill_id": 12489
+          "skill_id": 5857
         },
         {
           "cost": 4,
           "type": "Skill",
-          "skill_id": 12476
+          "skill_id": 5818
         },
         {
           "cost": 7,
           "type": "Skill",
-          "skill_id": 12499
+          "skill_id": 5836
         },
         {
-          "cost": 11,
+          "cost": 10,
           "type": "Skill",
-          "skill_id": 12496
+          "skill_id": 5838
         },
         {
-          "cost": 15,
+          "cost": 14,
           "type": "Skill",
-          "skill_id": 12492
+          "skill_id": 5837
+        },
+        {
+          "cost": 19,
+          "type": "Skill",
+          "skill_id": 5912
+        },
+        {
+          "cost": 27,
+          "type": "Skill",
+          "skill_id": 5868
         }
       ]
     },
     {
-      "id": 48,
+      "id": 71,
       "category": "Skills",
-      "name": "Überlebens-Ausbildung",
+      "name": "Kit-Ausbildung",
       "track": [
         {
           "cost": 2,
           "type": "Skill",
-          "skill_id": 12483
+          "skill_id": 5802
         },
         {
           "cost": 4,
           "type": "Skill",
-          "skill_id": 12537
+          "skill_id": 5927
         },
         {
           "cost": 7,
           "type": "Skill",
-          "skill_id": 12494
+          "skill_id": 5805
         },
         {
-          "cost": 11,
+          "cost": 10,
           "type": "Skill",
-          "skill_id": 12501
+          "skill_id": 5933
         },
         {
-          "cost": 15,
+          "cost": 14,
           "type": "Skill",
-          "skill_id": 12550
+          "skill_id": 5904
         },
         {
-          "cost": 24,
+          "cost": 19,
           "type": "Skill",
-          "skill_id": 12580
+          "skill_id": 5812
+        },
+        {
+          "cost": 27,
+          "type": "Skill",
+          "skill_id": 30800
         }
       ]
     },
     {
-      "id": 41,
+      "id": 75,
       "category": "Skills",
-      "name": "Geister-Ausbildung",
+      "name": "Gadget-Ausbildung",
       "track": [
         {
           "cost": 2,
           "type": "Skill",
-          "skill_id": 21773
+          "skill_id": 21659
         },
         {
           "cost": 4,
           "type": "Skill",
-          "skill_id": 12498
+          "skill_id": 5910
         },
         {
           "cost": 7,
           "type": "Skill",
-          "skill_id": 12495
+          "skill_id": 5865
         },
         {
-          "cost": 11,
+          "cost": 10,
           "type": "Skill",
-          "skill_id": 12497
+          "skill_id": 6161
         },
         {
-          "cost": 15,
+          "cost": 14,
           "type": "Skill",
-          "skill_id": 12493
+          "skill_id": 5811
         },
         {
-          "cost": 24,
+          "cost": 19,
           "type": "Skill",
-          "skill_id": 12569
+          "skill_id": 5825
         }
       ]
     },
     {
-      "id": 82,
-      "category": "Skills",
-      "name": "Kommando-Training",
-      "track": [
-        {
-          "cost": 2,
-          "type": "Skill",
-          "skill_id": 12633
-        },
-        {
-          "cost": 5,
-          "type": "Skill",
-          "skill_id": 12632
-        },
-        {
-          "cost": 9,
-          "type": "Skill",
-          "skill_id": 12631
-        },
-        {
-          "cost": 13,
-          "type": "Skill",
-          "skill_id": 34309
-        },
-        {
-          "cost": 22,
-          "type": "Skill",
-          "skill_id": 12516
-        }
-      ]
-    },
-    {
-      "id": 83,
+      "id": 61,
       "category": "Specializations",
-      "name": "Schießkunst",
+      "name": "Sprengstoff",
       "track": [
         {
           "cost": 2,
           "type": "Trait",
-          "trait_id": 1010
+          "trait_id": 432
         },
         {
           "cost": 5,
           "type": "Trait",
-          "trait_id": 1021
+          "trait_id": 514
         },
         {
           "cost": 8,
           "type": "Trait",
-          "trait_id": 1014
+          "trait_id": 525
         },
         {
           "cost": 11,
           "type": "Trait",
-          "trait_id": 986
+          "trait_id": 1882
         },
         {
           "cost": 15,
           "type": "Trait",
-          "trait_id": 1009
+          "trait_id": 517
         },
         {
           "cost": 20,
           "type": "Trait",
-          "trait_id": 1001
+          "trait_id": 482
         },
         {
           "cost": 25,
           "type": "Trait",
-          "trait_id": 1000
+          "trait_id": 1892
         },
         {
           "cost": 30,
           "type": "Trait",
-          "trait_id": 1070
+          "trait_id": 1944
         },
         {
           "cost": 36,
           "type": "Trait",
-          "trait_id": 1011
+          "trait_id": 429
         },
         {
           "cost": 44,
           "type": "Trait",
-          "trait_id": 996
+          "trait_id": 1541
         },
         {
           "cost": 52,
           "type": "Trait",
-          "trait_id": 1015
+          "trait_id": 505
         },
         {
           "cost": 60,
           "type": "Trait",
-          "trait_id": 1698
+          "trait_id": 1947
         }
       ]
     },
     {
-      "id": 105,
+      "id": 66,
       "category": "Specializations",
-      "name": "Gefechtsbeherrschung",
+      "name": "Schusswaffen",
       "track": [
         {
           "cost": 2,
           "type": "Trait",
-          "trait_id": 1080
+          "trait_id": 515
         },
         {
           "cost": 5,
           "type": "Trait",
-          "trait_id": 1069
+          "trait_id": 1878
         },
         {
           "cost": 8,
           "type": "Trait",
-          "trait_id": 1067
+          "trait_id": 1930
         },
         {
           "cost": 11,
           "type": "Trait",
-          "trait_id": 1075
+          "trait_id": 1914
         },
         {
           "cost": 15,
           "type": "Trait",
-          "trait_id": 1083
+          "trait_id": 536
         },
         {
           "cost": 20,
           "type": "Trait",
-          "trait_id": 1016
+          "trait_id": 1984
         },
         {
           "cost": 25,
           "type": "Trait",
-          "trait_id": 1700
+          "trait_id": 2006
         },
         {
           "cost": 30,
           "type": "Trait",
-          "trait_id": 1846
+          "trait_id": 1923
         },
         {
           "cost": 36,
           "type": "Trait",
-          "trait_id": 1068
+          "trait_id": 516
         },
         {
           "cost": 44,
           "type": "Trait",
-          "trait_id": 1064
+          "trait_id": 510
         },
         {
           "cost": 52,
           "type": "Trait",
-          "trait_id": 1912
+          "trait_id": 526
         },
         {
           "cost": 60,
           "type": "Trait",
-          "trait_id": 1888
+          "trait_id": 433
         }
       ]
     },
     {
-      "id": 65,
+      "id": 94,
       "category": "Specializations",
-      "name": "Überleben in der Wildnis",
+      "name": "Alchemie",
       "track": [
         {
           "cost": 2,
           "type": "Trait",
-          "trait_id": 1096
+          "trait_id": 468
         },
         {
           "cost": 5,
           "type": "Trait",
-          "trait_id": 1098
+          "trait_id": 396
         },
         {
           "cost": 8,
           "type": "Trait",
-          "trait_id": 1086
+          "trait_id": 509
         },
         {
           "cost": 11,
           "type": "Trait",
-          "trait_id": 1099
+          "trait_id": 521
         },
         {
           "cost": 15,
           "type": "Trait",
-          "trait_id": 1090
+          "trait_id": 487
         },
         {
           "cost": 20,
           "type": "Trait",
-          "trait_id": 1101
+          "trait_id": 520
         },
         {
           "cost": 25,
           "type": "Trait",
-          "trait_id": 2032
+          "trait_id": 469
         },
         {
           "cost": 30,
           "type": "Trait",
-          "trait_id": 1100
+          "trait_id": 470
         },
         {
           "cost": 36,
           "type": "Trait",
-          "trait_id": 1089
+          "trait_id": 413
         },
         {
           "cost": 44,
           "type": "Trait",
-          "trait_id": 1094
+          "trait_id": 473
         },
         {
           "cost": 52,
           "type": "Trait",
-          "trait_id": 1699
+          "trait_id": 1871
         },
         {
           "cost": 60,
           "type": "Trait",
-          "trait_id": 1701
+          "trait_id": 1854
         }
       ]
     },
     {
-      "id": 101,
+      "id": 51,
       "category": "Specializations",
-      "name": "Naturmagie",
+      "name": "Erfindungen",
       "track": [
         {
           "cost": 2,
           "type": "Trait",
-          "trait_id": 1055
+          "trait_id": 518
         },
         {
           "cost": 5,
           "type": "Trait",
-          "trait_id": 1062
+          "trait_id": 394
         },
         {
           "cost": 8,
           "type": "Trait",
-          "trait_id": 978
+          "trait_id": 1901
         },
         {
           "cost": 11,
           "type": "Trait",
-          "trait_id": 1060
+          "trait_id": 507
         },
         {
           "cost": 15,
           "type": "Trait",
-          "trait_id": 1056
+          "trait_id": 508
         },
         {
           "cost": 20,
           "type": "Trait",
-          "trait_id": 1054
+          "trait_id": 1678
         },
         {
           "cost": 25,
           "type": "Trait",
-          "trait_id": 965
+          "trait_id": 1834
         },
         {
           "cost": 30,
           "type": "Trait",
-          "trait_id": 964
+          "trait_id": 445
         },
         {
           "cost": 36,
           "type": "Trait",
-          "trait_id": 1059
+          "trait_id": 519
         },
         {
           "cost": 44,
           "type": "Trait",
-          "trait_id": 1038
+          "trait_id": 472
         },
         {
           "cost": 52,
           "type": "Trait",
-          "trait_id": 1988
+          "trait_id": 1680
         },
         {
           "cost": 60,
           "type": "Trait",
-          "trait_id": 1697
+          "trait_id": 1916
         }
       ]
     },
     {
-      "id": 46,
+      "id": 32,
       "category": "Specializations",
-      "name": "Tierbeherrschung",
+      "name": "Werkzeuge",
       "track": [
         {
           "cost": 2,
           "type": "Trait",
-          "trait_id": 1900
+          "trait_id": 1979
         },
         {
           "cost": 5,
           "type": "Trait",
-          "trait_id": 1861
+          "trait_id": 532
         },
         {
           "cost": 8,
           "type": "Trait",
-          "trait_id": 1072
+          "trait_id": 1997
         },
         {
           "cost": 11,
           "type": "Trait",
-          "trait_id": 1606
+          "trait_id": 531
         },
         {
           "cost": 15,
           "type": "Trait",
-          "trait_id": 974
+          "trait_id": 1872
         },
         {
           "cost": 20,
           "type": "Trait",
-          "trait_id": 975
+          "trait_id": 512
         },
         {
           "cost": 25,
           "type": "Trait",
-          "trait_id": 1047
+          "trait_id": 1946
         },
         {
           "cost": 30,
           "type": "Trait",
-          "trait_id": 970
+          "trait_id": 1832
         },
         {
           "cost": 36,
           "type": "Trait",
-          "trait_id": 1065
+          "trait_id": 1936
         },
         {
           "cost": 44,
           "type": "Trait",
-          "trait_id": 1945
+          "trait_id": 1856
         },
         {
           "cost": 52,
           "type": "Trait",
-          "trait_id": 968
+          "trait_id": 523
         },
         {
           "cost": 60,
           "type": "Trait",
-          "trait_id": 1066
+          "trait_id": 1679
         }
       ]
     },
     {
-      "id": 53,
+      "id": 113,
       "category": "EliteSpecializations",
-      "name": "Druide",
+      "name": "Schrotter",
       "track": [
         {
           "cost": 30,
           "type": "Trait",
-          "trait_id": 1965
+          "trait_id": 1951
         },
         {
           "cost": 40,
           "type": "Trait",
-          "trait_id": 1874
+          "trait_id": 1959
         },
         {
           "cost": 55,
           "type": "Skill",
-          "skill_id": 31407
+          "skill_id": 30357
         },
         {
           "cost": 65,
           "type": "Trait",
-          "trait_id": 1868
+          "trait_id": 1917
         },
         {
           "cost": 75,
           "type": "Trait",
-          "trait_id": 2016
+          "trait_id": 1971
         },
         {
           "cost": 85,
           "type": "Trait",
-          "trait_id": 1935
+          "trait_id": 1867
         },
         {
           "cost": 95,
           "type": "Trait",
-          "trait_id": 1862
+          "trait_id": 2014
         },
         {
           "cost": 110,
           "type": "Skill",
-          "skill_id": 31322
+          "skill_id": 31248
         },
         {
           "cost": 125,
           "type": "Skill",
-          "skill_id": 31582
+          "skill_id": 29739
         },
         {
           "cost": 135,
           "type": "Trait",
-          "trait_id": 2053
+          "trait_id": 1954
         },
         {
           "cost": 145,
           "type": "Trait",
-          "trait_id": 2001
+          "trait_id": 1999
         },
         {
           "cost": 155,
           "type": "Trait",
-          "trait_id": 2056
+          "trait_id": 1860
         },
         {
           "cost": 165,
           "type": "Trait",
-          "trait_id": 1992
+          "trait_id": 1877
         },
         {
           "cost": 180,
           "type": "Skill",
-          "skill_id": 30238
+          "skill_id": 29921
         },
         {
           "cost": 190,
           "type": "Trait",
-          "trait_id": 2057
+          "trait_id": 1981
         },
         {
           "cost": 200,
           "type": "Trait",
-          "trait_id": 2058
+          "trait_id": 2052
         },
         {
           "cost": 210,
           "type": "Trait",
-          "trait_id": 2055
+          "trait_id": 1849
         },
         {
           "cost": 225,
           "type": "Skill",
-          "skill_id": 31746
+          "skill_id": 30101
         },
         {
           "cost": 250,
           "type": "Skill",
-          "skill_id": 31677
+          "skill_id": 30815
         }
       ]
     },
     {
-      "id": 407,
+      "id": 409,
       "category": "EliteSpecializations",
-      "name": "Seelenwandler",
+      "name": "Holoschmied",
       "track": [
         {
           "cost": 30,
           "type": "Trait",
-          "trait_id": 2088
+          "trait_id": 2125
         },
         {
           "cost": 40,
           "type": "Trait",
-          "trait_id": 2151
+          "trait_id": 2158
         },
         {
           "cost": 50,
           "type": "Trait",
-          "trait_id": 2071
+          "trait_id": 2157
         },
         {
           "cost": 60,
           "type": "Trait",
-          "trait_id": 2156
+          "trait_id": 2135
         },
         {
           "cost": 70,
           "type": "Trait",
-          "trait_id": 2085
+          "trait_id": 2152
         },
         {
           "cost": 80,
           "type": "Trait",
-          "trait_id": 2127
+          "trait_id": 2122
         },
         {
           "cost": 90,
           "type": "Trait",
-          "trait_id": 2128
+          "trait_id": 2137
         },
         {
           "cost": 105,
           "type": "Skill",
-          "skill_id": 44948
+          "skill_id": 40507
         },
         {
           "cost": 120,
           "type": "Skill",
-          "skill_id": 45142
+          "skill_id": 43739
         },
         {
           "cost": 130,
           "type": "Trait",
-          "trait_id": 2134
+          "trait_id": 2114
         },
         {
           "cost": 140,
           "type": "Trait",
-          "trait_id": 2119
+          "trait_id": 2103
         },
         {
           "cost": 150,
           "type": "Trait",
-          "trait_id": 2155
+          "trait_id": 2066
         },
         {
           "cost": 165,
           "type": "Skill",
-          "skill_id": 45789
+          "skill_id": 42842
         },
         {
           "cost": 180,
           "type": "Skill",
-          "skill_id": 45970
+          "skill_id": 44646
         },
         {
           "cost": 190,
           "type": "Trait",
-          "trait_id": 2072
+          "trait_id": 2106
         },
         {
           "cost": 200,
           "type": "Trait",
-          "trait_id": 2161
+          "trait_id": 2091
         },
         {
           "cost": 210,
           "type": "Trait",
-          "trait_id": 2143
+          "trait_id": 2064
         },
         {
           "cost": 225,
           "type": "Skill",
-          "skill_id": 40498
+          "skill_id": 41218
         },
         {
           "cost": 250,
           "type": "Skill",
-          "skill_id": 45717
+          "skill_id": 42009
         }
       ]
     },
     {
-      "id": 471,
+      "id": 470,
       "category": "EliteSpecializations",
-      "name": "Ungezähmter",
+      "name": "Mech-Lenker",
       "track": [
         {
           "cost": 30,
           "type": "Trait",
-          "trait_id": 2273
+          "trait_id": 2265
         },
         {
           "cost": 40,
           "type": "Trait",
-          "trait_id": 2268
+          "trait_id": 2291
         },
         {
           "cost": 50,
           "type": "Trait",
-          "trait_id": 2277
+          "trait_id": 2296
         },
         {
           "cost": 60,
           "type": "Trait",
-          "trait_id": 2286
+          "trait_id": 2266
         },
         {
           "cost": 70,
           "type": "Trait",
-          "trait_id": 2287
+          "trait_id": 2276
         },
         {
           "cost": 80,
           "type": "Trait",
-          "trait_id": 2269
+          "trait_id": 2267
         },
         {
           "cost": 90,
           "type": "Trait",
-          "trait_id": 2283
+          "trait_id": 2281
         },
         {
           "cost": 105,
           "type": "Skill",
-          "skill_id": 63319
+          "skill_id": 63049
         },
         {
           "cost": 120,
           "type": "Skill",
-          "skill_id": 63157
+          "skill_id": 63262
         },
         {
           "cost": 130,
           "type": "Trait",
-          "trait_id": 2297
+          "trait_id": 2282
         },
         {
           "cost": 140,
           "type": "Trait",
-          "trait_id": 2263
+          "trait_id": 2270
         },
         {
           "cost": 150,
           "type": "Trait",
-          "trait_id": 2271
+          "trait_id": 2292
         },
         {
           "cost": 165,
           "type": "Skill",
-          "skill_id": 63256
+          "skill_id": 63111
         },
         {
           "cost": 180,
           "type": "Skill",
-          "skill_id": 63195
+          "skill_id": 63253
         },
         {
           "cost": 190,
           "type": "Trait",
-          "trait_id": 2301
+          "trait_id": 2279
         },
         {
           "cost": 200,
           "type": "Trait",
-          "trait_id": 2278
+          "trait_id": 2294
         },
         {
           "cost": 210,
           "type": "Trait",
-          "trait_id": 2274
+          "trait_id": 2298
         },
         {
           "cost": 225,
           "type": "Skill",
-          "skill_id": 63130
+          "skill_id": 63113
         },
         {
           "cost": 250,
           "type": "Skill",
-          "skill_id": 63163
+          "skill_id": 63095
         }
       ]
     },
     {
-      "id": 525,
+      "id": 517,
       "category": "EliteSpecializations",
-      "name": "Orkanschütze",
+      "name": "Amalgam",
       "track": [
         {
           "cost": 40,
           "type": "Trait",
-          "trait_id": 2359
+          "trait_id": 2377
         },
         {
           "cost": 50,
           "type": "Trait",
-          "trait_id": 2370
+          "trait_id": 2366
         },
         {
           "cost": 60,
           "type": "Trait",
-          "trait_id": 2363
+          "trait_id": 2389
         },
         {
           "cost": 70,
           "type": "Trait",
-          "trait_id": 2413
+          "trait_id": 2383
         },
         {
           "cost": 80,
           "type": "Trait",
-          "trait_id": 2341
+          "trait_id": 2356
         },
         {
           "cost": 90,
           "type": "Trait",
-          "trait_id": 2336
+          "trait_id": 2406
         },
         {
           "cost": 105,
           "type": "Skill",
-          "skill_id": 77271
+          "skill_id": 76738
         },
         {
           "cost": 120,
           "type": "Skill",
-          "skill_id": 77264
+          "skill_id": 77069
         },
         {
           "cost": 130,
           "type": "Trait",
-          "trait_id": 2402
+          "trait_id": 2395
         },
         {
           "cost": 140,
           "type": "Trait",
-          "trait_id": 2408
+          "trait_id": 2420
         },
         {
           "cost": 150,
           "type": "Trait",
-          "trait_id": 2425
+          "trait_id": 2387
         },
         {
           "cost": 165,
           "type": "Skill",
-          "skill_id": 77211
+          "skill_id": 76908
         },
         {
           "cost": 180,
           "type": "Skill",
-          "skill_id": 76619
+          "skill_id": 77018
         },
         {
           "cost": 190,
           "type": "Trait",
-          "trait_id": 2360
+          "trait_id": 2434
         },
         {
           "cost": 200,
           "type": "Trait",
-          "trait_id": 2396
+          "trait_id": 2349
         },
         {
           "cost": 210,
           "type": "Trait",
-          "trait_id": 2372
+          "trait_id": 2334
         },
         {
           "cost": 225,
           "type": "Skill",
-          "skill_id": 76757
+          "skill_id": 77209
         },
         {
           "cost": 250,
           "type": "Skill",
-          "skill_id": 76979
+          "skill_id": 76993
         }
       ]
     }
   ]
+},
+{
+  "text": "unknown error"
 },
 {
   "id": "Thief",
@@ -2509,12 +2100,12 @@
       "type": "Profession"
     },
     {
-      "id": 76702,
+      "id": 76601,
       "slot": "Profession_2",
       "type": "Profession"
     },
     {
-      "id": 76601,
+      "id": 76633,
       "slot": "Profession_2",
       "type": "Profession"
     },
@@ -2545,6 +2136,11 @@
     },
     {
       "id": 77288,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
+      "id": 76909,
       "slot": "Profession_2",
       "type": "Profession"
     },
