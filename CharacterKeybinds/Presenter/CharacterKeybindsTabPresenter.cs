@@ -8,7 +8,6 @@ using System.IO;
 using flakysalt.CharacterKeybinds.Views.UiElements;
 using flakysalt.CharacterKeybinds.Model;
 using System.Globalization;
-using System.Linq;
 using flakysalt.CharacterKeybinds.Resources;
 using flakysalt.CharacterKeybinds.Util;
 using flakysalt.CharacterKeybinds.Data;
@@ -138,8 +137,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
             {
                 View?.ClearKeybindEntries();
 
-                var keybindsFolder = Model.GetKeybindsFolder();
-                View?.SetDefaultKeybindOptions(CharacterKeybindFileUtil.GetKeybindFiles(keybindsFolder),
+                View?.SetDefaultKeybindOptions(CharacterKeybindFileUtil.GetKeybindFiles(Model.GetKeybindsFolder()),
                     Model.GetDefaultKeybind());
 
                 foreach (var keymap in Model.GetKeymaps())
@@ -147,7 +145,9 @@ namespace flakysalt.CharacterKeybinds.Presenter
                     var character = Model.GetCharacter(keymap.CharacterName);
                     
                     //safeguard for characters that do not exits and are not new entries
-                    if (keymap.CharacterName != null && character == null) continue;
+                    if ((!String.IsNullOrEmpty(keymap.CharacterName) && character == null) ||
+                        (!String.IsNullOrEmpty(keymap.KeymapName) && !CharacterKeybindFileUtil.KeybindFileExists(Model.GetKeybindsFolder(),keymap.KeymapName)))
+                        continue;
                     
                     int iconAssetId = 0;
 
@@ -172,7 +172,7 @@ namespace flakysalt.CharacterKeybinds.Presenter
 
                     View?.SetKeybindOptions(container, Model.GetCharacterNames(),
                         Model.GetProfessionSpecializations(keymap.CharacterName),
-                        CharacterKeybindFileUtil.GetKeybindFiles(keybindsFolder));
+                        CharacterKeybindFileUtil.GetKeybindFiles(Model.GetKeybindsFolder()));
                     View?.SetKeybindValues(container, keymap, iconAssetId);
                     View?.AttachListeners(container, OnApplyKeymap, OnKeymapChange, OnKeymapRemoved);
                 }

@@ -33,5 +33,11 @@ namespace flakysalt.CharacterKeybinds.Util
 
             return xmlFiles.ToList();
         }
+        
+        public static bool KeybindFileExists(string folderPath, string filename) 
+        {
+            string path = Path.Combine(folderPath,filename+".xml");
+            return File.Exists(path);
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "Character Keybinds",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "namespace": "flakysalt.CharacterKeybinds",
     "package": "CharacterKeybinds.dll",
     "manifest_version": 1,
