@@ -204,7 +204,7 @@ namespace flakysalt.CharacterKeybinds.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select a character to load the API key!.
+        ///   Looks up a localized string similar to API key not loaded. Add one to Blish HUD or select a character if you have set an API key..
         /// </summary>
         internal static string errorMessageMissingSubtoken {
             get {

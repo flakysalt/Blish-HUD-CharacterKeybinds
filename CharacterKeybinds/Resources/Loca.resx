@@ -103,6 +103,6 @@
         <value>GW2 API is experiencing issues. This could impact the modules performance.</value>
     </data>
     <data name="errorMessageMissingSubtoken" xml:space="preserve">
-        <value>Select a character to load the API key!</value>
+        <value>API key not loaded. Add one to Blish HUD or select a character if you have set an API key.</value>
     </data>
 </root>
