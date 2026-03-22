@@ -493,11 +493,6 @@
       "type": "Utility"
     },
     {
-      "id": 9247,
-      "slot": "Utility",
-      "type": "Utility"
-    },
-    {
       "id": 9246,
       "slot": "Utility",
       "type": "Utility"
@@ -7238,11 +7233,6 @@
       "type": "Utility"
     },
     {
-      "id": 13035,
-      "slot": "Utility",
-      "type": "Utility"
-    },
-    {
       "id": 13066,
       "slot": "Utility",
       "type": "Utility"
@@ -7418,6 +7408,11 @@
       "type": "Profession"
     },
     {
+      "id": 76816,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
       "id": 76702,
       "slot": "Profession_2",
       "type": "Profession"
@@ -7434,6 +7429,11 @@
     },
     {
       "id": 76550,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
+      "id": 76674,
       "slot": "Profession_2",
       "type": "Profession"
     },
@@ -7474,6 +7474,11 @@
     },
     {
       "id": 76733,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
+      "id": 76895,
       "slot": "Profession_2",
       "type": "Profession"
     },
