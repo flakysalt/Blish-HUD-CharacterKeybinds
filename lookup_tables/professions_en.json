@@ -7423,17 +7423,7 @@
       "type": "Profession"
     },
     {
-      "id": 76702,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
       "id": 76601,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 76633,
       "slot": "Profession_2",
       "type": "Profession"
     },
@@ -7459,6 +7449,11 @@
     },
     {
       "id": 77288,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
+      "id": 76909,
       "slot": "Profession_2",
       "type": "Profession"
     },
