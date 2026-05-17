@@ -5893,6 +5893,16 @@
       "id": 78091,
       "slot": "Profession_2",
       "type": "Profession"
+    },
+    {
+      "id": 80035,
+      "slot": "Profession_1",
+      "type": "Profession"
+    },
+    {
+      "id": 80031,
+      "slot": "Profession_2",
+      "type": "Profession"
     }
   ],
   "training": [
@@ -10058,6 +10068,12 @@
       "slot": "Profession_1",
       "type": "Profession",
       "attunement": "Fire"
+    },
+    {
+      "id": 76703,
+      "slot": "Profession_2",
+      "type": "Profession",
+      "attunement": "Water"
     },
     {
       "id": 77082,
