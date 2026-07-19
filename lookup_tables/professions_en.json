@@ -1963,7 +1963,7 @@
           "slot": "Weapon_2"
         },
         {
-          "id": 14497,
+          "id": 80247,
           "slot": "Weapon_3"
         },
         {
@@ -2022,11 +2022,6 @@
     },
     {
       "id": 14375,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 14367,
       "slot": "Profession_1",
       "type": "Profession"
     },
@@ -2371,11 +2366,6 @@
       "type": "Profession"
     },
     {
-      "id": 42494,
-      "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
       "id": 41746,
       "slot": "Profession_1",
       "type": "Profession"
@@ -2543,6 +2533,16 @@
     {
       "id": 77155,
       "slot": "Profession_4",
+      "type": "Profession"
+    },
+    {
+      "id": 80203,
+      "slot": "Profession_1",
+      "type": "Profession"
+    },
+    {
+      "id": 80252,
+      "slot": "Profession_1",
       "type": "Profession"
     }
   ],
@@ -3269,7 +3269,7 @@
         {
           "cost": 50,
           "type": "Trait",
-          "trait_id": 2260
+          "trait_id": 2225
         },
         {
           "cost": 60,
@@ -3329,7 +3329,7 @@
         {
           "cost": 190,
           "type": "Trait",
-          "trait_id": 2225
+          "trait_id": 2260
         },
         {
           "cost": 200,
@@ -7143,7 +7143,7 @@
           "offhand": "Dagger"
         },
         {
-          "id": 13031,
+          "id": 80244,
           "slot": "Weapon_3",
           "offhand": "Pistol"
         },
@@ -7433,11 +7433,6 @@
       "type": "Profession"
     },
     {
-      "id": 76702,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
       "id": 76601,
       "slot": "Profession_2",
       "type": "Profession"
@@ -7453,17 +7448,7 @@
       "type": "Profession"
     },
     {
-      "id": 76674,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
       "id": 76800,
-      "slot": "Profession_2",
-      "type": "Profession"
-    },
-    {
-      "id": 77192,
       "slot": "Profession_2",
       "type": "Profession"
     },
@@ -7474,6 +7459,11 @@
     },
     {
       "id": 76582,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
+      "id": 77277,
       "slot": "Profession_2",
       "type": "Profession"
     },
@@ -10093,6 +10083,11 @@
     },
     {
       "id": 76707,
+      "slot": "Profession_5",
+      "type": "Profession"
+    },
+    {
+      "id": 80231,
       "slot": "Profession_5",
       "type": "Profession"
     }
