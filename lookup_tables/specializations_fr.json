@@ -173,30 +173,8 @@
   "profession_icon_big": "https://render.guildwars2.com/file/232D31C9A3076F6A6B41167FBDA7D50F70C82260/1128570.png",
   "profession_icon": "https://render.guildwars2.com/file/CEA6755F350FAAE9A7D8796CF8CC10FA1E33081D/1128571.png"
 },
-{
-  "id": 8,
-  "name": "Adresse au tir",
-  "profession": "Ranger",
-  "elite": false,
-  "minor_traits": [
-    1010,
-    1009,
-    1011
-  ],
-  "major_traits": [
-    1021,
-    1014,
-    986,
-    1001,
-    1000,
-    1070,
-    996,
-    1015,
-    1698
-  ],
-  "icon": "https://render.guildwars2.com/file/80FEB75663DAE60BAC59495671261C206C0BAFC3/1012014.png",
-  "background": "https://render.guildwars2.com/file/100CE796CC2318DA62D2189A02BAAD2AE91BCE1F/1012079.png"
-},
+<Error code="48" module="3" line="475" text="JsEngine: script terminated without sending a reply {/v2/specializations/:id.:format}"/>
+,
 {
   "id": 9,
   "name": "Punition",
