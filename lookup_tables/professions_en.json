@@ -5903,6 +5903,16 @@
       "id": 80031,
       "slot": "Profession_2",
       "type": "Profession"
+    },
+    {
+      "id": 81024,
+      "slot": "Profession_1",
+      "type": "Profession"
+    },
+    {
+      "id": 80985,
+      "slot": "Profession_2",
+      "type": "Profession"
     }
   ],
   "training": [
@@ -7425,11 +7435,6 @@
     {
       "id": 77397,
       "slot": "Profession_1",
-      "type": "Profession"
-    },
-    {
-      "id": 76816,
-      "slot": "Profession_2",
       "type": "Profession"
     },
     {
