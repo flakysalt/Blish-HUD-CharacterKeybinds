@@ -7443,17 +7443,22 @@
       "type": "Profession"
     },
     {
+      "id": 76702,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
       "id": 76601,
       "slot": "Profession_2",
       "type": "Profession"
     },
     {
-      "id": 76550,
+      "id": 76633,
       "slot": "Profession_2",
       "type": "Profession"
     },
     {
-      "id": 76674,
+      "id": 76550,
       "slot": "Profession_2",
       "type": "Profession"
     },
@@ -7473,7 +7478,22 @@
       "type": "Profession"
     },
     {
+      "id": 76582,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
+      "id": 77277,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
       "id": 77288,
+      "slot": "Profession_2",
+      "type": "Profession"
+    },
+    {
+      "id": 76909,
       "slot": "Profession_2",
       "type": "Profession"
     },
